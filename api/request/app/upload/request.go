@@ -68,7 +68,7 @@ func (req Request) IoReaderMap() (*map[string]io.Reader, error) {
 		parts[keyReleaseNote] = strings.NewReader(note.String)
 	}
 
-	out, err := util.StringifyKeys(parts)
+	out, err := util.StringifyKeysOfReaderMap(parts)
 
 	if err != nil {
 		return nil, err

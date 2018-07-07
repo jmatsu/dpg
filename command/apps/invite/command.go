@@ -4,12 +4,12 @@ import (
 	"errors"
 	"fmt"
 	"github.com/jmatsu/dpg/api"
-	requestAppInvite "github.com/jmatsu/dpg/api/request/app/invite"
 	"github.com/urfave/cli"
 	"gopkg.in/guregu/null.v3"
 	"strings"
 	"github.com/jmatsu/dpg/api/response"
 	"encoding/json"
+	"github.com/jmatsu/dpg/api/request/app/invite"
 )
 
 func Command() cli.Command {
@@ -57,17 +57,17 @@ func action(c *cli.Context) error {
 		Token: apiToken.Value(c).(string),
 	}
 
-	endpoint := api.AppInviteEndpoint{
+	endpoint := api.AppMemberEndpoint{
 		BaseURL:      "https://deploygate.com",
 		AppOwnerName: appOwnerName.Value(c).(string),
 		AppId:        appId.Value(c).(string),
 		AppPlatform:  appPlatform.Value(c).(string),
 	}
 
-	resp, err := invite(
+	resp, err := inviteUsers(
 		endpoint,
 		authority,
-		requestAppInvite.Request{
+		invite.Request{
 			Invitees:      invitees.Value(c).([]string),
 			DeveloperRole: role.Value(c).(null.Bool),
 		},
@@ -83,7 +83,7 @@ func action(c *cli.Context) error {
 	return nil
 }
 
-func invite(e api.AppInviteEndpoint, authority api.Authority, requestBody requestAppInvite.Request, verbose bool) (response.AppInviteResponse, error) {
+func inviteUsers(e api.AppMemberEndpoint, authority api.Authority, requestBody invite.Request, verbose bool) (response.AppInviteResponse, error) {
 	var r response.AppInviteResponse
 
 	if err := verifyInput(e, authority, requestBody); err != nil {
@@ -119,7 +119,7 @@ func verifyIOSApp(c *cli.Context) error {
 	return nil
 }
 
-func verifyInput(e api.AppInviteEndpoint, authority api.Authority, requestBody requestAppInvite.Request) error {
+func verifyInput(e api.AppMemberEndpoint, authority api.Authority, requestBody invite.Request) error {
 	if authority.Token == "" {
 		return errors.New("api token must be specified")
 	}
@@ -132,7 +132,7 @@ func verifyInput(e api.AppInviteEndpoint, authority api.Authority, requestBody r
 		return errors.New("application id must be specified")
 	}
 
-	if !strings.EqualFold(e.AppPlatform, "android") || !strings.EqualFold(e.AppPlatform, "ios") {
+	if !strings.EqualFold(e.AppPlatform, "android") && !strings.EqualFold(e.AppPlatform, "ios") {
 		return errors.New("A platform must be either of `android` or `ios`")
 	}
 

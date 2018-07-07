@@ -32,7 +32,7 @@ func (req Request) IoReaderMap() (*map[string]io.Reader, error) {
 		}
 	}
 
-	out, err := util.StringifyKeys(parts)
+	out, err := util.StringifyKeysOfReaderMap(parts)
 
 	if err != nil {
 		return nil, err

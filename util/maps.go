@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 )
 
-func Merge(m1, m2 map[string]io.Reader) map[string]io.Reader {
+func MergeIOReaderMap(m1, m2 map[string]io.Reader) map[string]io.Reader {
 	newMap := map[string]io.Reader{}
 
 	for k, v := range m1 {
@@ -24,7 +24,21 @@ func Merge(m1, m2 map[string]io.Reader) map[string]io.Reader {
 	return newMap
 }
 
-func StringifyKeys(mustBeMap interface{}) (*map[string]io.Reader, error) {
+func MergeStringMap(m1, m2 map[string]string) map[string]string {
+	newMap := map[string]string{}
+
+	for k, v := range m1 {
+		newMap[k] = v
+	}
+
+	for k, v := range m2 {
+		newMap[k] = v
+	}
+
+	return newMap
+}
+
+func StringifyKeysOfReaderMap(mustBeMap interface{}) (*map[string]io.Reader, error) {
 	m := reflect.ValueOf(mustBeMap)
 
 	output := make(map[string]io.Reader)
@@ -41,6 +55,24 @@ func StringifyKeys(mustBeMap interface{}) (*map[string]io.Reader, error) {
 		} else {
 			return nil, errors.New("all type of values must be io.Reader")
 		}
+	}
+
+	return &output, nil
+}
+
+func StringifyKeysAndValues(mustBeMap interface{}) (*map[string]string, error) {
+	m := reflect.ValueOf(mustBeMap)
+
+	output := make(map[string]string)
+
+	for _, e := range m.MapKeys() {
+		v := m.MapIndex(e)
+
+		if e.Kind() != reflect.String {
+			return nil, errors.New("the type of keys must be string")
+		}
+
+		output[e.String()] = v.String()
 	}
 
 	return &output, nil
