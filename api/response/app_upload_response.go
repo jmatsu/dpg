@@ -2,7 +2,7 @@ package response
 
 import "github.com/jmatsu/dpg/api/entity"
 
-type UploadAppResponse struct {
+type AppUploadResponse struct {
 	Apps  entity.App `json:"results"`
 	Error bool       `json:"error"`
 }

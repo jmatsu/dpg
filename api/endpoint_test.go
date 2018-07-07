@@ -8,11 +8,11 @@ import (
 
 func TestUploadAppEndpointToURL(t *testing.T) {
 	cases := []struct {
-		in       UploadAppEndpoint
+		in       AppUploadEndpoint
 		expected string
 	}{
 		{
-			in: UploadAppEndpoint{
+			in: AppUploadEndpoint{
 				BaseURL:      "x",
 				AppOwnerName: "y",
 			},

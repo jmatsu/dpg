@@ -17,7 +17,7 @@ func existingFilePath() string {
 }
 
 var verifyCases = []struct {
-	endpoint    api.UploadAppEndpoint
+	endpoint    api.AppUploadEndpoint
 	authority   api.Authority
 	requestBody requestAppUpload.Request
 
@@ -27,7 +27,7 @@ var verifyCases = []struct {
 		expectError: true,
 	},
 	{
-		endpoint: api.UploadAppEndpoint{
+		endpoint: api.AppUploadEndpoint{
 			BaseURL: "xxxx",
 		},
 		requestBody: requestAppUpload.Request{
@@ -42,7 +42,7 @@ var verifyCases = []struct {
 		expectError: true,
 	},
 	{
-		endpoint: api.UploadAppEndpoint{
+		endpoint: api.AppUploadEndpoint{
 			BaseURL:      "xxxx",
 			AppOwnerName: "xx",
 		},
@@ -58,7 +58,7 @@ var verifyCases = []struct {
 		expectError: true,
 	},
 	{
-		endpoint: api.UploadAppEndpoint{
+		endpoint: api.AppUploadEndpoint{
 			BaseURL:      "xxxx",
 			AppOwnerName: "xx",
 		},
@@ -76,7 +76,7 @@ var verifyCases = []struct {
 		expectError: true,
 	},
 	{
-		endpoint: api.UploadAppEndpoint{
+		endpoint: api.AppUploadEndpoint{
 			BaseURL:      "xxxx",
 			AppOwnerName: "xx",
 		},
@@ -95,7 +95,7 @@ var verifyCases = []struct {
 		expectError: true,
 	},
 	{
-		endpoint: api.UploadAppEndpoint{
+		endpoint: api.AppUploadEndpoint{
 			BaseURL:      "xxxx",
 			AppOwnerName: "xx",
 		},
@@ -114,7 +114,7 @@ var verifyCases = []struct {
 		expectError: true,
 	},
 	{
-		endpoint: api.UploadAppEndpoint{
+		endpoint: api.AppUploadEndpoint{
 			BaseURL:      "xxxx",
 			AppOwnerName: "xx",
 		},
@@ -133,7 +133,7 @@ var verifyCases = []struct {
 		expectError: true,
 	},
 	{
-		endpoint: api.UploadAppEndpoint{
+		endpoint: api.AppUploadEndpoint{
 			BaseURL:      "xxxx",
 			AppOwnerName: "xx",
 		},
@@ -151,7 +151,7 @@ var verifyCases = []struct {
 		expectError: false,
 	},
 	{
-		endpoint: api.UploadAppEndpoint{
+		endpoint: api.AppUploadEndpoint{
 			BaseURL:      "xxxx",
 			AppOwnerName: "xx",
 		},
@@ -214,7 +214,7 @@ func testAction(t *testing.T, token string, appOwner string, request requestAppU
 
 	defer apiStub.Close()
 
-	endpoint := api.UploadAppEndpoint{
+	endpoint := api.AppUploadEndpoint{
 		BaseURL:      apiStub.URL,
 		AppOwnerName: appOwner,
 	}

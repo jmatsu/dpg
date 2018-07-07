@@ -6,6 +6,7 @@ import (
 
 	"github.com/urfave/cli"
 	"github.com/jmatsu/dpg/command/app/upload"
+	"github.com/jmatsu/dpg/command/app/invite"
 )
 
 func main() {
@@ -22,6 +23,7 @@ func main() {
 
 	app.Commands = []cli.Command{
 		upload.Command(),
+		invite.Command(),
 	}
 
 	err := app.Run(os.Args)

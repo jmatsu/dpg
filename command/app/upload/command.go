@@ -20,15 +20,15 @@ func Command() cli.Command {
 		Usage:   "Upload either android application or iOS application to the specified owner space",
 		Action:  action,
 		Flags: []cli.Flag{
-			AppFilePath.Flag(),
-			ApiToken.Flag(),
-			AppOwnerName.Flag(),
-			IsPublic.Flag(),
-			EnableNotification.Flag(),
-			ShortMessage.Flag(),
-			DistributionKey.Flag(),
-			DistributionName.Flag(),
-			ReleaseNote.Flag(),
+			appFilePath.Flag(),
+			apiToken.Flag(),
+			appOwnerName.Flag(),
+			isPublic.Flag(),
+			enableNotification.Flag(),
+			shortMessage.Flag(),
+			distributionKey.Flag(),
+			distributionName.Flag(),
+			releaseNote.Flag(),
 		},
 		Subcommands: []cli.Command{
 			{
@@ -37,9 +37,9 @@ func Command() cli.Command {
 				Usage:   "Upload an android application to the specified owner space",
 				Action:  androidAppAction,
 				Flags: []cli.Flag{
-					AppFilePath.Flag(),
-					ApiToken.Flag(),
-					AppOwnerName.Flag(),
+					appFilePath.Flag(),
+					apiToken.Flag(),
+					appOwnerName.Flag(),
 				},
 			},
 			{
@@ -48,10 +48,10 @@ func Command() cli.Command {
 				Usage:   "Upload an iOS application to the specified owner space",
 				Action:  iOSAppAction,
 				Flags: []cli.Flag{
-					AppFilePath.Flag(),
-					ApiToken.Flag(),
-					AppOwnerName.Flag(),
-					EnableNotification.Flag(),
+					appFilePath.Flag(),
+					apiToken.Flag(),
+					appOwnerName.Flag(),
+					enableNotification.Flag(),
 				},
 			},
 		},
@@ -76,25 +76,25 @@ func iOSAppAction(c *cli.Context) error {
 
 func action(c *cli.Context) error {
 	authority := api.Authority{
-		Token: ApiToken.Value(c).(string),
+		Token: apiToken.Value(c).(string),
 	}
 
-	endpoint := api.UploadAppEndpoint{
+	endpoint := api.AppUploadEndpoint{
 		BaseURL:      "https://deploygate.com",
-		AppOwnerName: AppOwnerName.Value(c).(string),
+		AppOwnerName: appOwnerName.Value(c).(string),
 	}
 
 	resp, err := uploadApp(
 		endpoint,
 		authority,
 		requestAppUpload.Request{
-			AppFilePath:        AppFilePath.Value(c).(string),
-			AppVisible:         IsPublic.Value(c).(bool),
-			EnableNotification: EnableNotification.Value(c).(bool),
-			ShortMessage:       ShortMessage.Value(c).(null.String),
-			DistributionKey:    DistributionKey.Value(c).(null.String),
-			DistributionName:   DistributionName.Value(c).(null.String),
-			ReleaseNote:        ReleaseNote.Value(c).(null.String),
+			AppFilePath:        appFilePath.Value(c).(string),
+			AppVisible:         isPublic.Value(c).(bool),
+			EnableNotification: enableNotification.Value(c).(bool),
+			ShortMessage:       shortMessage.Value(c).(null.String),
+			DistributionKey:    distributionKey.Value(c).(null.String),
+			DistributionName:   distributionName.Value(c).(null.String),
+			ReleaseNote:        releaseNote.Value(c).(null.String),
 		},
 		c.GlobalBoolT("verbose"),
 	)
@@ -108,8 +108,8 @@ func action(c *cli.Context) error {
 	return nil
 }
 
-func uploadApp(e api.UploadAppEndpoint, authority api.Authority, requestBody requestAppUpload.Request, verbose bool) (response.UploadAppResponse, error) {
-	var r response.UploadAppResponse
+func uploadApp(e api.AppUploadEndpoint, authority api.Authority, requestBody requestAppUpload.Request, verbose bool) (response.AppUploadResponse, error) {
+	var r response.AppUploadResponse
 
 	if err := verifyInput(e, authority, requestBody); err != nil {
 		return r, err
@@ -125,7 +125,7 @@ func uploadApp(e api.UploadAppEndpoint, authority api.Authority, requestBody req
 }
 
 func verifyAndroidApp(c *cli.Context) error {
-	appFilePath := AppFilePath.Value(c).(string)
+	appFilePath := appFilePath.Value(c).(string)
 
 	if !strings.HasSuffix(appFilePath, ".apk") {
 		return errors.New("A file path must be an apk file")
@@ -135,7 +135,7 @@ func verifyAndroidApp(c *cli.Context) error {
 }
 
 func verifyIOSApp(c *cli.Context) error {
-	appFilePath := AppFilePath.Value(c).(string)
+	appFilePath := appFilePath.Value(c).(string)
 
 	if !strings.HasSuffix(appFilePath, ".ipa") {
 		return errors.New("A file path must be an ipa file")
@@ -144,7 +144,7 @@ func verifyIOSApp(c *cli.Context) error {
 	return nil
 }
 
-func verifyInput(e api.UploadAppEndpoint, authority api.Authority, requestBody requestAppUpload.Request) error {
+func verifyInput(e api.AppUploadEndpoint, authority api.Authority, requestBody requestAppUpload.Request) error {
 	if authority.Token == "" {
 		return errors.New("api token must be specified")
 	}
