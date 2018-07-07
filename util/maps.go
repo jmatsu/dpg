@@ -7,6 +7,7 @@ import (
 	"mime/multipart"
 	"os"
 	"reflect"
+	"path/filepath"
 )
 
 func Merge(m1, m2 map[string]io.Reader) map[string]io.Reader {
@@ -55,7 +56,7 @@ func Buffering(readerMap map[string]io.Reader) (data bytes.Buffer, contentType s
 			}
 
 			if file, ok := reader.(*os.File); ok {
-				if fw, err := writer.CreateFormFile(key, file.Name()); err != nil {
+				if fw, err := writer.CreateFormFile(key, filepath.Base(file.Name())); err != nil {
 					failure = err
 					return
 				} else if _, err := io.Copy(fw, reader); err != nil {
