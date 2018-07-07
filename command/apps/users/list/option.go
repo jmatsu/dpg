@@ -1,4 +1,4 @@
-package users
+package apps_users_list
 
 import (
 	"github.com/urfave/cli"
@@ -8,9 +8,9 @@ type optionName string
 
 const (
 	apiToken     optionName = "token"
-	appOwnerName optionName = "app-owner"
-	appId        optionName = "app-id"
-	appPlatform  optionName = "app-platform"
+	appOwnerName optionName = "apps-owner"
+	appId        optionName = "apps-id"
+	appPlatform  optionName = "apps-platform"
 )
 
 func allFlags() []cli.Flag {

@@ -1,10 +1,10 @@
-package upload
+package apps_upload
 
 import (
 	"errors"
 	"fmt"
 	"github.com/jmatsu/dpg/api"
-	requestAppUpload "github.com/jmatsu/dpg/api/request/app/upload"
+	requestAppUpload "github.com/jmatsu/dpg/api/request/apps/upload"
 	"github.com/urfave/cli"
 	"gopkg.in/guregu/null.v3"
 	"strings"

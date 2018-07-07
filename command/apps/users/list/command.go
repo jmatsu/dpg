@@ -1,4 +1,4 @@
-package users
+package apps_users_list
 
 import (
 	"errors"
@@ -7,14 +7,14 @@ import (
 	"strings"
 	"github.com/jmatsu/dpg/api/response"
 	"encoding/json"
-	"github.com/jmatsu/dpg/api/request/app/users"
+	"github.com/jmatsu/dpg/api/request/apps/users/list"
 )
 
 func Command() cli.Command {
 	return cli.Command{
 		Name:    "list-users",
 		Aliases: []string{"i"},
-		Usage:   "Show users who have joined to the specified application (expect the app owner)",
+		Usage:   "Show users who have joined to the specified application (expect the apps owner)",
 		Action:  action,
 		Flags:   allFlags(),
 	}
@@ -35,7 +35,7 @@ func action(c *cli.Context) error {
 	_, err := listUsers(
 		endpoint,
 		authority,
-		users.Request{
+		list.Request{
 		},
 		c.GlobalBoolT("verbose"),
 	)
@@ -47,7 +47,7 @@ func action(c *cli.Context) error {
 	return nil
 }
 
-func listUsers(e api.AppMemberEndpoint, authority api.Authority, requestParam users.Request, verbose bool) (response.AppUsersResponse, error) {
+func listUsers(e api.AppMemberEndpoint, authority api.Authority, requestParam list.Request, verbose bool) (response.AppUsersResponse, error) {
 	var r response.AppUsersResponse
 
 	if err := verifyInput(e, authority, requestParam); err != nil {
@@ -63,7 +63,7 @@ func listUsers(e api.AppMemberEndpoint, authority api.Authority, requestParam us
 	}
 }
 
-func verifyInput(e api.AppMemberEndpoint, authority api.Authority, _ users.Request) error {
+func verifyInput(e api.AppMemberEndpoint, authority api.Authority, _ list.Request) error {
 	if authority.Token == "" {
 		return errors.New("api token must be specified")
 	}

@@ -1,8 +1,8 @@
-package upload
+package apps_upload
 
 import (
 	"github.com/jmatsu/dpg/api"
-	requestAppUpload "github.com/jmatsu/dpg/api/request/app/upload"
+	requestAppUpload "github.com/jmatsu/dpg/api/request/apps/upload"
 	"testing"
 	"fmt"
 	"os"
@@ -250,7 +250,7 @@ func mockServer(t *testing.T, expectedResponse bool, expectError bool) *httptest
 			if ! expectError {
 				w.WriteHeader(http.StatusOK)
 
-				bytes, err := ioutil.ReadFile(fmt.Sprintf("%s/src/github.com/jmatsu/dpg/fixture/response/app/upload/ok.json", os.Getenv("GOPATH")))
+				bytes, err := ioutil.ReadFile(fmt.Sprintf("%s/src/github.com/jmatsu/dpg/fixture/response/apps/upload/ok.json", os.Getenv("GOPATH")))
 
 				if err != nil {
 					t.Error(err.Error())
@@ -261,7 +261,7 @@ func mockServer(t *testing.T, expectedResponse bool, expectError bool) *httptest
 				// 200 would be returned when failed...
 				w.WriteHeader(http.StatusOK)
 
-				bytes, err := ioutil.ReadFile(fmt.Sprintf("%s/src/github.com/jmatsu/dpg/fixture/response/app/upload/ng.json", os.Getenv("GOPATH")))
+				bytes, err := ioutil.ReadFile(fmt.Sprintf("%s/src/github.com/jmatsu/dpg/fixture/response/apps/upload/ng.json", os.Getenv("GOPATH")))
 
 				if err != nil {
 					t.Error(err.Error())

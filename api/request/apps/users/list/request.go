@@ -1,4 +1,4 @@
-package users
+package list
 
 import (
 	"github.com/jmatsu/dpg/util"

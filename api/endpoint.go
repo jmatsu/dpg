@@ -2,10 +2,10 @@ package api
 
 import (
 	"fmt"
-	"github.com/jmatsu/dpg/api/request/app/upload"
-	"github.com/jmatsu/dpg/api/request/app/invite"
-	"github.com/jmatsu/dpg/api/request/app/users"
-	"github.com/jmatsu/dpg/api/request/organizations/teams/list"
+	"github.com/jmatsu/dpg/api/request/apps/upload"
+	"github.com/jmatsu/dpg/api/request/apps/invite"
+	appsUsersList "github.com/jmatsu/dpg/api/request/apps/users/list"
+	organizationTeamsList "github.com/jmatsu/dpg/api/request/organizations/teams/list"
 )
 
 type Endpoint interface {
@@ -45,23 +45,28 @@ func (e AppMemberEndpoint) MultiPartFormRequest(authority Authority, requestBody
 	return multiPartFormRequest(e, authority, requestBody, verbose)
 }
 
-func (e AppMemberEndpoint) GetQueryRequest(authority Authority, requestParams users.Request, verbose bool) ([]byte, error) {
+func (e AppMemberEndpoint) GetQueryRequest(authority Authority, requestParams appsUsersList.Request, verbose bool) ([]byte, error) {
 	return getRequest(e, authority, requestParams, verbose)
 }
 
 // https://docs.deploygate.com/reference#apps-teams-index
+// https://docs.deploygate.com/reference#apps-teams-create
 
-type OrganizationTeamEndpoint struct {
+type OrganizationTeamsEndpoint struct {
 	BaseURL          string
 	OrganizationName string
 	AppPlatform      string
 	AppId            string
 }
 
-func (e OrganizationTeamEndpoint) ToURL() string {
+func (e OrganizationTeamsEndpoint) ToURL() string {
 	return fmt.Sprintf("%s/api/organizations/%s/platforms/%s/apps/%s/teams", e.BaseURL, e.OrganizationName, e.AppPlatform, e.AppId)
 }
 
-func (e OrganizationTeamEndpoint) GetQueryRequest(authority Authority, requestParams list.Request, verbose bool) ([]byte, error) {
+func (e OrganizationTeamsEndpoint) MultiPartFormRequest(authority Authority, requestBody invite.Request, verbose bool) ([]byte, error) {
+	return multiPartFormRequest(e, authority, requestBody, verbose)
+}
+
+func (e OrganizationTeamsEndpoint) GetQueryRequest(authority Authority, requestParams organizationTeamsList.Request, verbose bool) ([]byte, error) {
 	return getRequest(e, authority, requestParams, verbose)
 }

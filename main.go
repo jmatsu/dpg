@@ -5,9 +5,10 @@ import (
 	"os"
 
 	"github.com/urfave/cli"
-	"github.com/jmatsu/dpg/command/apps/upload"
+	"github.com/jmatsu/dpg/command/organizations/teams/list"
 	"github.com/jmatsu/dpg/command/apps/invite"
-	"github.com/jmatsu/dpg/command/apps/users"
+	"github.com/jmatsu/dpg/command/apps/upload"
+	"github.com/jmatsu/dpg/command/apps/users/list"
 )
 
 func main() {
@@ -23,9 +24,10 @@ func main() {
 	}
 
 	app.Commands = []cli.Command{
-		upload.Command(),
-		invite.Command(),
-		users.Command(),
+		apps_upload.Command(),
+		apps_invite.Command(),
+		apps_users_list.Command(),
+		organizations_teams_list.Command(),
 	}
 
 	err := app.Run(os.Args)

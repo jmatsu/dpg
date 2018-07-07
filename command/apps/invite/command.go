@@ -1,4 +1,4 @@
-package invite
+package apps_invite
 
 import (
 	"errors"
@@ -9,7 +9,7 @@ import (
 	"strings"
 	"github.com/jmatsu/dpg/api/response"
 	"encoding/json"
-	"github.com/jmatsu/dpg/api/request/app/invite"
+	"github.com/jmatsu/dpg/api/request/apps/invite"
 )
 
 func Command() cli.Command {

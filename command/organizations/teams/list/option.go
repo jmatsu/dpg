@@ -1,4 +1,4 @@
-package list
+package organizations_teams_list
 
 import (
 	"github.com/urfave/cli"
@@ -7,16 +7,16 @@ import (
 type optionName string
 
 const (
-	apiToken     optionName = "token"
-	appOwnerName optionName = "app-owner"
-	appId        optionName = "app-id"
-	appPlatform  optionName = "app-platform"
+	apiToken         optionName = "token"
+	organizationName optionName = "organization-name"
+	appId            optionName = "apps-id"
+	appPlatform      optionName = "apps-platform"
 )
 
 func allFlags() []cli.Flag {
 	return []cli.Flag{
 		apiToken.Flag(),
-		appOwnerName.Flag(),
+		organizationName.Flag(),
 		appId.Flag(),
 		appPlatform.Flag(),
 	}
@@ -33,10 +33,10 @@ func (name optionName) Flag() cli.Flag {
 			Name:  name.String(),
 			Usage: "[Required] API token",
 		}
-	case appOwnerName:
+	case organizationName:
 		return cli.StringFlag{
 			Name:  name.String(),
-			Usage: "[Required] An owner of applications",
+			Usage: "[Required] A name of an organization",
 		}
 	case appId:
 		return cli.StringFlag{
@@ -57,7 +57,7 @@ func (name optionName) Value(c *cli.Context) interface{} {
 	switch name {
 	case
 		apiToken,
-		appOwnerName,
+		organizationName,
 		appId,
 		appPlatform:
 		return c.String(name.String())

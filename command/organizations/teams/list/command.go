@@ -1,4 +1,4 @@
-package list
+package organizations_teams_list
 
 import (
 	"errors"
@@ -7,7 +7,7 @@ import (
 	"strings"
 	"github.com/jmatsu/dpg/api/response"
 	"encoding/json"
-	"github.com/jmatsu/dpg/api/request/app/users"
+	"github.com/jmatsu/dpg/api/request/organizations/teams/list"
 )
 
 func Command() cli.Command {
@@ -25,17 +25,17 @@ func action(c *cli.Context) error {
 		Token: apiToken.Value(c).(string),
 	}
 
-	endpoint := api.AppMemberEndpoint{
-		BaseURL:      "https://deploygate.com",
-		AppOwnerName: appOwnerName.Value(c).(string),
-		AppId:        appId.Value(c).(string),
-		AppPlatform:  appPlatform.Value(c).(string),
+	endpoint := api.OrganizationTeamsEndpoint{
+		BaseURL:          "https://deploygate.com",
+		OrganizationName: organizationName.Value(c).(string),
+		AppId:            appId.Value(c).(string),
+		AppPlatform:      appPlatform.Value(c).(string),
 	}
 
-	_, err := listUsers(
+	_, err := listTeams(
 		endpoint,
 		authority,
-		users.Request{
+		list.Request{
 		},
 		c.GlobalBoolT("verbose"),
 	)
@@ -47,8 +47,8 @@ func action(c *cli.Context) error {
 	return nil
 }
 
-func listUsers(e api.AppMemberEndpoint, authority api.Authority, requestParam users.Request, verbose bool) (response.AppUsersResponse, error) {
-	var r response.AppUsersResponse
+func listTeams(e api.OrganizationTeamsEndpoint, authority api.Authority, requestParam list.Request, verbose bool) (response.OrganizationTeamsListResponse, error) {
+	var r response.OrganizationTeamsListResponse
 
 	if err := verifyInput(e, authority, requestParam); err != nil {
 		return r, err
@@ -63,13 +63,13 @@ func listUsers(e api.AppMemberEndpoint, authority api.Authority, requestParam us
 	}
 }
 
-func verifyInput(e api.AppMemberEndpoint, authority api.Authority, _ users.Request) error {
+func verifyInput(e api.OrganizationTeamsEndpoint, authority api.Authority, _ list.Request) error {
 	if authority.Token == "" {
 		return errors.New("api token must be specified")
 	}
 
-	if e.AppOwnerName == "" {
-		return errors.New("application owner must be specified")
+	if e.OrganizationName == "" {
+		return errors.New("organization name must be specified")
 	}
 
 	if e.AppId == "" {

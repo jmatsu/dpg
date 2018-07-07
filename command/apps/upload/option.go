@@ -1,4 +1,4 @@
-package upload
+package apps_upload
 
 import (
 	"github.com/urfave/cli"
@@ -9,8 +9,8 @@ type optionName string
 
 const (
 	apiToken           optionName = "token"
-	appOwnerName       optionName = "app-owner"
-	appFilePath        optionName = "app"
+	appOwnerName       optionName = "apps-owner"
+	appFilePath        optionName = "apps"
 	isPublic           optionName = "visible"
 	enableNotification optionName = "enableNotification"
 	shortMessage       optionName = "message"
