@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"github.com/jmatsu/dpg/api/request/apps/upload"
 	"github.com/jmatsu/dpg/api/request/apps/invite"
-	appsUsersList "github.com/jmatsu/dpg/api/request/apps/users/list"
+	appsUsersList "github.com/jmatsu/dpg/api/request/apps/members/list"
 	organizationTeamsList "github.com/jmatsu/dpg/api/request/organizations/teams/list"
+	organizationTeamsAdd "github.com/jmatsu/dpg/api/request/organizations/teams/add"
 )
 
 type Endpoint interface {
@@ -63,7 +64,7 @@ func (e OrganizationTeamsEndpoint) ToURL() string {
 	return fmt.Sprintf("%s/api/organizations/%s/platforms/%s/apps/%s/teams", e.BaseURL, e.OrganizationName, e.AppPlatform, e.AppId)
 }
 
-func (e OrganizationTeamsEndpoint) MultiPartFormRequest(authority Authority, requestBody invite.Request, verbose bool) ([]byte, error) {
+func (e OrganizationTeamsEndpoint) MultiPartFormRequest(authority Authority, requestBody organizationTeamsAdd.Request, verbose bool) ([]byte, error) {
 	return multiPartFormRequest(e, authority, requestBody, verbose)
 }
 

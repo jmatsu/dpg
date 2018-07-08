@@ -9,9 +9,9 @@ type optionName string
 
 const (
 	apiToken     optionName = "token"
-	appOwnerName optionName = "apps-owner"
-	appId        optionName = "apps-id"
-	appPlatform  optionName = "apps-platform"
+	appOwnerName optionName = "app-owner"
+	appId        optionName = "app-id"
+	appPlatform  optionName = "app-platform"
 	invitees     optionName = "invitees"
 	role         optionName = "role"
 )

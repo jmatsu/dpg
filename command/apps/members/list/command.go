@@ -7,7 +7,7 @@ import (
 	"strings"
 	"github.com/jmatsu/dpg/api/response"
 	"encoding/json"
-	"github.com/jmatsu/dpg/api/request/apps/users/list"
+	"github.com/jmatsu/dpg/api/request/apps/members/list"
 )
 
 func Command() cli.Command {

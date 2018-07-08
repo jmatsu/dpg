@@ -9,8 +9,8 @@ type optionName string
 
 const (
 	apiToken           optionName = "token"
-	appOwnerName       optionName = "apps-owner"
-	appFilePath        optionName = "apps"
+	appOwnerName       optionName = "app-owner"
+	appFilePath        optionName = "app"
 	isPublic           optionName = "visible"
 	enableNotification optionName = "enableNotification"
 	shortMessage       optionName = "message"

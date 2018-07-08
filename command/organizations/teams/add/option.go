@@ -1,4 +1,4 @@
-package organizations_teams_list
+package organizations_teams_add
 
 import (
 	"github.com/urfave/cli"
@@ -11,6 +11,7 @@ const (
 	organizationName optionName = "organization-name"
 	appId            optionName = "app-id"
 	appPlatform      optionName = "app-platform"
+	teamName         optionName = "team-name"
 )
 
 func allFlags() []cli.Flag {
@@ -19,6 +20,7 @@ func allFlags() []cli.Flag {
 		organizationName.Flag(),
 		appId.Flag(),
 		appPlatform.Flag(),
+		teamName.Flag(),
 	}
 }
 
@@ -48,6 +50,11 @@ func (name optionName) Flag() cli.Flag {
 			Name:  name.String(),
 			Usage: "[Required] Either of android or iOS (case insensitive)",
 		}
+	case teamName:
+		return cli.StringFlag{
+			Name:  name.String(),
+			Usage: "[Required] A team name to be added the application",
+		}
 	}
 
 	panic("Option name mapping is not found")
@@ -59,7 +66,8 @@ func (name optionName) Value(c *cli.Context) interface{} {
 		apiToken,
 		organizationName,
 		appId,
-		appPlatform:
+		appPlatform,
+		teamName:
 		return c.String(name.String())
 	}
 

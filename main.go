@@ -8,7 +8,7 @@ import (
 	"github.com/jmatsu/dpg/command/organizations/teams/list"
 	"github.com/jmatsu/dpg/command/apps/invite"
 	"github.com/jmatsu/dpg/command/apps/upload"
-	"github.com/jmatsu/dpg/command/apps/users/list"
+	"github.com/jmatsu/dpg/command/apps/members/list"
 )
 
 func main() {
