@@ -2,18 +2,18 @@ package apps_invite
 
 import (
 	"github.com/urfave/cli"
-	"gopkg.in/guregu/null.v3"
 )
 
 type optionName string
 
 const (
-	apiToken     optionName = "token"
-	appOwnerName optionName = "app-owner"
-	appId        optionName = "app-id"
-	appPlatform  optionName = "app-platform"
-	invitees     optionName = "invitees"
-	role         optionName = "role"
+	apiToken      optionName = "token"
+	appOwnerName  optionName = "app-owner"
+	appId         optionName = "app-id"
+	android       optionName = "android"
+	ios           optionName = "ios"
+	invitees      optionName = "invitees"
+	developerRole optionName = "role"
 )
 
 func allFlags() []cli.Flag {
@@ -21,9 +21,10 @@ func allFlags() []cli.Flag {
 		apiToken.Flag(),
 		appOwnerName.Flag(),
 		appId.Flag(),
-		appPlatform.Flag(),
+		android.Flag(),
+		ios.Flag(),
 		invitees.Flag(),
-		role.Flag(),
+		developerRole.Flag(),
 	}
 }
 
@@ -48,20 +49,25 @@ func (name optionName) Flag() cli.Flag {
 			Name:  name.String(),
 			Usage: "[Required] An application id to invite users. e.g. com.deploygate",
 		}
-	case appPlatform:
-		return cli.StringFlag{
+	case android:
+		return cli.BoolFlag{
 			Name:  name.String(),
-			Usage: "[Required] Either of android or iOS (case insensitive)",
+			Usage: "[Required] Either of this or ios flag must be specified",
+		}
+	case ios:
+		return cli.BoolFlag{
+			Name:  name.String(),
+			Usage: "[Required] Either of this or android flag must be specified",
 		}
 	case invitees:
 		return cli.StringSliceFlag{
 			Name:  name.String(),
 			Usage: "[Required] Comma separated names or e-mails of those who you want to invite",
 		}
-	case role:
+	case developerRole:
 		return cli.BoolFlag{
 			Name:   name.String(),
-			Usage:  "[Old Free/Lite/Pro/Biz plans only] Specify true if invitee(s) should be the developer role, otherwise they would be the tester role. false by default",
+			Usage:  "[Old Free/Lite/Pro/Biz plans only] Specify this if invitee(s) should be the developer role, otherwise they would be the tester role. tester will be selected by default",
 			Hidden: true,
 		}
 	}
@@ -74,18 +80,15 @@ func (name optionName) Value(c *cli.Context) interface{} {
 	case
 		apiToken,
 		appOwnerName,
-		appId,
-		appPlatform:
+		appId:
 		return c.String(name.String())
 	case invitees:
 		return c.StringSlice(name.String())
 	case
-		role:
-		if x := c.Bool(name.String()); c.IsSet(name.String()) {
-			return null.BoolFrom(x)
-		} else {
-			return null.BoolFromPtr(nil)
-		}
+		android,
+		ios,
+		developerRole:
+		return c.Bool(name.String())
 	}
 
 	panic("Option name mapping is not found")

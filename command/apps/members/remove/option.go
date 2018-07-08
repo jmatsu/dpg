@@ -10,7 +10,8 @@ const (
 	apiToken     optionName = "token"
 	appOwnerName optionName = "app-owner"
 	appId        optionName = "app-id"
-	appPlatform  optionName = "app-platform"
+	android      optionName = "android"
+	ios          optionName = "ios"
 	removees     optionName = "removees"
 )
 
@@ -19,7 +20,8 @@ func allFlags() []cli.Flag {
 		apiToken.Flag(),
 		appOwnerName.Flag(),
 		appId.Flag(),
-		appPlatform.Flag(),
+		android.Flag(),
+		ios.Flag(),
 		removees.Flag(),
 	}
 }
@@ -45,10 +47,15 @@ func (name optionName) Flag() cli.Flag {
 			Name:  name.String(),
 			Usage: "[Required] An application id to invite users. e.g. com.deploygate",
 		}
-	case appPlatform:
-		return cli.StringFlag{
+	case android:
+		return cli.BoolFlag{
 			Name:  name.String(),
-			Usage: "[Required] Either of android or iOS (case insensitive)",
+			Usage: "[Required] Either of this or ios flag must be specified",
+		}
+	case ios:
+		return cli.BoolFlag{
+			Name:  name.String(),
+			Usage: "[Required] Either of this or android flag must be specified",
 		}
 	case removees:
 		return cli.StringSliceFlag{
@@ -65,11 +72,14 @@ func (name optionName) Value(c *cli.Context) interface{} {
 	case
 		apiToken,
 		appOwnerName,
-		appId,
-		appPlatform:
+		appId:
 		return c.String(name.String())
 	case removees:
 		return c.StringSlice(name.String())
+	case
+		android,
+		ios:
+		return c.Bool(name.String())
 	}
 
 	panic("Option name mapping is not found")

@@ -2,10 +2,8 @@ package apps_invite
 
 import (
 	"errors"
-	"fmt"
 	"github.com/jmatsu/dpg/api"
 	"github.com/urfave/cli"
-	"gopkg.in/guregu/null.v3"
 	"strings"
 	"github.com/jmatsu/dpg/api/response"
 	"encoding/json"
@@ -23,6 +21,23 @@ func Command() cli.Command {
 }
 
 func action(c *cli.Context) error {
+	endpoint, authority, requestBody, err := buildResource(c)
+
+	_, err = inviteUsers(
+		*endpoint,
+		*authority,
+		*requestBody,
+		c.GlobalBoolT("verbose"),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func buildResource(c *cli.Context) (*api.AppMemberEndpoint, *api.Authority, *invite.Request, error) {
 	authority := api.Authority{
 		Token: apiToken.Value(c).(string),
 	}
@@ -31,42 +46,35 @@ func action(c *cli.Context) error {
 		BaseURL:      "https://deploygate.com",
 		AppOwnerName: appOwnerName.Value(c).(string),
 		AppId:        appId.Value(c).(string),
-		AppPlatform:  appPlatform.Value(c).(string),
 	}
 
-	resp, err := inviteUsers(
-		endpoint,
-		authority,
-		invite.Request{
-			UserNamesOrEmails: invitees.Value(c).([]string),
-			DeveloperRole:     role.Value(c).(null.Bool),
-		},
-		c.GlobalBoolT("verbose"),
-	)
+	isAndroid := android.Value(c).(bool)
+	isIOS := ios.Value(c).(bool)
 
-	if err != nil {
-		return err
+	if isAndroid && isIOS {
+		return nil, nil, nil, errors.New("only one option of android or ios is allowed")
 	}
 
-	fmt.Println(resp)
-
-	return nil
-}
-
-func inviteUsers(e api.AppMemberEndpoint, authority api.Authority, requestBody invite.Request, verbose bool) (response.AppInviteResponse, error) {
-	var r response.AppInviteResponse
-
-	if err := verifyInput(e, authority, requestBody); err != nil {
-		return r, err
+	if !isAndroid && !isIOS {
+		return nil, nil, nil, errors.New("either of android or ios must be specified")
 	}
 
-	if bytes, err := e.MultiPartFormRequest(authority, requestBody, verbose); err != nil {
-		return r, err
-	} else if err := json.Unmarshal(bytes, &r); err != nil {
-		return r, err
+	if isAndroid {
+		endpoint.AppPlatform = "android"
 	} else {
-		return r, nil
+		endpoint.AppPlatform = "ios"
 	}
+
+	requestBody := invite.Request{
+		UserNamesOrEmails: invitees.Value(c).([]string),
+		DeveloperRole:     developerRole.Value(c).(bool),
+	}
+
+	if err := verifyInput(endpoint, authority, requestBody); err != nil {
+		return nil, nil, nil, err
+	}
+
+	return &endpoint, &authority, &requestBody, nil
 }
 
 func verifyInput(e api.AppMemberEndpoint, authority api.Authority, requestBody invite.Request) error {
@@ -91,4 +99,16 @@ func verifyInput(e api.AppMemberEndpoint, authority api.Authority, requestBody i
 	}
 
 	return nil
+}
+
+func inviteUsers(e api.AppMemberEndpoint, authority api.Authority, requestBody invite.Request, verbose bool) (response.AppInviteResponse, error) {
+	var r response.AppInviteResponse
+
+	if bytes, err := e.MultiPartFormRequest(authority, requestBody, verbose); err != nil {
+		return r, err
+	} else if err := json.Unmarshal(bytes, &r); err != nil {
+		return r, err
+	} else {
+		return r, nil
+	}
 }

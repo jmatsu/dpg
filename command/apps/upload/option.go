@@ -17,7 +17,25 @@ const (
 	distributionKey    optionName = "distributionKey"
 	distributionName   optionName = "distributionName"
 	releaseNote        optionName = "releaseNote"
+	android            optionName = "android"
+	ios                optionName = "ios"
 )
+
+func allFlags() []cli.Flag {
+	return []cli.Flag{
+		apiToken.Flag(),
+		appOwnerName.Flag(),
+		appFilePath.Flag(),
+		isPublic.Flag(),
+		enableNotification.Flag(),
+		shortMessage.Flag(),
+		distributionKey.Flag(),
+		distributionName.Flag(),
+		releaseNote.Flag(),
+		android.Flag(),
+		ios.Flag(),
+	}
+}
 
 func (name optionName) String() string {
 	return string(name)
@@ -70,6 +88,16 @@ func (name optionName) Flag() cli.Flag {
 			Name:  name.String(),
 			Usage: "A release note for this revision",
 		}
+	case android:
+		return cli.BoolFlag{
+			Name:  name.String(),
+			Usage: "[Required] Either of this or ios flag must be specified",
+		}
+	case ios:
+		return cli.BoolFlag{
+			Name:  name.String(),
+			Usage: "[Required] Either of this or android flag must be specified",
+		}
 	}
 
 	panic("Option name mapping is not found")
@@ -84,8 +112,11 @@ func (name optionName) Value(c *cli.Context) interface{} {
 		return c.String(name.String())
 	case isPublic:
 		return c.Bool(name.String())
-	case enableNotification:
-		return c.Bool(string(name))
+	case
+		enableNotification,
+		android,
+		ios:
+		return c.Bool(name.String())
 	case
 		shortMessage,
 		distributionKey,

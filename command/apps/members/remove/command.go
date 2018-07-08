@@ -2,7 +2,6 @@ package apps_members_remove
 
 import (
 	"errors"
-	"fmt"
 	"github.com/jmatsu/dpg/api"
 	"github.com/urfave/cli"
 	"strings"
@@ -21,6 +20,27 @@ func Command() cli.Command {
 }
 
 func action(c *cli.Context) error {
+	endpoint, authority, requestBody, err := buildResource(c)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = removeUsers(
+		*endpoint,
+		*authority,
+		*requestBody,
+		c.GlobalBoolT("verbose"),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func buildResource(c *cli.Context) (*api.AppMemberEndpoint, *api.Authority, *remove.Request, error) {
 	authority := api.Authority{
 		Token: apiToken.Value(c).(string),
 	}
@@ -29,25 +49,34 @@ func action(c *cli.Context) error {
 		BaseURL:      "https://deploygate.com",
 		AppOwnerName: appOwnerName.Value(c).(string),
 		AppId:        appId.Value(c).(string),
-		AppPlatform:  appPlatform.Value(c).(string),
 	}
 
-	resp, err := removeUsers(
-		endpoint,
-		authority,
-		remove.Request{
-			UserNamesOrEmails: removees.Value(c).([]string),
-		},
-		c.GlobalBoolT("verbose"),
-	)
-
-	if err != nil {
-		return err
+	requestBody := remove.Request{
+		UserNamesOrEmails: removees.Value(c).([]string),
 	}
 
-	fmt.Println(resp)
+	isAndroid := android.Value(c).(bool)
+	isIOS := ios.Value(c).(bool)
 
-	return nil
+	if isAndroid && isIOS {
+		return nil, nil, nil, errors.New("only one option of android or ios is allowed")
+	}
+
+	if !isAndroid && !isIOS {
+		return nil, nil, nil, errors.New("either of android or ios must be specified")
+	}
+
+	if isAndroid {
+		endpoint.AppPlatform = "android"
+	} else {
+		endpoint.AppPlatform = "ios"
+	}
+
+	if err := verifyInput(endpoint, authority, requestBody); err != nil {
+		return nil, nil, nil, err
+	}
+
+	return &endpoint, &authority, &requestBody, nil
 }
 
 func removeUsers(e api.AppMemberEndpoint, authority api.Authority, requestBody remove.Request, verbose bool) (response.AppInviteResponse, error) {

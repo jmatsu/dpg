@@ -2,14 +2,13 @@ package invite
 
 import (
 	"github.com/jmatsu/dpg/util"
-	"gopkg.in/guregu/null.v3"
 	"io"
 	"strings"
 )
 
 type Request struct {
 	UserNamesOrEmails []string
-	DeveloperRole     null.Bool
+	DeveloperRole     bool
 }
 
 type Key string
@@ -24,12 +23,10 @@ func (req Request) IoReaderMap() (*map[string]io.Reader, error) {
 		keyInvitees: strings.NewReader(strings.Join(req.UserNamesOrEmails, ",")),
 	}
 
-	if devRole := req.DeveloperRole; devRole.Valid {
-		if devRole.Bool {
-			parts[keyDeveloperRole] = strings.NewReader("1")
-		} else {
-			parts[keyDeveloperRole] = strings.NewReader("2")
-		}
+	if req.DeveloperRole {
+		parts[keyDeveloperRole] = strings.NewReader("1")
+	} else {
+		parts[keyDeveloperRole] = strings.NewReader("2")
 	}
 
 	out, err := util.StringifyKeysOfReaderMap(parts)

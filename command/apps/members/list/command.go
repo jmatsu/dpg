@@ -21,22 +21,16 @@ func Command() cli.Command {
 }
 
 func action(c *cli.Context) error {
-	authority := api.Authority{
-		Token: apiToken.Value(c).(string),
+	endpoint, authority, requestParams, err := buildResource(c)
+
+	if err != nil {
+		return err
 	}
 
-	endpoint := api.AppMemberEndpoint{
-		BaseURL:      "https://deploygate.com",
-		AppOwnerName: appOwnerName.Value(c).(string),
-		AppId:        appId.Value(c).(string),
-		AppPlatform:  appPlatform.Value(c).(string),
-	}
-
-	_, err := listUsers(
-		endpoint,
-		authority,
-		list.Request{
-		},
+	_, err = listUsers(
+		*endpoint,
+		*authority,
+		*requestParams,
 		c.GlobalBoolT("verbose"),
 	)
 
@@ -47,20 +41,41 @@ func action(c *cli.Context) error {
 	return nil
 }
 
-func listUsers(e api.AppMemberEndpoint, authority api.Authority, requestParam list.Request, verbose bool) (response.AppUsersResponse, error) {
-	var r response.AppUsersResponse
-
-	if err := verifyInput(e, authority, requestParam); err != nil {
-		return r, err
+func buildResource(c *cli.Context) (*api.AppMemberEndpoint, *api.Authority, *list.Request, error) {
+	authority := api.Authority{
+		Token: apiToken.Value(c).(string),
 	}
 
-	if bytes, err := e.GetQueryRequest(authority, requestParam, verbose); err != nil {
-		return r, err
-	} else if err := json.Unmarshal(bytes, &r); err != nil {
-		return r, err
+	endpoint := api.AppMemberEndpoint{
+		BaseURL:      "https://deploygate.com",
+		AppOwnerName: appOwnerName.Value(c).(string),
+		AppId:        appId.Value(c).(string),
+	}
+
+	requestParams := list.Request{}
+
+	isAndroid := android.Value(c).(bool)
+	isIOS := ios.Value(c).(bool)
+
+	if isAndroid && isIOS {
+		return nil, nil, nil, errors.New("only one option of android or ios is allowed")
+	}
+
+	if !isAndroid && !isIOS {
+		return nil, nil, nil, errors.New("either of android or ios must be specified")
+	}
+
+	if isAndroid {
+		endpoint.AppPlatform = "android"
 	} else {
-		return r, nil
+		endpoint.AppPlatform = "ios"
 	}
+
+	if err := verifyInput(endpoint, authority, requestParams); err != nil {
+		return nil, nil, nil, err
+	}
+
+	return &endpoint, &authority, &requestParams, nil
 }
 
 func verifyInput(e api.AppMemberEndpoint, authority api.Authority, _ list.Request) error {
@@ -81,4 +96,16 @@ func verifyInput(e api.AppMemberEndpoint, authority api.Authority, _ list.Reques
 	}
 
 	return nil
+}
+
+func listUsers(e api.AppMemberEndpoint, authority api.Authority, requestParam list.Request, verbose bool) (response.AppUsersResponse, error) {
+	var r response.AppUsersResponse
+
+	if bytes, err := e.GetQueryRequest(authority, requestParam, verbose); err != nil {
+		return r, err
+	} else if err := json.Unmarshal(bytes, &r); err != nil {
+		return r, err
+	} else {
+		return r, nil
+	}
 }

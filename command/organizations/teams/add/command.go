@@ -21,23 +21,16 @@ func Command() cli.Command {
 }
 
 func action(c *cli.Context) error {
-	authority := api.Authority{
-		Token: apiToken.Value(c).(string),
+	endpoint, authority, requestBody, err := buildResource(c)
+
+	if err != nil {
+		return err
 	}
 
-	endpoint := api.OrganizationTeamsEndpoint{
-		BaseURL:          "https://deploygate.com",
-		OrganizationName: organizationName.Value(c).(string),
-		AppId:            appId.Value(c).(string),
-		AppPlatform:      appPlatform.Value(c).(string),
-	}
-
-	_, err := addToTeam(
-		endpoint,
-		authority,
-		add.Request{
-			TeamName: teamName.Value(c).(string),
-		},
+	_, err = addToTeam(
+		*endpoint,
+		*authority,
+		*requestBody,
 		c.GlobalBoolT("verbose"),
 	)
 
@@ -48,20 +41,43 @@ func action(c *cli.Context) error {
 	return nil
 }
 
-func addToTeam(e api.OrganizationTeamsEndpoint, authority api.Authority, requestBody add.Request, verbose bool) (response.OrganizationTeamsListResponse, error) {
-	var r response.OrganizationTeamsListResponse
-
-	if err := verifyInput(e, authority, requestBody); err != nil {
-		return r, err
+func buildResource(c *cli.Context) (*api.OrganizationTeamsEndpoint, *api.Authority, *add.Request, error) {
+	authority := api.Authority{
+		Token: apiToken.Value(c).(string),
 	}
 
-	if bytes, err := e.MultiPartFormRequest(authority, requestBody, verbose); err != nil {
-		return r, err
-	} else if err := json.Unmarshal(bytes, &r); err != nil {
-		return r, err
+	endpoint := api.OrganizationTeamsEndpoint{
+		BaseURL:          "https://deploygate.com",
+		OrganizationName: organizationName.Value(c).(string),
+		AppId:            appId.Value(c).(string),
+	}
+
+	requestBody := add.Request{
+		TeamName: teamName.Value(c).(string),
+	}
+
+	isAndroid := android.Value(c).(bool)
+	isIOS := ios.Value(c).(bool)
+
+	if isAndroid && isIOS {
+		return nil, nil, nil, errors.New("only one option of android or ios is allowed")
+	}
+
+	if !isAndroid && !isIOS {
+		return nil, nil, nil, errors.New("either of android or ios must be specified")
+	}
+
+	if isAndroid {
+		endpoint.AppPlatform = "android"
 	} else {
-		return r, nil
+		endpoint.AppPlatform = "ios"
 	}
+
+	if err := verifyInput(endpoint, authority, requestBody); err != nil {
+		return nil, nil, nil, err
+	}
+
+	return &endpoint, &authority, &requestBody, nil
 }
 
 func verifyInput(e api.OrganizationTeamsEndpoint, authority api.Authority, request add.Request) error {
@@ -86,4 +102,20 @@ func verifyInput(e api.OrganizationTeamsEndpoint, authority api.Authority, reque
 	}
 
 	return nil
+}
+
+func addToTeam(e api.OrganizationTeamsEndpoint, authority api.Authority, requestBody add.Request, verbose bool) (response.OrganizationTeamsListResponse, error) {
+	var r response.OrganizationTeamsListResponse
+
+	if err := verifyInput(e, authority, requestBody); err != nil {
+		return r, err
+	}
+
+	if bytes, err := e.MultiPartFormRequest(authority, requestBody, verbose); err != nil {
+		return r, err
+	} else if err := json.Unmarshal(bytes, &r); err != nil {
+		return r, err
+	} else {
+		return r, nil
+	}
 }
