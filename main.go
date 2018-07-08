@@ -9,6 +9,8 @@ import (
 	"github.com/jmatsu/dpg/command/apps/invite"
 	"github.com/jmatsu/dpg/command/apps/upload"
 	"github.com/jmatsu/dpg/command/apps/members/list"
+	"github.com/jmatsu/dpg/command/apps/members/remove"
+	"github.com/jmatsu/dpg/command/organizations/teams/add"
 )
 
 func main() {
@@ -26,8 +28,10 @@ func main() {
 	app.Commands = []cli.Command{
 		apps_upload.Command(),
 		apps_invite.Command(),
-		apps_users_list.Command(),
+		apps_members_list.Command(),
+		apps_members_remove.Command(),
 		organizations_teams_list.Command(),
+		organizations_teams_add.Command(),
 	}
 
 	err := app.Run(os.Args)

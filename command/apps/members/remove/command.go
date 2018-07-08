@@ -1,22 +1,22 @@
-package apps_members_list
+package apps_members_remove
 
 import (
 	"errors"
+	"fmt"
 	"github.com/jmatsu/dpg/api"
 	"github.com/urfave/cli"
 	"strings"
 	"github.com/jmatsu/dpg/api/response"
 	"encoding/json"
-	"github.com/jmatsu/dpg/api/request/apps/members/list"
+	"github.com/jmatsu/dpg/api/request/apps/members/remove"
 )
 
 func Command() cli.Command {
 	return cli.Command{
-		Name:    "list-users",
-		Aliases: []string{"i"},
-		Usage:   "Show users who have joined to the specified application (expect the apps owner)",
-		Action:  action,
-		Flags:   allFlags(),
+		Name:   "remove",
+		Usage:  "Remove users from the specified application space",
+		Action: action,
+		Flags:  allFlags(),
 	}
 }
 
@@ -32,10 +32,11 @@ func action(c *cli.Context) error {
 		AppPlatform:  appPlatform.Value(c).(string),
 	}
 
-	_, err := listUsers(
+	resp, err := removeUsers(
 		endpoint,
 		authority,
-		list.Request{
+		remove.Request{
+			UserNamesOrEmails: removees.Value(c).([]string),
 		},
 		c.GlobalBoolT("verbose"),
 	)
@@ -44,17 +45,19 @@ func action(c *cli.Context) error {
 		return err
 	}
 
+	fmt.Println(resp)
+
 	return nil
 }
 
-func listUsers(e api.AppMemberEndpoint, authority api.Authority, requestParam list.Request, verbose bool) (response.AppUsersResponse, error) {
-	var r response.AppUsersResponse
+func removeUsers(e api.AppMemberEndpoint, authority api.Authority, requestBody remove.Request, verbose bool) (response.AppInviteResponse, error) {
+	var r response.AppInviteResponse
 
-	if err := verifyInput(e, authority, requestParam); err != nil {
+	if err := verifyInput(e, authority, requestBody); err != nil {
 		return r, err
 	}
 
-	if bytes, err := e.GetQueryRequest(authority, requestParam, verbose); err != nil {
+	if bytes, err := e.DeleteRequest(authority, requestBody, verbose); err != nil {
 		return r, err
 	} else if err := json.Unmarshal(bytes, &r); err != nil {
 		return r, err
@@ -63,7 +66,7 @@ func listUsers(e api.AppMemberEndpoint, authority api.Authority, requestParam li
 	}
 }
 
-func verifyInput(e api.AppMemberEndpoint, authority api.Authority, _ list.Request) error {
+func verifyInput(e api.AppMemberEndpoint, authority api.Authority, requestBody remove.Request) error {
 	if authority.Token == "" {
 		return errors.New("api token must be specified")
 	}
@@ -78,6 +81,10 @@ func verifyInput(e api.AppMemberEndpoint, authority api.Authority, _ list.Reques
 
 	if !strings.EqualFold(e.AppPlatform, "android") && !strings.EqualFold(e.AppPlatform, "ios") {
 		return errors.New("A platform must be either of `android` or `ios`")
+	}
+
+	if len(requestBody.UserNamesOrEmails) == 0 {
+		return errors.New("the number of removees must be greater than 0")
 	}
 
 	return nil

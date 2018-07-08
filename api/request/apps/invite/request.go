@@ -8,8 +8,8 @@ import (
 )
 
 type Request struct {
-	Invitees      []string
-	DeveloperRole null.Bool
+	UserNamesOrEmails []string
+	DeveloperRole     null.Bool
 }
 
 type Key string
@@ -21,7 +21,7 @@ const (
 
 func (req Request) IoReaderMap() (*map[string]io.Reader, error) {
 	parts := map[Key]io.Reader{
-		keyInvitees: strings.NewReader(strings.Join(req.Invitees, ",")),
+		keyInvitees: strings.NewReader(strings.Join(req.UserNamesOrEmails, ",")),
 	}
 
 	if devRole := req.DeveloperRole; devRole.Valid {

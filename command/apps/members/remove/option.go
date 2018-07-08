@@ -1,4 +1,4 @@
-package apps_members_list
+package apps_members_remove
 
 import (
 	"github.com/urfave/cli"
@@ -8,9 +8,10 @@ type optionName string
 
 const (
 	apiToken     optionName = "token"
-	appOwnerName optionName = "apps-owner"
-	appId        optionName = "apps-id"
-	appPlatform  optionName = "apps-platform"
+	appOwnerName optionName = "app-owner"
+	appId        optionName = "app-id"
+	appPlatform  optionName = "app-platform"
+	removees     optionName = "removees"
 )
 
 func allFlags() []cli.Flag {
@@ -19,6 +20,7 @@ func allFlags() []cli.Flag {
 		appOwnerName.Flag(),
 		appId.Flag(),
 		appPlatform.Flag(),
+		removees.Flag(),
 	}
 }
 
@@ -48,6 +50,11 @@ func (name optionName) Flag() cli.Flag {
 			Name:  name.String(),
 			Usage: "[Required] Either of android or iOS (case insensitive)",
 		}
+	case removees:
+		return cli.StringSliceFlag{
+			Name:  name.String(),
+			Usage: "[Required] Comma separated names or e-mails of those who you want to remove",
+		}
 	}
 
 	panic("Option name mapping is not found")
@@ -61,6 +68,8 @@ func (name optionName) Value(c *cli.Context) interface{} {
 		appId,
 		appPlatform:
 		return c.String(name.String())
+	case removees:
+		return c.StringSlice(name.String())
 	}
 
 	panic("Option name mapping is not found")

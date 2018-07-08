@@ -7,6 +7,7 @@ import (
 	appsUsersList "github.com/jmatsu/dpg/api/request/apps/members/list"
 	organizationTeamsList "github.com/jmatsu/dpg/api/request/organizations/teams/list"
 	organizationTeamsAdd "github.com/jmatsu/dpg/api/request/organizations/teams/add"
+	"github.com/jmatsu/dpg/api/request/apps/members/remove"
 )
 
 type Endpoint interface {
@@ -30,6 +31,7 @@ func (e AppUploadEndpoint) MultiPartFormRequest(authority Authority, requestBody
 
 // https://docs.deploygate.com/reference#invite
 // https://docs.deploygate.com/reference#apps-members-index
+// https://docs.deploygate.com/reference#apps-members-destroy
 
 type AppMemberEndpoint struct {
 	BaseURL      string
@@ -48,6 +50,10 @@ func (e AppMemberEndpoint) MultiPartFormRequest(authority Authority, requestBody
 
 func (e AppMemberEndpoint) GetQueryRequest(authority Authority, requestParams appsUsersList.Request, verbose bool) ([]byte, error) {
 	return getRequest(e, authority, requestParams, verbose)
+}
+
+func (e AppMemberEndpoint) DeleteRequest(authority Authority, requestBody remove.Request, verbose bool) ([]byte, error) {
+	return deleteRequest(e, authority, requestBody, verbose)
 }
 
 // https://docs.deploygate.com/reference#apps-teams-index

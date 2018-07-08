@@ -19,37 +19,7 @@ func Command() cli.Command {
 		Usage:   "Invite users to the specified application space",
 		Action:  action,
 		Flags:   allFlags(),
-		Subcommands: []cli.Command{
-			{
-				Name:    "android",
-				Aliases: []string{"a"},
-				Usage:   "Invite users to the specified android application space",
-				Action:  androidAppAction,
-			},
-			{
-				Name:    "ios",
-				Aliases: []string{"i"},
-				Usage:   "Invite users to the specified iOS application space",
-				Action:  iOSAppAction,
-			},
-		},
 	}
-}
-
-func androidAppAction(c *cli.Context) error {
-	if err := verifyAndroidApp(c); err != nil {
-		return err
-	}
-
-	return action(c)
-}
-
-func iOSAppAction(c *cli.Context) error {
-	if err := verifyIOSApp(c); err != nil {
-		return err
-	}
-
-	return action(c)
 }
 
 func action(c *cli.Context) error {
@@ -68,8 +38,8 @@ func action(c *cli.Context) error {
 		endpoint,
 		authority,
 		invite.Request{
-			Invitees:      invitees.Value(c).([]string),
-			DeveloperRole: role.Value(c).(null.Bool),
+			UserNamesOrEmails: invitees.Value(c).([]string),
+			DeveloperRole:     role.Value(c).(null.Bool),
 		},
 		c.GlobalBoolT("verbose"),
 	)
@@ -99,26 +69,6 @@ func inviteUsers(e api.AppMemberEndpoint, authority api.Authority, requestBody i
 	}
 }
 
-func verifyAndroidApp(c *cli.Context) error {
-	appPlatform := appPlatform.Value(c).(string)
-
-	if !strings.EqualFold(appPlatform, "android") {
-		return errors.New("A platform must be `android`")
-	}
-
-	return nil
-}
-
-func verifyIOSApp(c *cli.Context) error {
-	appPlatform := appPlatform.Value(c).(string)
-
-	if !strings.EqualFold(appPlatform, "ios") {
-		return errors.New("A platform must be `ios`")
-	}
-
-	return nil
-}
-
 func verifyInput(e api.AppMemberEndpoint, authority api.Authority, requestBody invite.Request) error {
 	if authority.Token == "" {
 		return errors.New("api token must be specified")
@@ -136,7 +86,7 @@ func verifyInput(e api.AppMemberEndpoint, authority api.Authority, requestBody i
 		return errors.New("A platform must be either of `android` or `ios`")
 	}
 
-	if len(requestBody.Invitees) == 0 {
+	if len(requestBody.UserNamesOrEmails) == 0 {
 		return errors.New("the number of invitees must be greater than 0")
 	}
 
