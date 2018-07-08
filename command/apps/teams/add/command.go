@@ -52,7 +52,7 @@ func buildResource(c *cli.Context) (*api.OrganizationAppTeamsEndpoint, *api.Auth
 	}
 
 	endpoint := api.OrganizationAppTeamsEndpoint{
-		BaseURL:          "https://deploygate.com",
+		BaseURL:          api.EndpointURL,
 		OrganizationName: apps.GetAppOwnerName(c),
 		AppId:            apps.GetAppId(c),
 		AppPlatform:      platform,
@@ -94,15 +94,9 @@ func verifyInput(e api.OrganizationAppTeamsEndpoint, authority api.Authority, re
 }
 
 func addTeamToApp(e api.OrganizationAppTeamsEndpoint, authority api.Authority, requestBody add.Request) (string, error) {
-	var r string
-
-	if err := verifyInput(e, authority, requestBody); err != nil {
-		return r, err
-	}
-
-	if _, err := e.MultiPartFormRequest(authority, requestBody); err != nil {
-		return r, err
+	if bytes, err := e.MultiPartFormRequest(authority, requestBody); err != nil {
+		return "", err
 	} else {
-		return r, nil
+		return string(bytes), nil
 	}
 }

@@ -5,8 +5,6 @@ import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/urfave/cli"
 	"strings"
-	"github.com/jmatsu/dpg/api/response"
-	"encoding/json"
 	"github.com/jmatsu/dpg/api/request/apps/members/list"
 	"github.com/jmatsu/dpg/command/apps"
 	"github.com/jmatsu/dpg/command"
@@ -53,7 +51,7 @@ func buildResource(c *cli.Context) (*api.AppMemberEndpoint, *api.Authority, *lis
 	}
 
 	endpoint := api.AppMemberEndpoint{
-		BaseURL:      "https://deploygate.com",
+		BaseURL:      api.EndpointURL,
 		AppOwnerName: apps.GetAppOwnerName(c),
 		AppId:        apps.GetAppId(c),
 		AppPlatform:  platform,
@@ -88,14 +86,10 @@ func verifyInput(e api.AppMemberEndpoint, authority api.Authority, _ list.Reques
 	return nil
 }
 
-func listUsers(e api.AppMemberEndpoint, authority api.Authority, requestParam list.Request) (response.AppUsersResponse, error) {
-	var r response.AppUsersResponse
-
-	if bytes, err := e.GetQueryRequest(authority, requestParam); err != nil {
-		return r, err
-	} else if err := json.Unmarshal(bytes, &r); err != nil {
-		return r, err
+func listUsers(e api.AppMemberEndpoint, authority api.Authority, requestParam list.Request) (string, error) {
+	if bytes, err := e.GetRequest(authority, requestParam); err != nil {
+		return "", err
 	} else {
-		return r, nil
+		return string(bytes), nil
 	}
 }

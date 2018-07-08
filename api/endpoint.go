@@ -13,7 +13,12 @@ import (
 	appsSharedTeamsList "github.com/jmatsu/dpg/api/request/apps/shared_teams/list"
 	appsSharedTeamsAdd "github.com/jmatsu/dpg/api/request/apps/shared_teams/add"
 	appsSharedTeamsRemove "github.com/jmatsu/dpg/api/request/apps/shared_teams/remove"
-	distributionsRemove "github.com/jmatsu/dpg/api/request/distributions/remove"
+	distributionsRemove "github.com/jmatsu/dpg/api/request/distributions/destroy"
+	organizationsCreate "github.com/jmatsu/dpg/api/request/organizations/create"
+	organizationsRemove "github.com/jmatsu/dpg/api/request/organizations/destroy"
+	organizationsList "github.com/jmatsu/dpg/api/request/organizations/list"
+	organizationsShow "github.com/jmatsu/dpg/api/request/organizations/show"
+	organizationsUpdate "github.com/jmatsu/dpg/api/request/organizations/update"
 	"os"
 )
 
@@ -73,7 +78,7 @@ func (e AppMemberEndpoint) MultiPartFormRequest(authority Authority, requestBody
 	return multiPartFormRequest(e, authority, requestBody)
 }
 
-func (e AppMemberEndpoint) GetQueryRequest(authority Authority, requestParams appsMembersList.Request) ([]byte, error) {
+func (e AppMemberEndpoint) GetRequest(authority Authority, requestParams appsMembersList.Request) ([]byte, error) {
 	return getRequest(e, authority, requestParams)
 }
 
@@ -109,7 +114,7 @@ func (e OrganizationAppTeamsEndpoint) MultiPartFormRequest(authority Authority, 
 	return multiPartFormRequest(e, authority, requestBody)
 }
 
-func (e OrganizationAppTeamsEndpoint) GetQueryRequest(authority Authority, requestParams appsTeamsList.Request) ([]byte, error) {
+func (e OrganizationAppTeamsEndpoint) GetRequest(authority Authority, requestParams appsTeamsList.Request) ([]byte, error) {
 	return getRequest(e, authority, requestParams)
 }
 
@@ -145,7 +150,7 @@ func (e OrganizationAppSharedTeamsEndpoint) MultiPartFormRequest(authority Autho
 	return multiPartFormRequest(e, authority, requestBody)
 }
 
-func (e OrganizationAppSharedTeamsEndpoint) GetQueryRequest(authority Authority, requestParams appsSharedTeamsList.Request) ([]byte, error) {
+func (e OrganizationAppSharedTeamsEndpoint) GetRequest(authority Authority, requestParams appsSharedTeamsList.Request) ([]byte, error) {
 	return getRequest(e, authority, requestParams)
 }
 
@@ -174,4 +179,47 @@ func (e DistributionsEndpoint) ToURL() string {
 
 func (e DistributionsEndpoint) DeleteRequest(authority Authority, requestBody distributionsRemove.Request) ([]byte, error) {
 	return deleteRequest(e, authority, requestBody)
+}
+
+// https://docs.deploygate.com/reference#organizations-index
+// https://docs.deploygate.com/reference#organizations-create
+// https://docs.deploygate.com/reference#organizations-show
+// https://docs.deploygate.com/reference#organizations-update
+// https://docs.deploygate.com/reference#organizations-destroy
+
+type OrganizationsEndpoint struct {
+	BaseURL          string
+	OrganizationName string
+}
+
+func (e OrganizationsEndpoint) ToURL() string {
+	var url string
+
+	if url = fmt.Sprintf("%s/api/organizations", e.BaseURL); e.OrganizationName != "" {
+		url = fmt.Sprintf("%s/%s", url, e.OrganizationName)
+	}
+
+	logrus.Debugln(url)
+
+	return url
+}
+
+func (e OrganizationsEndpoint) MultiPartFormRequest(authority Authority, requestBody organizationsCreate.Request) ([]byte, error) {
+	return multiPartFormRequest(e, authority, requestBody)
+}
+
+func (e OrganizationsEndpoint) GetListRequest(authority Authority, requestParams organizationsList.Request) ([]byte, error) {
+	return getRequest(e, authority, requestParams)
+}
+
+func (e OrganizationsEndpoint) GetSingleRequest(authority Authority, requestParams organizationsShow.Request) ([]byte, error) {
+	return getRequest(e, authority, requestParams)
+}
+
+func (e OrganizationsEndpoint) DeleteRequest(authority Authority, requestBody organizationsRemove.Request) ([]byte, error) {
+	return deleteRequest(e, authority, requestBody)
+}
+
+func (e OrganizationsEndpoint) PatchRequest(authority Authority, requestBody organizationsUpdate.Request) ([]byte, error) {
+	return patchRequest(e, authority, requestBody)
 }

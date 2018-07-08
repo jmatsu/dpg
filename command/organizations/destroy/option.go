@@ -1,9 +1,9 @@
-package distributions_destroy
+package organizations_destroy
 
 import (
 	"github.com/urfave/cli"
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/command/distributions"
+	"github.com/jmatsu/dpg/command/organizations"
 )
 
 //type option string
@@ -11,7 +11,7 @@ import (
 func flags() []cli.Flag {
 	return []cli.Flag{
 		command.ApiToken.Flag(),
-		distributions.DistributionKey.Flag(),
+		organizations.OrganizationName.Flag(),
 	}
 }
 

@@ -5,8 +5,6 @@ import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/urfave/cli"
 	"strings"
-	"github.com/jmatsu/dpg/api/response"
-	"encoding/json"
 	"github.com/jmatsu/dpg/command/apps"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/api/request/apps/teams/remove"
@@ -54,7 +52,7 @@ func buildResource(c *cli.Context) (*api.OrganizationAppTeamsEndpoint, *api.Auth
 	}
 
 	endpoint := api.OrganizationAppTeamsEndpoint{
-		BaseURL:          "https://deploygate.com",
+		BaseURL:          api.EndpointURL,
 		OrganizationName: apps.GetAppOwnerName(c),
 		AppId:            apps.GetAppId(c),
 		AppPlatform:      platform,
@@ -94,18 +92,10 @@ func verifyInput(e api.OrganizationAppTeamsEndpoint, authority api.Authority, _ 
 	return nil
 }
 
-func removeTeamFromApp(e api.OrganizationAppTeamsEndpoint, authority api.Authority, requestBody remove.Request) (response.AppsTeamsRemoveResponse, error) {
-	var r response.AppsTeamsRemoveResponse
-
-	if err := verifyInput(e, authority, requestBody); err != nil {
-		return r, err
-	}
-
+func removeTeamFromApp(e api.OrganizationAppTeamsEndpoint, authority api.Authority, requestBody remove.Request) (string, error) {
 	if bytes, err := e.DeleteRequest(authority, requestBody); err != nil {
-		return r, err
-	} else if err := json.Unmarshal(bytes, &r); err != nil {
-		return r, err
+		return "", err
 	} else {
-		return r, nil
+		return string(bytes), nil
 	}
 }

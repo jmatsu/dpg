@@ -5,8 +5,6 @@ import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/urfave/cli"
 	"strings"
-	"github.com/jmatsu/dpg/api/response"
-	"encoding/json"
 	"github.com/jmatsu/dpg/api/request/apps/teams/list"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
@@ -53,7 +51,7 @@ func buildResource(c *cli.Context) (*api.OrganizationAppTeamsEndpoint, *api.Auth
 	}
 
 	endpoint := api.OrganizationAppTeamsEndpoint{
-		BaseURL:          "https://deploygate.com",
+		BaseURL:          api.EndpointURL,
 		OrganizationName: apps.GetAppOwnerName(c),
 		AppId:            apps.GetAppId(c),
 		AppPlatform:      platform,
@@ -88,18 +86,10 @@ func verifyInput(e api.OrganizationAppTeamsEndpoint, authority api.Authority, _ 
 	return nil
 }
 
-func listTeams(e api.OrganizationAppTeamsEndpoint, authority api.Authority, requestParams list.Request) (response.AppsTeamsListResponse, error) {
-	var r response.AppsTeamsListResponse
-
-	if err := verifyInput(e, authority, requestParams); err != nil {
-		return r, err
-	}
-
-	if bytes, err := e.GetQueryRequest(authority, requestParams); err != nil {
-		return r, err
-	} else if err := json.Unmarshal(bytes, &r); err != nil {
-		return r, err
+func listTeams(e api.OrganizationAppTeamsEndpoint, authority api.Authority, requestParams list.Request) (string, error) {
+	if bytes, err := e.GetRequest(authority, requestParams); err != nil {
+		return "", err
 	} else {
-		return r, nil
+		return string(bytes), nil
 	}
 }

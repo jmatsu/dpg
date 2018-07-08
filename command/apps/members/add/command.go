@@ -5,12 +5,10 @@ import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/urfave/cli"
 	"strings"
-	"github.com/jmatsu/dpg/api/response"
-	"encoding/json"
-	"github.com/jmatsu/dpg/api/request/apps/members/add"
 	"github.com/jmatsu/dpg/command/apps"
 	"github.com/jmatsu/dpg/command"
 	"github.com/sirupsen/logrus"
+	"github.com/jmatsu/dpg/api/request/apps/members/add"
 )
 
 func Command() cli.Command {
@@ -27,7 +25,7 @@ func action(c *cli.Context) error {
 
 	endpoint, authority, requestBody, err := buildResource(c)
 
-	_, err = inviteUsers(
+	_, err = addUsersToApp(
 		*endpoint,
 		*authority,
 		*requestBody,
@@ -52,7 +50,7 @@ func buildResource(c *cli.Context) (*api.AppMemberEndpoint, *api.Authority, *add
 	}
 
 	endpoint := api.AppMemberEndpoint{
-		BaseURL:         api.EndpointURL,
+		BaseURL:      api.EndpointURL,
 		AppOwnerName: apps.GetAppOwnerName(c),
 		AppId:        apps.GetAppId(c),
 		AppPlatform:  platform,
@@ -94,14 +92,10 @@ func verifyInput(e api.AppMemberEndpoint, authority api.Authority, requestBody a
 	return nil
 }
 
-func inviteUsers(e api.AppMemberEndpoint, authority api.Authority, requestBody add.Request) (response.AppInviteResponse, error) {
-	var r response.AppInviteResponse
-
+func addUsersToApp(e api.AppMemberEndpoint, authority api.Authority, requestBody add.Request) (string, error) {
 	if bytes, err := e.MultiPartFormRequest(authority, requestBody); err != nil {
-		return r, err
-	} else if err := json.Unmarshal(bytes, &r); err != nil {
-		return r, err
+		return "", err
 	} else {
-		return r, nil
+		return string(bytes), nil
 	}
 }

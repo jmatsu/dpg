@@ -28,7 +28,7 @@ func action(c *cli.Context) error {
 		return err
 	}
 
-	_, err = addTeamToApp(
+	_, err = addSharedTeamToApp(
 		*endpoint,
 		*authority,
 		*requestBody,
@@ -53,7 +53,7 @@ func buildResource(c *cli.Context) (*api.OrganizationAppSharedTeamsEndpoint, *ap
 	}
 
 	endpoint := api.OrganizationAppSharedTeamsEndpoint{
-		BaseURL:          "https://deploygate.com",
+		BaseURL:          api.EndpointURL,
 		OrganizationName: apps.GetAppOwnerName(c),
 		AppId:            apps.GetAppId(c),
 		AppPlatform:      platform,
@@ -94,16 +94,10 @@ func verifyInput(e api.OrganizationAppSharedTeamsEndpoint, authority api.Authori
 	return nil
 }
 
-func addTeamToApp(e api.OrganizationAppSharedTeamsEndpoint, authority api.Authority, requestBody add.Request) (string, error) {
-	var r string
-
-	if err := verifyInput(e, authority, requestBody); err != nil {
-		return r, err
-	}
-
-	if _, err := e.MultiPartFormRequest(authority, requestBody); err != nil {
-		return r, err
+func addSharedTeamToApp(e api.OrganizationAppSharedTeamsEndpoint, authority api.Authority, requestBody add.Request) (string, error) {
+	if bytes, err := e.MultiPartFormRequest(authority, requestBody); err != nil {
+		return "", err
 	} else {
-		return r, nil
+		return string(bytes), nil
 	}
 }

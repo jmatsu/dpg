@@ -5,8 +5,6 @@ import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/urfave/cli"
 	"strings"
-	"github.com/jmatsu/dpg/api/response"
-	"encoding/json"
 	"github.com/jmatsu/dpg/command/apps"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/api/request/apps/shared_teams/remove"
@@ -29,7 +27,7 @@ func action(c *cli.Context) error {
 		return err
 	}
 
-	_, err = removeTeamFromApp(
+	_, err = removeSharedTeamFromApp(
 		*endpoint,
 		*authority,
 		*requestBody,
@@ -54,7 +52,7 @@ func buildResource(c *cli.Context) (*api.OrganizationAppSharedTeamsEndpoint, *ap
 	}
 
 	endpoint := api.OrganizationAppSharedTeamsEndpoint{
-		BaseURL:          "https://deploygate.com",
+		BaseURL:          api.EndpointURL,
 		OrganizationName: apps.GetAppOwnerName(c),
 		AppId:            apps.GetAppId(c),
 		AppPlatform:      platform,
@@ -94,18 +92,10 @@ func verifyInput(e api.OrganizationAppSharedTeamsEndpoint, authority api.Authori
 	return nil
 }
 
-func removeTeamFromApp(e api.OrganizationAppSharedTeamsEndpoint, authority api.Authority, requestBody remove.Request) (response.AppsSharedTeamsRemoveResponse, error) {
-	var r response.AppsSharedTeamsRemoveResponse
-
-	if err := verifyInput(e, authority, requestBody); err != nil {
-		return r, err
-	}
-
+func removeSharedTeamFromApp(e api.OrganizationAppSharedTeamsEndpoint, authority api.Authority, requestBody remove.Request) (string, error) {
 	if bytes, err := e.DeleteRequest(authority, requestBody); err != nil {
-		return r, err
-	} else if err := json.Unmarshal(bytes, &r); err != nil {
-		return r, err
+		return "", err
 	} else {
-		return r, nil
+		return string(bytes), nil
 	}
 }

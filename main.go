@@ -14,6 +14,11 @@ import (
 	"github.com/jmatsu/dpg/command/apps/teams/remove"
 	"strconv"
 	"github.com/jmatsu/dpg/command/distributions/remove"
+	"github.com/jmatsu/dpg/command/organizations/create"
+	"github.com/jmatsu/dpg/command/organizations/destroy"
+	"github.com/jmatsu/dpg/command/organizations/list"
+	"github.com/jmatsu/dpg/command/organizations/show"
+	"github.com/jmatsu/dpg/command/organizations/update"
 )
 
 func main() {
@@ -61,9 +66,20 @@ func main() {
 		},
 		{
 			Name:  "distribution",
-			Usage: "Application-based Operation API",
+			Usage: "Distribution-based Operation API",
 			Subcommands: []cli.Command{
-				distributions_remove.Command(),
+				distributions_destroy.Command(),
+			},
+		},
+		{
+			Name:  "organization",
+			Usage: "Organization-based Operation API",
+			Subcommands: []cli.Command{
+				organizations_create.Command(),
+				organizations_destroy.Command(),
+				organizations_list.Command(),
+				organizations_show.Command(),
+				organizations_update.Command(),
 			},
 		},
 	}

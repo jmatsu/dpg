@@ -5,8 +5,6 @@ import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/urfave/cli"
 	"strings"
-	"github.com/jmatsu/dpg/api/response"
-	"encoding/json"
 	"github.com/jmatsu/dpg/api/request/apps/shared_teams/list"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
@@ -28,7 +26,7 @@ func action(c *cli.Context) error {
 		return err
 	}
 
-	_, err = listTeams(
+	_, err = listSharedTeams(
 		*endpoint,
 		*authority,
 		*requestParams,
@@ -53,7 +51,7 @@ func buildResource(c *cli.Context) (*api.OrganizationAppSharedTeamsEndpoint, *ap
 	}
 
 	endpoint := api.OrganizationAppSharedTeamsEndpoint{
-		BaseURL:          "https://deploygate.com",
+		BaseURL:          api.EndpointURL,
 		OrganizationName: apps.GetAppOwnerName(c),
 		AppId:            apps.GetAppId(c),
 		AppPlatform:      platform,
@@ -88,18 +86,10 @@ func verifyInput(e api.OrganizationAppSharedTeamsEndpoint, authority api.Authori
 	return nil
 }
 
-func listTeams(e api.OrganizationAppSharedTeamsEndpoint, authority api.Authority, requestParams list.Request) (response.AppsSharedTeamsListResponse, error) {
-	var r response.AppsSharedTeamsListResponse
-
-	if err := verifyInput(e, authority, requestParams); err != nil {
-		return r, err
-	}
-
-	if bytes, err := e.GetQueryRequest(authority, requestParams); err != nil {
-		return r, err
-	} else if err := json.Unmarshal(bytes, &r); err != nil {
-		return r, err
+func listSharedTeams(e api.OrganizationAppSharedTeamsEndpoint, authority api.Authority, requestParams list.Request) (string, error) {
+	if bytes, err := e.GetRequest(authority, requestParams); err != nil {
+		return "", err
 	} else {
-		return r, nil
+		return string(bytes), nil
 	}
 }

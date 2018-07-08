@@ -5,8 +5,6 @@ import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/urfave/cli"
 	"strings"
-	"github.com/jmatsu/dpg/api/response"
-	"encoding/json"
 	"github.com/jmatsu/dpg/api/request/apps/members/remove"
 	"github.com/jmatsu/dpg/command/apps"
 	"github.com/jmatsu/dpg/command"
@@ -53,7 +51,7 @@ func buildResource(c *cli.Context) (*api.AppMemberEndpoint, *api.Authority, *rem
 	}
 
 	endpoint := api.AppMemberEndpoint{
-		BaseURL:      "https://deploygate.com",
+		BaseURL:      api.EndpointURL,
 		AppOwnerName: apps.GetAppOwnerName(c),
 		AppId:        apps.GetAppId(c),
 		AppPlatform:  platform,
@@ -68,22 +66,6 @@ func buildResource(c *cli.Context) (*api.AppMemberEndpoint, *api.Authority, *rem
 	}
 
 	return &endpoint, &authority, &requestBody, nil
-}
-
-func removeUsers(e api.AppMemberEndpoint, authority api.Authority, requestBody remove.Request) (response.AppInviteResponse, error) {
-	var r response.AppInviteResponse
-
-	if err := verifyInput(e, authority, requestBody); err != nil {
-		return r, err
-	}
-
-	if bytes, err := e.DeleteRequest(authority, requestBody); err != nil {
-		return r, err
-	} else if err := json.Unmarshal(bytes, &r); err != nil {
-		return r, err
-	} else {
-		return r, nil
-	}
 }
 
 func verifyInput(e api.AppMemberEndpoint, authority api.Authority, requestBody remove.Request) error {
@@ -108,4 +90,12 @@ func verifyInput(e api.AppMemberEndpoint, authority api.Authority, requestBody r
 	}
 
 	return nil
+}
+
+func removeUsers(e api.AppMemberEndpoint, authority api.Authority, requestBody remove.Request) (string, error) {
+	if bytes, err := e.DeleteRequest(authority, requestBody); err != nil {
+		return "", err
+	} else {
+		return string(bytes), nil
+	}
 }

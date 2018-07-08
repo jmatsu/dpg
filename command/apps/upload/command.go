@@ -5,8 +5,6 @@ import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/apps/upload"
 	"github.com/urfave/cli"
-	"github.com/jmatsu/dpg/api/response"
-	"encoding/json"
 	"os"
 	"strings"
 	"github.com/jmatsu/dpg/command/apps"
@@ -105,18 +103,10 @@ func verifyInput(e api.AppUploadEndpoint, authority api.Authority, requestBody u
 	return nil
 }
 
-func uploadApp(e api.AppUploadEndpoint, authority api.Authority, requestBody upload.Request) (response.AppUploadResponse, error) {
-	var r response.AppUploadResponse
-
-	if err := verifyInput(e, authority, requestBody); err != nil {
-		return r, err
-	}
-
+func uploadApp(e api.AppUploadEndpoint, authority api.Authority, requestBody upload.Request) (string, error) {
 	if bytes, err := e.MultiPartFormRequest(authority, requestBody); err != nil {
-		return r, err
-	} else if err := json.Unmarshal(bytes, &r); err != nil {
-		return r, err
+		return "", err
 	} else {
-		return r, nil
+		return string(bytes), nil
 	}
 }
