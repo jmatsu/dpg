@@ -1,10 +1,10 @@
 package response
 
 import (
-	"net/http"
-	"io/ioutil"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"os"
 )
 

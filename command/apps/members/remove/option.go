@@ -1,9 +1,9 @@
 package apps_members_remove
 
 import (
-	"github.com/urfave/cli"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
+	"github.com/urfave/cli"
 )
 
 type option int

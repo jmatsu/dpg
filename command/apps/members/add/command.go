@@ -3,12 +3,12 @@ package apps_members_add
 import (
 	"errors"
 	"github.com/jmatsu/dpg/api"
+	"github.com/jmatsu/dpg/api/request/apps/members/add"
+	"github.com/jmatsu/dpg/command"
+	"github.com/jmatsu/dpg/command/apps"
+	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 	"strings"
-	"github.com/jmatsu/dpg/command/apps"
-	"github.com/jmatsu/dpg/command"
-	"github.com/sirupsen/logrus"
-	"github.com/jmatsu/dpg/api/request/apps/members/add"
 )
 
 func Command() cli.Command {

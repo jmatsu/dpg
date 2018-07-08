@@ -3,12 +3,12 @@ package apps_shared_teams_add
 import (
 	"errors"
 	"github.com/jmatsu/dpg/api"
+	"github.com/jmatsu/dpg/api/request/apps/shared_teams/add"
+	"github.com/jmatsu/dpg/command"
+	"github.com/jmatsu/dpg/command/apps"
+	"github.com/jmatsu/dpg/command/apps/shared_teams"
 	"github.com/urfave/cli"
 	"strings"
-	"github.com/jmatsu/dpg/api/request/apps/shared_teams/add"
-	"github.com/jmatsu/dpg/command/apps"
-	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/command/apps/shared_teams"
 )
 
 func Command() cli.Command {

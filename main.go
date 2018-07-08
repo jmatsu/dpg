@@ -4,21 +4,21 @@ import (
 	"github.com/sirupsen/logrus"
 	"os"
 
-	"github.com/urfave/cli"
-	"github.com/jmatsu/dpg/command/apps/upload"
+	"github.com/jmatsu/dpg/command/apps/members/add"
 	"github.com/jmatsu/dpg/command/apps/members/list"
 	"github.com/jmatsu/dpg/command/apps/members/remove"
-	"github.com/jmatsu/dpg/command/apps/teams/list"
 	"github.com/jmatsu/dpg/command/apps/teams/add"
-	"github.com/jmatsu/dpg/command/apps/members/add"
+	"github.com/jmatsu/dpg/command/apps/teams/list"
 	"github.com/jmatsu/dpg/command/apps/teams/remove"
-	"strconv"
+	"github.com/jmatsu/dpg/command/apps/upload"
 	"github.com/jmatsu/dpg/command/distributions/remove"
 	"github.com/jmatsu/dpg/command/organizations/create"
 	"github.com/jmatsu/dpg/command/organizations/destroy"
 	"github.com/jmatsu/dpg/command/organizations/list"
 	"github.com/jmatsu/dpg/command/organizations/show"
 	"github.com/jmatsu/dpg/command/organizations/update"
+	"github.com/urfave/cli"
+	"strconv"
 )
 
 func main() {

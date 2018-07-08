@@ -3,11 +3,11 @@ package apps_teams_list
 import (
 	"errors"
 	"github.com/jmatsu/dpg/api"
-	"github.com/urfave/cli"
-	"strings"
 	"github.com/jmatsu/dpg/api/request/apps/teams/list"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
+	"github.com/urfave/cli"
+	"strings"
 )
 
 func Command() cli.Command {

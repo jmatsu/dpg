@@ -1,12 +1,12 @@
 package api
 
 import (
-	"github.com/jmatsu/dpg/api/request"
-	"net/http"
-	"github.com/jmatsu/dpg/api/response"
 	"errors"
 	"fmt"
+	"github.com/jmatsu/dpg/api/request"
+	"github.com/jmatsu/dpg/api/response"
 	"github.com/sirupsen/logrus"
+	"net/http"
 )
 
 func getRequest(e Endpoint, authority Authority, requestParams request.Params) ([]byte, error) {

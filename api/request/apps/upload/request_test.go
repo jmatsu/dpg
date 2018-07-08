@@ -5,10 +5,10 @@ import (
 	"gopkg.in/guregu/null.v3"
 	"io"
 	"io/ioutil"
+	"os"
 	"reflect"
 	"strconv"
 	"testing"
-	"os"
 )
 
 func existingFilePath() string {
@@ -102,7 +102,7 @@ func TestRequest_IOReaderMap(t *testing.T) {
 		ioMap, err := c.request.IoReaderMap()
 
 		if err != nil {
-			if ! c.expectError {
+			if !c.expectError {
 				t.Error(err)
 			}
 

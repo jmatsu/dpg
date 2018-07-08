@@ -1,8 +1,8 @@
 package command
 
 import (
-	"github.com/urfave/cli"
 	"github.com/sirupsen/logrus"
+	"github.com/urfave/cli"
 )
 
 type option int

@@ -3,10 +3,10 @@ package organizations_list
 import (
 	"errors"
 	"github.com/jmatsu/dpg/api"
-	"github.com/urfave/cli"
 	"github.com/jmatsu/dpg/api/request/organizations/list"
 	"github.com/jmatsu/dpg/command"
 	"github.com/sirupsen/logrus"
+	"github.com/urfave/cli"
 )
 
 func Command() cli.Command {

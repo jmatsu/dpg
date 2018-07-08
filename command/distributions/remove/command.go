@@ -3,10 +3,10 @@ package distributions_destroy
 import (
 	"errors"
 	"github.com/jmatsu/dpg/api"
-	"github.com/urfave/cli"
-	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/api/request/distributions/destroy"
+	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/distributions"
+	"github.com/urfave/cli"
 )
 
 func Command() cli.Command {

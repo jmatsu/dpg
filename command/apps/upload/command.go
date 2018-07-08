@@ -4,11 +4,11 @@ import (
 	"errors"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/apps/upload"
+	"github.com/jmatsu/dpg/command"
+	"github.com/jmatsu/dpg/command/apps"
 	"github.com/urfave/cli"
 	"os"
 	"strings"
-	"github.com/jmatsu/dpg/command/apps"
-	"github.com/jmatsu/dpg/command"
 )
 
 func Command() cli.Command {

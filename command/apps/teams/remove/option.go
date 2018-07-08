@@ -1,10 +1,10 @@
 package apps_teams_remove
 
 import (
-	"github.com/urfave/cli"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
 	"github.com/jmatsu/dpg/command/apps/teams"
+	"github.com/urfave/cli"
 )
 
 //type option string

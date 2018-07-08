@@ -1,24 +1,24 @@
 package api
 
 import (
-	"github.com/sirupsen/logrus"
 	"fmt"
-	appsUpload "github.com/jmatsu/dpg/api/request/apps/upload"
 	appsMembersAdd "github.com/jmatsu/dpg/api/request/apps/members/add"
 	appsMembersList "github.com/jmatsu/dpg/api/request/apps/members/list"
 	appsMembersRemove "github.com/jmatsu/dpg/api/request/apps/members/remove"
-	appsTeamsList "github.com/jmatsu/dpg/api/request/apps/teams/list"
-	appsTeamsAdd "github.com/jmatsu/dpg/api/request/apps/teams/add"
-	appsTeamsRemove "github.com/jmatsu/dpg/api/request/apps/teams/remove"
-	appsSharedTeamsList "github.com/jmatsu/dpg/api/request/apps/shared_teams/list"
 	appsSharedTeamsAdd "github.com/jmatsu/dpg/api/request/apps/shared_teams/add"
+	appsSharedTeamsList "github.com/jmatsu/dpg/api/request/apps/shared_teams/list"
 	appsSharedTeamsRemove "github.com/jmatsu/dpg/api/request/apps/shared_teams/remove"
+	appsTeamsAdd "github.com/jmatsu/dpg/api/request/apps/teams/add"
+	appsTeamsList "github.com/jmatsu/dpg/api/request/apps/teams/list"
+	appsTeamsRemove "github.com/jmatsu/dpg/api/request/apps/teams/remove"
+	appsUpload "github.com/jmatsu/dpg/api/request/apps/upload"
 	distributionsRemove "github.com/jmatsu/dpg/api/request/distributions/destroy"
 	organizationsCreate "github.com/jmatsu/dpg/api/request/organizations/create"
 	organizationsRemove "github.com/jmatsu/dpg/api/request/organizations/destroy"
 	organizationsList "github.com/jmatsu/dpg/api/request/organizations/list"
 	organizationsShow "github.com/jmatsu/dpg/api/request/organizations/show"
 	organizationsUpdate "github.com/jmatsu/dpg/api/request/organizations/update"
+	"github.com/sirupsen/logrus"
 	"os"
 )
 

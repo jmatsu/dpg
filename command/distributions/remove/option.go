@@ -1,9 +1,9 @@
 package distributions_destroy
 
 import (
-	"github.com/urfave/cli"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/distributions"
+	"github.com/urfave/cli"
 )
 
 //type option string

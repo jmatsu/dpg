@@ -1,10 +1,10 @@
 package create
 
 import (
-	"io"
-	"strings"
 	"github.com/jmatsu/dpg/util"
 	"gopkg.in/guregu/null.v3"
+	"io"
+	"strings"
 )
 
 type Request struct {

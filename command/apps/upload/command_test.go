@@ -1,15 +1,15 @@
 package apps_upload
 
 import (
+	"fmt"
 	"github.com/jmatsu/dpg/api"
 	requestAppUpload "github.com/jmatsu/dpg/api/request/apps/upload"
-	"testing"
-	"fmt"
-	"os"
-	"net/http/httptest"
-	"net/http"
-	"io/ioutil"
 	"gopkg.in/guregu/null.v3"
+	"io/ioutil"
+	"net/http"
+	"net/http/httptest"
+	"os"
+	"testing"
 )
 
 func existingFilePath() string {
@@ -236,7 +236,7 @@ func testAction(t *testing.T, token string, appOwner string, request requestAppU
 		authority,
 		request,
 	); err != nil {
-		if ! expectError {
+		if !expectError {
 			t.Log("No error was expected")
 			t.Error(err.Error())
 		}
@@ -246,7 +246,7 @@ func testAction(t *testing.T, token string, appOwner string, request requestAppU
 func mockServer(t *testing.T, expectedResponse bool, expectError bool) *httptest.Server {
 	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if expectedResponse {
-			if ! expectError {
+			if !expectError {
 				w.WriteHeader(http.StatusOK)
 
 				bytes, err := ioutil.ReadFile(fmt.Sprintf("%s/src/github.com/jmatsu/dpg/fixture/response/apps/upload/ok.json", os.Getenv("GOPATH")))

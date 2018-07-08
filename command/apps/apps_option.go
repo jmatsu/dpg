@@ -1,9 +1,9 @@
 package apps
 
 import (
-	"github.com/urfave/cli"
 	"errors"
 	"github.com/sirupsen/logrus"
+	"github.com/urfave/cli"
 )
 
 type option int

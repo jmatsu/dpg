@@ -1,9 +1,9 @@
 package remove
 
 import (
+	"github.com/jmatsu/dpg/util"
 	"io"
 	"strings"
-	"github.com/jmatsu/dpg/util"
 )
 
 type Request struct {

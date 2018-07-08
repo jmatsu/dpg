@@ -1,8 +1,8 @@
 package destroy
 
 import (
-	"io"
 	"github.com/jmatsu/dpg/util"
+	"io"
 )
 
 type Request struct{}

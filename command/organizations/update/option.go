@@ -1,9 +1,9 @@
 package organizations_update
 
 import (
-	"github.com/urfave/cli"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/organizations"
+	"github.com/urfave/cli"
 	"gopkg.in/guregu/null.v3"
 )
 

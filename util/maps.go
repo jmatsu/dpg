@@ -6,8 +6,8 @@ import (
 	"io"
 	"mime/multipart"
 	"os"
-	"reflect"
 	"path/filepath"
+	"reflect"
 )
 
 func MergeIOReaderMap(m1, m2 map[string]io.Reader) map[string]io.Reader {

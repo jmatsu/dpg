@@ -1,12 +1,12 @@
 package api
 
 import (
-	"github.com/jmatsu/dpg/util"
-	"io"
-	"strings"
 	"bytes"
 	"fmt"
+	"github.com/jmatsu/dpg/util"
+	"io"
 	"net/url"
+	"strings"
 )
 
 type Authority struct {

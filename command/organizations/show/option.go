@@ -1,9 +1,9 @@
 package organizations_show
 
 import (
-	"github.com/urfave/cli"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/organizations"
+	"github.com/urfave/cli"
 )
 
 //type option string
