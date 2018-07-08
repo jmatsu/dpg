@@ -8,7 +8,7 @@ import (
 	"fmt"
 )
 
-func getRequest(e Endpoint, authority Authority, requestParams request.Params, verbose bool) ([]byte, error) {
+func getRequest(e Endpoint, authority Authority, requestParams request.Params) ([]byte, error) {
 	stringMap, err := requestParams.StringMap()
 
 	if err != nil {
@@ -35,7 +35,7 @@ func getRequest(e Endpoint, authority Authority, requestParams request.Params, v
 
 	defer resp.Body.Close()
 
-	bytes, errResp, err := response.FilterErrorResponse(*resp, verbose)
+	bytes, errResp, err := response.FilterErrorResponse(*resp)
 
 	if err != nil {
 		return nil, err
@@ -48,7 +48,7 @@ func getRequest(e Endpoint, authority Authority, requestParams request.Params, v
 	return bytes, nil
 }
 
-func deleteRequest(e Endpoint, authority Authority, requestBody request.Body, verbose bool) ([]byte, error) {
+func deleteRequest(e Endpoint, authority Authority, requestBody request.Body) ([]byte, error) {
 	ioMap, err := requestBody.IoReaderMap()
 
 	if err != nil {
@@ -77,7 +77,7 @@ func deleteRequest(e Endpoint, authority Authority, requestBody request.Body, ve
 
 	defer resp.Body.Close()
 
-	bytes, errResp, err := response.FilterErrorResponse(*resp, verbose)
+	bytes, errResp, err := response.FilterErrorResponse(*resp)
 
 	if err != nil {
 		return nil, err
@@ -90,7 +90,7 @@ func deleteRequest(e Endpoint, authority Authority, requestBody request.Body, ve
 	return bytes, nil
 }
 
-func multiPartFormRequest(e Endpoint, authority Authority, requestBody request.Body, verbose bool) ([]byte, error) {
+func multiPartFormRequest(e Endpoint, authority Authority, requestBody request.Body) ([]byte, error) {
 	ioMap, err := requestBody.IoReaderMap()
 
 	if err != nil {
@@ -119,7 +119,7 @@ func multiPartFormRequest(e Endpoint, authority Authority, requestBody request.B
 
 	defer resp.Body.Close()
 
-	bytes, errResp, err := response.FilterErrorResponse(*resp, verbose)
+	bytes, errResp, err := response.FilterErrorResponse(*resp)
 
 	if err != nil {
 		return nil, err

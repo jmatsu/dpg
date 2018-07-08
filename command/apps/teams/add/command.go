@@ -1,4 +1,4 @@
-package organizations_teams_add
+package apps_teams_add
 
 import (
 	"errors"
@@ -8,15 +8,17 @@ import (
 	"github.com/jmatsu/dpg/api/response"
 	"encoding/json"
 	"github.com/jmatsu/dpg/api/request/organizations/teams/add"
+	"github.com/jmatsu/dpg/command/apps"
+	"github.com/jmatsu/dpg/command"
 )
 
 func Command() cli.Command {
 	return cli.Command{
 		Name:    "add-teams",
 		Aliases: []string{"i"},
-		Usage:   "Add a team to the specified organization",
+		Usage:   "Add a team to the specified application",
 		Action:  action,
-		Flags:   allFlags(),
+		Flags:   flags(),
 	}
 }
 
@@ -27,11 +29,10 @@ func action(c *cli.Context) error {
 		return err
 	}
 
-	_, err = addToTeam(
+	_, err = addTeamToApp(
 		*endpoint,
 		*authority,
 		*requestBody,
-		c.GlobalBoolT("verbose"),
 	)
 
 	if err != nil {
@@ -43,34 +44,24 @@ func action(c *cli.Context) error {
 
 func buildResource(c *cli.Context) (*api.OrganizationTeamsEndpoint, *api.Authority, *add.Request, error) {
 	authority := api.Authority{
-		Token: apiToken.Value(c).(string),
+		Token: command.GetApiToken(c),
+	}
+
+	platform, err := apps.GetAppPlatform(c)
+
+	if err != nil {
+		return nil, nil, nil, err
 	}
 
 	endpoint := api.OrganizationTeamsEndpoint{
 		BaseURL:          "https://deploygate.com",
-		OrganizationName: organizationName.Value(c).(string),
-		AppId:            appId.Value(c).(string),
+		OrganizationName: apps.GetAppOwnerName(c),
+		AppId:            apps.GetAppId(c),
+		AppPlatform:      platform,
 	}
 
 	requestBody := add.Request{
-		TeamName: teamName.Value(c).(string),
-	}
-
-	isAndroid := android.Value(c).(bool)
-	isIOS := ios.Value(c).(bool)
-
-	if isAndroid && isIOS {
-		return nil, nil, nil, errors.New("only one option of android or ios is allowed")
-	}
-
-	if !isAndroid && !isIOS {
-		return nil, nil, nil, errors.New("either of android or ios must be specified")
-	}
-
-	if isAndroid {
-		endpoint.AppPlatform = "android"
-	} else {
-		endpoint.AppPlatform = "ios"
+		TeamName: getTeamName(c),
 	}
 
 	if err := verifyInput(endpoint, authority, requestBody); err != nil {
@@ -104,14 +95,14 @@ func verifyInput(e api.OrganizationTeamsEndpoint, authority api.Authority, reque
 	return nil
 }
 
-func addToTeam(e api.OrganizationTeamsEndpoint, authority api.Authority, requestBody add.Request, verbose bool) (response.OrganizationTeamsListResponse, error) {
+func addTeamToApp(e api.OrganizationTeamsEndpoint, authority api.Authority, requestBody add.Request) (response.OrganizationTeamsListResponse, error) {
 	var r response.OrganizationTeamsListResponse
 
 	if err := verifyInput(e, authority, requestBody); err != nil {
 		return r, err
 	}
 
-	if bytes, err := e.MultiPartFormRequest(authority, requestBody, verbose); err != nil {
+	if bytes, err := e.MultiPartFormRequest(authority, requestBody); err != nil {
 		return r, err
 	} else if err := json.Unmarshal(bytes, &r); err != nil {
 		return r, err

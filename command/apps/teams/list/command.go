@@ -1,4 +1,4 @@
-package organizations_teams_list
+package apps_teams_list
 
 import (
 	"errors"
@@ -8,15 +8,16 @@ import (
 	"github.com/jmatsu/dpg/api/response"
 	"encoding/json"
 	"github.com/jmatsu/dpg/api/request/organizations/teams/list"
+	"github.com/jmatsu/dpg/command"
+	"github.com/jmatsu/dpg/command/apps"
 )
 
 func Command() cli.Command {
 	return cli.Command{
-		Name:    "list-teams",
-		Aliases: []string{"i"},
-		Usage:   "Show teams which belong to the specified organization",
-		Action:  action,
-		Flags:   allFlags(),
+		Name:   "list-teams",
+		Usage:  "Show teams which belong to the specified application",
+		Action: action,
+		Flags:  flags(),
 	}
 }
 
@@ -31,7 +32,6 @@ func action(c *cli.Context) error {
 		*endpoint,
 		*authority,
 		*requestParams,
-		c.GlobalBoolT("verbose"),
 	)
 
 	if err != nil {
@@ -43,33 +43,23 @@ func action(c *cli.Context) error {
 
 func buildResource(c *cli.Context) (*api.OrganizationTeamsEndpoint, *api.Authority, *list.Request, error) {
 	authority := api.Authority{
-		Token: apiToken.Value(c).(string),
+		Token: command.GetApiToken(c),
+	}
+
+	platform, err := apps.GetAppPlatform(c)
+
+	if err != nil {
+		return nil, nil, nil, err
 	}
 
 	endpoint := api.OrganizationTeamsEndpoint{
 		BaseURL:          "https://deploygate.com",
-		OrganizationName: organizationName.Value(c).(string),
-		AppId:            appId.Value(c).(string),
+		OrganizationName: apps.GetAppOwnerName(c),
+		AppId:            apps.GetAppId(c),
+		AppPlatform:      platform,
 	}
 
 	requestParams := list.Request{}
-
-	isAndroid := android.Value(c).(bool)
-	isIOS := ios.Value(c).(bool)
-
-	if isAndroid && isIOS {
-		return nil, nil, nil, errors.New("only one option of android or ios is allowed")
-	}
-
-	if !isAndroid && !isIOS {
-		return nil, nil, nil, errors.New("either of android or ios must be specified")
-	}
-
-	if isAndroid {
-		endpoint.AppPlatform = "android"
-	} else {
-		endpoint.AppPlatform = "ios"
-	}
 
 	if err := verifyInput(endpoint, authority, requestParams); err != nil {
 		return nil, nil, nil, err
@@ -98,14 +88,14 @@ func verifyInput(e api.OrganizationTeamsEndpoint, authority api.Authority, _ lis
 	return nil
 }
 
-func listTeams(e api.OrganizationTeamsEndpoint, authority api.Authority, requestParam list.Request, verbose bool) (response.OrganizationTeamsListResponse, error) {
+func listTeams(e api.OrganizationTeamsEndpoint, authority api.Authority, requestParams list.Request) (response.OrganizationTeamsListResponse, error) {
 	var r response.OrganizationTeamsListResponse
 
-	if err := verifyInput(e, authority, requestParam); err != nil {
+	if err := verifyInput(e, authority, requestParams); err != nil {
 		return r, err
 	}
 
-	if bytes, err := e.GetQueryRequest(authority, requestParam, verbose); err != nil {
+	if bytes, err := e.GetQueryRequest(authority, requestParams); err != nil {
 		return r, err
 	} else if err := json.Unmarshal(bytes, &r); err != nil {
 		return r, err

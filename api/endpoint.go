@@ -25,8 +25,8 @@ func (e AppUploadEndpoint) ToURL() string {
 	return fmt.Sprintf("%s/api/users/%s/apps", e.BaseURL, e.AppOwnerName)
 }
 
-func (e AppUploadEndpoint) MultiPartFormRequest(authority Authority, requestBody upload.Request, verbose bool) ([]byte, error) {
-	return multiPartFormRequest(e, authority, requestBody, verbose)
+func (e AppUploadEndpoint) MultiPartFormRequest(authority Authority, requestBody upload.Request) ([]byte, error) {
+	return multiPartFormRequest(e, authority, requestBody)
 }
 
 // https://docs.deploygate.com/reference#invite
@@ -44,16 +44,16 @@ func (e AppMemberEndpoint) ToURL() string {
 	return fmt.Sprintf("%s/api/users/%s/platforms/%s/apps/%s/members", e.BaseURL, e.AppOwnerName, e.AppPlatform, e.AppId)
 }
 
-func (e AppMemberEndpoint) MultiPartFormRequest(authority Authority, requestBody invite.Request, verbose bool) ([]byte, error) {
-	return multiPartFormRequest(e, authority, requestBody, verbose)
+func (e AppMemberEndpoint) MultiPartFormRequest(authority Authority, requestBody invite.Request) ([]byte, error) {
+	return multiPartFormRequest(e, authority, requestBody)
 }
 
-func (e AppMemberEndpoint) GetQueryRequest(authority Authority, requestParams appsUsersList.Request, verbose bool) ([]byte, error) {
-	return getRequest(e, authority, requestParams, verbose)
+func (e AppMemberEndpoint) GetQueryRequest(authority Authority, requestParams appsUsersList.Request) ([]byte, error) {
+	return getRequest(e, authority, requestParams)
 }
 
-func (e AppMemberEndpoint) DeleteRequest(authority Authority, requestBody remove.Request, verbose bool) ([]byte, error) {
-	return deleteRequest(e, authority, requestBody, verbose)
+func (e AppMemberEndpoint) DeleteRequest(authority Authority, requestBody remove.Request) ([]byte, error) {
+	return deleteRequest(e, authority, requestBody)
 }
 
 // https://docs.deploygate.com/reference#apps-teams-index
@@ -70,10 +70,10 @@ func (e OrganizationTeamsEndpoint) ToURL() string {
 	return fmt.Sprintf("%s/api/organizations/%s/platforms/%s/apps/%s/teams", e.BaseURL, e.OrganizationName, e.AppPlatform, e.AppId)
 }
 
-func (e OrganizationTeamsEndpoint) MultiPartFormRequest(authority Authority, requestBody organizationTeamsAdd.Request, verbose bool) ([]byte, error) {
-	return multiPartFormRequest(e, authority, requestBody, verbose)
+func (e OrganizationTeamsEndpoint) MultiPartFormRequest(authority Authority, requestBody organizationTeamsAdd.Request) ([]byte, error) {
+	return multiPartFormRequest(e, authority, requestBody)
 }
 
-func (e OrganizationTeamsEndpoint) GetQueryRequest(authority Authority, requestParams organizationTeamsList.Request, verbose bool) ([]byte, error) {
-	return getRequest(e, authority, requestParams, verbose)
+func (e OrganizationTeamsEndpoint) GetQueryRequest(authority Authority, requestParams organizationTeamsList.Request) ([]byte, error) {
+	return getRequest(e, authority, requestParams)
 }

@@ -8,15 +8,16 @@ import (
 	"github.com/jmatsu/dpg/api/response"
 	"encoding/json"
 	"github.com/jmatsu/dpg/api/request/apps/members/list"
+	"github.com/jmatsu/dpg/command/apps"
+	"github.com/jmatsu/dpg/command"
 )
 
 func Command() cli.Command {
 	return cli.Command{
-		Name:    "list-users",
-		Aliases: []string{"i"},
-		Usage:   "Show users who have joined to the specified application (expect the apps owner)",
-		Action:  action,
-		Flags:   allFlags(),
+		Name:   "list-users",
+		Usage:  "Show users who have joined to the specified application (expect the apps owner)",
+		Action: action,
+		Flags:  flags(),
 	}
 }
 
@@ -31,7 +32,6 @@ func action(c *cli.Context) error {
 		*endpoint,
 		*authority,
 		*requestParams,
-		c.GlobalBoolT("verbose"),
 	)
 
 	if err != nil {
@@ -43,33 +43,23 @@ func action(c *cli.Context) error {
 
 func buildResource(c *cli.Context) (*api.AppMemberEndpoint, *api.Authority, *list.Request, error) {
 	authority := api.Authority{
-		Token: apiToken.Value(c).(string),
+		Token: command.GetApiToken(c),
+	}
+
+	platform, err := apps.GetAppPlatform(c)
+
+	if err != nil {
+		return nil, nil, nil, err
 	}
 
 	endpoint := api.AppMemberEndpoint{
 		BaseURL:      "https://deploygate.com",
-		AppOwnerName: appOwnerName.Value(c).(string),
-		AppId:        appId.Value(c).(string),
+		AppOwnerName: apps.GetAppOwnerName(c),
+		AppId:        apps.GetAppId(c),
+		AppPlatform:  platform,
 	}
 
 	requestParams := list.Request{}
-
-	isAndroid := android.Value(c).(bool)
-	isIOS := ios.Value(c).(bool)
-
-	if isAndroid && isIOS {
-		return nil, nil, nil, errors.New("only one option of android or ios is allowed")
-	}
-
-	if !isAndroid && !isIOS {
-		return nil, nil, nil, errors.New("either of android or ios must be specified")
-	}
-
-	if isAndroid {
-		endpoint.AppPlatform = "android"
-	} else {
-		endpoint.AppPlatform = "ios"
-	}
 
 	if err := verifyInput(endpoint, authority, requestParams); err != nil {
 		return nil, nil, nil, err
@@ -98,10 +88,10 @@ func verifyInput(e api.AppMemberEndpoint, authority api.Authority, _ list.Reques
 	return nil
 }
 
-func listUsers(e api.AppMemberEndpoint, authority api.Authority, requestParam list.Request, verbose bool) (response.AppUsersResponse, error) {
+func listUsers(e api.AppMemberEndpoint, authority api.Authority, requestParam list.Request) (response.AppUsersResponse, error) {
 	var r response.AppUsersResponse
 
-	if bytes, err := e.GetQueryRequest(authority, requestParam, verbose); err != nil {
+	if bytes, err := e.GetQueryRequest(authority, requestParam); err != nil {
 		return r, err
 	} else if err := json.Unmarshal(bytes, &r); err != nil {
 		return r, err

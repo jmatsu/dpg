@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-func FilterErrorResponse(resp http.Response, verbose bool) (bytes []byte, errorResponse *ErrorResponse, failure error) {
+func FilterErrorResponse(resp http.Response) (bytes []byte, errorResponse *ErrorResponse, failure error) {
 	bytes, err := ioutil.ReadAll(resp.Body)
 
 	if err != nil {
@@ -31,11 +31,9 @@ func FilterErrorResponse(resp http.Response, verbose bool) (bytes []byte, errorR
 		errorResponse = errResp.Ensure()
 	}
 
-	if verbose {
-		defer func() {
-			fmt.Fprintf(os.Stdout, "%s\n", string(bytes))
-		}()
-	}
+	defer func() {
+		fmt.Fprintf(os.Stdout, "%s\n", string(bytes))
+	}()
 
 	return
 }

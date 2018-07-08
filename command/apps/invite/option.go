@@ -2,71 +2,50 @@ package apps_invite
 
 import (
 	"github.com/urfave/cli"
+	"github.com/jmatsu/dpg/command"
+	"github.com/jmatsu/dpg/command/apps"
 )
 
-type optionName string
+type option int
 
 const (
-	apiToken      optionName = "token"
-	appOwnerName  optionName = "app-owner"
-	appId         optionName = "app-id"
-	android       optionName = "android"
-	ios           optionName = "ios"
-	invitees      optionName = "invitees"
-	developerRole optionName = "role"
+	invitees      option = iota
+	developerRole
 )
 
-func allFlags() []cli.Flag {
+func flags() []cli.Flag {
 	return []cli.Flag{
-		apiToken.Flag(),
-		appOwnerName.Flag(),
-		appId.Flag(),
-		android.Flag(),
-		ios.Flag(),
-		invitees.Flag(),
-		developerRole.Flag(),
+		command.ApiToken.Flag(),
+		apps.AppOwnerName.Flag(),
+		apps.AppId.Flag(),
+		apps.Android.Flag(),
+		apps.IOS.Flag(),
+		invitees.flag(),
+		developerRole.flag(),
 	}
 }
 
-func (name optionName) String() string {
-	return string(name)
+func (o option) name() string {
+	switch o {
+	case invitees:
+		return "invitees"
+	case developerRole:
+		return "role"
+	}
+
+	panic("Option name mapping is not found")
 }
 
-func (name optionName) Flag() cli.Flag {
-	switch name {
-	case apiToken:
-		return cli.StringFlag{
-			Name:  name.String(),
-			Usage: "[Required] API token",
-		}
-	case appOwnerName:
-		return cli.StringFlag{
-			Name:  name.String(),
-			Usage: "[Required] An owner of applications",
-		}
-	case appId:
-		return cli.StringFlag{
-			Name:  name.String(),
-			Usage: "[Required] An application id to invite users. e.g. com.deploygate",
-		}
-	case android:
-		return cli.BoolFlag{
-			Name:  name.String(),
-			Usage: "[Required] Either of this or ios flag must be specified",
-		}
-	case ios:
-		return cli.BoolFlag{
-			Name:  name.String(),
-			Usage: "[Required] Either of this or android flag must be specified",
-		}
+func (o option) flag() cli.Flag {
+	switch o {
 	case invitees:
 		return cli.StringSliceFlag{
-			Name:  name.String(),
+			Name:  o.name(),
 			Usage: "[Required] Comma separated names or e-mails of those who you want to invite",
 		}
 	case developerRole:
 		return cli.BoolFlag{
-			Name:   name.String(),
+			Name:   o.name(),
 			Usage:  "[Old Free/Lite/Pro/Biz plans only] Specify this if invitee(s) should be the developer role, otherwise they would be the tester role. tester will be selected by default",
 			Hidden: true,
 		}
@@ -75,21 +54,10 @@ func (name optionName) Flag() cli.Flag {
 	panic("Option name mapping is not found")
 }
 
-func (name optionName) Value(c *cli.Context) interface{} {
-	switch name {
-	case
-		apiToken,
-		appOwnerName,
-		appId:
-		return c.String(name.String())
-	case invitees:
-		return c.StringSlice(name.String())
-	case
-		android,
-		ios,
-		developerRole:
-		return c.Bool(name.String())
-	}
+func getInvitees(c *cli.Context) []string {
+	return c.StringSlice(invitees.name())
+}
 
-	panic("Option name mapping is not found")
+func isDeveloperRole(c *cli.Context) bool {
+	return c.Bool(developerRole.name())
 }

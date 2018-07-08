@@ -3,131 +3,141 @@ package apps_upload
 import (
 	"github.com/urfave/cli"
 	"gopkg.in/guregu/null.v3"
+	"github.com/jmatsu/dpg/command"
+	"github.com/jmatsu/dpg/command/apps"
 )
 
-type optionName string
+type option string
 
 const (
-	apiToken           optionName = "token"
-	appOwnerName       optionName = "app-owner"
-	appFilePath        optionName = "app"
-	isPublic           optionName = "visible"
-	enableNotification optionName = "enableNotification"
-	shortMessage       optionName = "message"
-	distributionKey    optionName = "distributionKey"
-	distributionName   optionName = "distributionName"
-	releaseNote        optionName = "releaseNote"
-	android            optionName = "android"
-	ios                optionName = "ios"
+	appFilePath        option = "app"
+	isPublic           option = "visible"
+	enableNotification option = "enableNotification"
+	shortMessage       option = "message"
+	distributionKey    option = "distributionKey"
+	distributionName   option = "distributionName"
+	releaseNote        option = "releaseNote"
 )
 
-func allFlags() []cli.Flag {
+func flags() []cli.Flag {
 	return []cli.Flag{
-		apiToken.Flag(),
-		appOwnerName.Flag(),
-		appFilePath.Flag(),
-		isPublic.Flag(),
-		enableNotification.Flag(),
-		shortMessage.Flag(),
-		distributionKey.Flag(),
-		distributionName.Flag(),
-		releaseNote.Flag(),
-		android.Flag(),
-		ios.Flag(),
+		command.ApiToken.Flag(),
+		apps.AppOwnerName.Flag(),
+		apps.Android.Flag(),
+		apps.IOS.Flag(),
+		appFilePath.flag(),
+		isPublic.flag(),
+		enableNotification.flag(),
+		shortMessage.flag(),
+		distributionKey.flag(),
+		distributionName.flag(),
+		releaseNote.flag(),
 	}
 }
 
-func (name optionName) String() string {
-	return string(name)
+func (o option) name() string {
+	switch o {
+	case appFilePath:
+		return "app"
+	case isPublic:
+		return "public"
+	case enableNotification:
+		return "enableNotification"
+	case shortMessage:
+		return "message"
+	case distributionKey:
+		return "distributionKey"
+	case distributionName:
+		return "distributionName"
+	case releaseNote:
+		return "releaseNote"
+	}
+
+	panic("Option name mapping is not found")
 }
 
-func (name optionName) Flag() cli.Flag {
-	switch name {
-	case apiToken:
-		return cli.StringFlag{
-			Name:  name.String(),
-			Usage: "[Required] API token",
-		}
-	case appOwnerName:
-		return cli.StringFlag{
-			Name:  name.String(),
-			Usage: "[Required] An owner of applications",
-		}
+func (o option) flag() cli.Flag {
+	switch o {
 	case appFilePath:
 		return cli.StringFlag{
-			Name:  name.String(),
+			Name:  o.name(),
 			Usage: "[Required] A path of an application file to be uploaded",
 		}
 	case isPublic:
 		return cli.BoolFlag{
-			Name:  name.String(),
+			Name:  o.name(),
 			Usage: "Specify true if an application to be uploaded should be public",
 		}
 	case enableNotification:
 		return cli.BoolFlag{
-			Name:  name.String(),
+			Name:  o.name(),
 			Usage: "[iOS only] Specify true if iOS's notifications should be enabled",
 		}
 	case shortMessage:
 		return cli.StringFlag{
-			Name:  name.String(),
+			Name:  o.name(),
 			Usage: "A short message to explain this update",
 		}
 	case distributionKey:
 		return cli.StringFlag{
-			Name:  name.String(),
+			Name:  o.name(),
 			Usage: "A key of a distribution which an application will be uploaded to",
 		}
 	case distributionName:
 		return cli.StringFlag{
-			Name:  name.String(),
+			Name:  o.name(),
 			Usage: "A name of a distribution which an application will be uploaded to",
 		}
 	case releaseNote:
 		return cli.StringFlag{
-			Name:  name.String(),
+			Name:  o.name(),
 			Usage: "A release note for this revision",
-		}
-	case android:
-		return cli.BoolFlag{
-			Name:  name.String(),
-			Usage: "[Required] Either of this or ios flag must be specified",
-		}
-	case ios:
-		return cli.BoolFlag{
-			Name:  name.String(),
-			Usage: "[Required] Either of this or android flag must be specified",
 		}
 	}
 
 	panic("Option name mapping is not found")
 }
 
-func (name optionName) Value(c *cli.Context) interface{} {
-	switch name {
-	case
-		apiToken,
-		appOwnerName,
-		appFilePath:
-		return c.String(name.String())
-	case isPublic:
-		return c.Bool(name.String())
-	case
-		enableNotification,
-		android,
-		ios:
-		return c.Bool(name.String())
-	case
-		shortMessage,
-		distributionKey,
-		distributionName,
-		releaseNote:
-		if x := c.String(name.String()); c.IsSet(name.String()) {
-			return null.StringFrom(x)
-		} else {
-			return null.StringFromPtr(nil)
-		}
-	}
+func getAppFilePath(c *cli.Context) string {
+	return c.String(appFilePath.name())
+}
 
-	panic("Option name mapping is not found")
+func isPublc(c *cli.Context) bool {
+	return c.Bool(isPublic.name())
+}
+
+func isEnabledNotification(c *cli.Context) bool {
+	return c.Bool(enableNotification.name())
+}
+
+func getShortMessage(c *cli.Context) null.String {
+	if x := c.String(shortMessage.name()); c.IsSet(shortMessage.name()) {
+		return null.StringFrom(x)
+	} else {
+		return null.StringFromPtr(nil)
+	}
+}
+
+func getDistributionKey(c *cli.Context) null.String {
+	if x := c.String(distributionKey.name()); c.IsSet(distributionKey.name()) {
+		return null.StringFrom(x)
+	} else {
+		return null.StringFromPtr(nil)
+	}
+}
+
+func getDistributionName(c *cli.Context) null.String {
+	if x := c.String(distributionName.name()); c.IsSet(distributionName.name()) {
+		return null.StringFrom(x)
+	} else {
+		return null.StringFromPtr(nil)
+	}
+}
+
+func getReleaseNote(c *cli.Context) null.String {
+	if x := c.String(releaseNote.name()); c.IsSet(releaseNote.name()) {
+		return null.StringFrom(x)
+	} else {
+		return null.StringFromPtr(nil)
+	}
 }

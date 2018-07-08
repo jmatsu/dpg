@@ -1,7 +1,8 @@
-package apps_members_list
+package apps_teams_list
 
 import (
 	"github.com/urfave/cli"
+	"github.com/jmatsu/dpg/command/apps/teams"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
 )
@@ -11,7 +12,7 @@ import (
 func flags() []cli.Flag {
 	return []cli.Flag{
 		command.ApiToken.Flag(),
-		apps.AppOwnerName.Flag(),
+		teams.AppOwnerName.Flag(),
 		apps.AppId.Flag(),
 		apps.Android.Flag(),
 		apps.IOS.Flag(),

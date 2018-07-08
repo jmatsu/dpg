@@ -5,11 +5,12 @@ import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/apps/upload"
 	"github.com/urfave/cli"
-	"gopkg.in/guregu/null.v3"
 	"github.com/jmatsu/dpg/api/response"
 	"encoding/json"
 	"os"
 	"strings"
+	"github.com/jmatsu/dpg/command/apps"
+	"github.com/jmatsu/dpg/command"
 )
 
 func Command() cli.Command {
@@ -17,7 +18,7 @@ func Command() cli.Command {
 		Name:   "upload",
 		Usage:  "Upload either android application or iOS application to the specified owner space",
 		Action: action,
-		Flags:  allFlags(),
+		Flags:  flags(),
 	}
 }
 
@@ -28,7 +29,6 @@ func action(c *cli.Context) error {
 		*endpoint,
 		*authority,
 		*requestBody,
-		c.GlobalBoolT("verbose"),
 	)
 
 	if err != nil {
@@ -40,36 +40,27 @@ func action(c *cli.Context) error {
 
 func buildResource(c *cli.Context) (*api.AppUploadEndpoint, *api.Authority, *upload.Request, error) {
 	authority := api.Authority{
-		Token: apiToken.Value(c).(string),
+		Token: command.GetApiToken(c),
 	}
 
 	endpoint := api.AppUploadEndpoint{
 		BaseURL:      "https://deploygate.com",
-		AppOwnerName: appOwnerName.Value(c).(string),
+		AppOwnerName: apps.GetAppOwnerName(c),
 	}
 
 	requestBody := upload.Request{
-		AppFilePath:        appFilePath.Value(c).(string),
-		AppVisible:         isPublic.Value(c).(bool),
-		EnableNotification: enableNotification.Value(c).(bool),
-		ShortMessage:       shortMessage.Value(c).(null.String),
-		DistributionKey:    distributionKey.Value(c).(null.String),
-		DistributionName:   distributionName.Value(c).(null.String),
-		ReleaseNote:        releaseNote.Value(c).(null.String),
+		AppFilePath:        getAppFilePath(c),
+		AppVisible:         isPublc(c),
+		EnableNotification: isEnabledNotification(c),
+		ShortMessage:       getShortMessage(c),
+		DistributionKey:    getDistributionKey(c),
+		DistributionName:   getDistributionName(c),
+		ReleaseNote:        getReleaseNote(c),
 	}
 
-	isAndroid := android.Value(c).(bool)
-	isIOS := ios.Value(c).(bool)
-
-	if isAndroid && isIOS {
-		return nil, nil, nil, errors.New("only one option of android or ios is allowed")
-	}
-
-	if !isAndroid && !isIOS {
-		return nil, nil, nil, errors.New("either of android or ios must be specified")
-	}
-
-	if isAndroid {
+	if platform, err := apps.GetAppPlatform(c); err != nil {
+		return nil, nil, nil, err
+	} else if platform == "android" {
 		if !strings.HasSuffix(requestBody.AppFilePath, ".apk") {
 			return nil, nil, nil, errors.New("A file path must be an apk file")
 		}
@@ -114,14 +105,14 @@ func verifyInput(e api.AppUploadEndpoint, authority api.Authority, requestBody u
 	return nil
 }
 
-func uploadApp(e api.AppUploadEndpoint, authority api.Authority, requestBody upload.Request, verbose bool) (response.AppUploadResponse, error) {
+func uploadApp(e api.AppUploadEndpoint, authority api.Authority, requestBody upload.Request) (response.AppUploadResponse, error) {
 	var r response.AppUploadResponse
 
 	if err := verifyInput(e, authority, requestBody); err != nil {
 		return r, err
 	}
 
-	if bytes, err := e.MultiPartFormRequest(authority, requestBody, verbose); err != nil {
+	if bytes, err := e.MultiPartFormRequest(authority, requestBody); err != nil {
 		return r, err
 	} else if err := json.Unmarshal(bytes, &r); err != nil {
 		return r, err
