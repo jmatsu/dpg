@@ -1,4 +1,4 @@
-package apps_teams_list
+package apps_shared_teams_list
 
 import (
 	"github.com/urfave/cli"
@@ -7,7 +7,7 @@ import (
 	"github.com/jmatsu/dpg/command/apps"
 )
 
-//type option string
+//type optionName string
 
 func flags() []cli.Flag {
 	return []cli.Flag{
@@ -19,14 +19,14 @@ func flags() []cli.Flag {
 	}
 }
 
-//func (o option) name() string {
+//func (o optionName) name() string {
 //	switch name {
 //	}
 //
 //	panic("Option name mapping is not found")
 //}
 //
-//func (o option) flag() cli.flag {
+//func (o optionName) flag() cli.flag {
 //	switch name {
 //	}
 //

@@ -6,6 +6,7 @@ import (
 	"github.com/jmatsu/dpg/api/response"
 	"errors"
 	"fmt"
+	"github.com/sirupsen/logrus"
 )
 
 func getRequest(e Endpoint, authority Authority, requestParams request.Params) ([]byte, error) {
@@ -20,6 +21,8 @@ func getRequest(e Endpoint, authority Authority, requestParams request.Params) (
 	if err != nil {
 		return nil, err
 	}
+
+	logrus.Debugf("query = %s\n", query)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s?%s", e.ToURL(), query), nil)
 

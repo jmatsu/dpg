@@ -1,22 +1,23 @@
-package apps_teams_add
+package apps_shared_teams_add
 
 import (
 	"errors"
 	"github.com/jmatsu/dpg/api"
 	"github.com/urfave/cli"
 	"strings"
-	"github.com/jmatsu/dpg/api/request/apps/teams/add"
+	"github.com/jmatsu/dpg/api/request/apps/shared_teams/add"
 	"github.com/jmatsu/dpg/command/apps"
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/command/apps/teams"
+	"github.com/jmatsu/dpg/command/apps/shared_teams"
 )
 
 func Command() cli.Command {
 	return cli.Command{
-		Name:   "add",
-		Usage:  "Add a team to the specified application",
-		Action: action,
-		Flags:  flags(),
+		Name:    "add-teams",
+		Aliases: []string{"i"},
+		Usage:   "Add a team to the specified application",
+		Action:  action,
+		Flags:   flags(),
 	}
 }
 
@@ -40,7 +41,7 @@ func action(c *cli.Context) error {
 	return nil
 }
 
-func buildResource(c *cli.Context) (*api.OrganizationAppTeamsEndpoint, *api.Authority, *add.Request, error) {
+func buildResource(c *cli.Context) (*api.OrganizationAppSharedTeamsEndpoint, *api.Authority, *add.Request, error) {
 	authority := api.Authority{
 		Token: command.GetApiToken(c),
 	}
@@ -51,7 +52,7 @@ func buildResource(c *cli.Context) (*api.OrganizationAppTeamsEndpoint, *api.Auth
 		return nil, nil, nil, err
 	}
 
-	endpoint := api.OrganizationAppTeamsEndpoint{
+	endpoint := api.OrganizationAppSharedTeamsEndpoint{
 		BaseURL:          "https://deploygate.com",
 		OrganizationName: apps.GetAppOwnerName(c),
 		AppId:            apps.GetAppId(c),
@@ -59,7 +60,7 @@ func buildResource(c *cli.Context) (*api.OrganizationAppTeamsEndpoint, *api.Auth
 	}
 
 	requestBody := add.Request{
-		TeamName: teams.GetTeamName(c),
+		TeamName: shared_teams.GetTeamName(c),
 	}
 
 	if err := verifyInput(endpoint, authority, requestBody); err != nil {
@@ -69,7 +70,7 @@ func buildResource(c *cli.Context) (*api.OrganizationAppTeamsEndpoint, *api.Auth
 	return &endpoint, &authority, &requestBody, nil
 }
 
-func verifyInput(e api.OrganizationAppTeamsEndpoint, authority api.Authority, request add.Request) error {
+func verifyInput(e api.OrganizationAppSharedTeamsEndpoint, authority api.Authority, request add.Request) error {
 	if authority.Token == "" {
 		return errors.New("api token must be specified")
 	}
@@ -93,7 +94,7 @@ func verifyInput(e api.OrganizationAppTeamsEndpoint, authority api.Authority, re
 	return nil
 }
 
-func addTeamToApp(e api.OrganizationAppTeamsEndpoint, authority api.Authority, requestBody add.Request) (string, error) {
+func addTeamToApp(e api.OrganizationAppSharedTeamsEndpoint, authority api.Authority, requestBody add.Request) (string, error) {
 	var r string
 
 	if err := verifyInput(e, authority, requestBody); err != nil {

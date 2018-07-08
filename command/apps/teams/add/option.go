@@ -7,11 +7,7 @@ import (
 	"github.com/jmatsu/dpg/command/apps/teams"
 )
 
-type option string
-
-const (
-	teamName option = "team-name"
-)
+//type option string
 
 func flags() []cli.Flag {
 	return []cli.Flag{
@@ -20,31 +16,20 @@ func flags() []cli.Flag {
 		apps.AppId.Flag(),
 		apps.Android.Flag(),
 		apps.IOS.Flag(),
-		teamName.flag(),
+		teams.TeamName.Flag(),
 	}
 }
 
-func (o option) name() string {
-	switch o {
-	case teamName:
-		return "team-name"
-	}
-
-	panic("Option name mapping is not found")
-}
-
-func (o option) flag() cli.Flag {
-	switch o {
-	case teamName:
-		return cli.StringFlag{
-			Name:  o.name(),
-			Usage: "[Required] A team name to be added the application",
-		}
-	}
-
-	panic("Option name mapping is not found")
-}
-
-func getTeamName(c *cli.Context) string {
-	return c.String(teamName.name())
-}
+//func (o optionName) name() string {
+//	switch name {
+//	}
+//
+//	panic("Option name mapping is not found")
+//}
+//
+//func (o optionName) flag() cli.flag {
+//	switch name {
+//	}
+//
+//	panic("Option name mapping is not found")
+//}

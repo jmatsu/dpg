@@ -1,4 +1,4 @@
-package invite
+package add
 
 import (
 	"github.com/jmatsu/dpg/util"

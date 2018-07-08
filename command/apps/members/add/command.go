@@ -1,4 +1,4 @@
-package apps_invite
+package apps_members_add
 
 import (
 	"errors"
@@ -7,22 +7,24 @@ import (
 	"strings"
 	"github.com/jmatsu/dpg/api/response"
 	"encoding/json"
-	"github.com/jmatsu/dpg/api/request/apps/invite"
+	"github.com/jmatsu/dpg/api/request/apps/members/add"
 	"github.com/jmatsu/dpg/command/apps"
 	"github.com/jmatsu/dpg/command"
+	"github.com/sirupsen/logrus"
 )
 
 func Command() cli.Command {
 	return cli.Command{
-		Name:    "invite",
-		Aliases: []string{"i"},
-		Usage:   "Invite users to the specified application space",
-		Action:  action,
-		Flags:   flags(),
+		Name:   "add",
+		Usage:  "Invite users to the specified application space",
+		Action: action,
+		Flags:  flags(),
 	}
 }
 
 func action(c *cli.Context) error {
+	logrus.Debugln("apps/members/add")
+
 	endpoint, authority, requestBody, err := buildResource(c)
 
 	_, err = inviteUsers(
@@ -38,7 +40,7 @@ func action(c *cli.Context) error {
 	return nil
 }
 
-func buildResource(c *cli.Context) (*api.AppMemberEndpoint, *api.Authority, *invite.Request, error) {
+func buildResource(c *cli.Context) (*api.AppMemberEndpoint, *api.Authority, *add.Request, error) {
 	authority := api.Authority{
 		Token: command.GetApiToken(c),
 	}
@@ -50,13 +52,13 @@ func buildResource(c *cli.Context) (*api.AppMemberEndpoint, *api.Authority, *inv
 	}
 
 	endpoint := api.AppMemberEndpoint{
-		BaseURL:      "https://deploygate.com",
+		BaseURL:         api.EndpointURL,
 		AppOwnerName: apps.GetAppOwnerName(c),
 		AppId:        apps.GetAppId(c),
 		AppPlatform:  platform,
 	}
 
-	requestBody := invite.Request{
+	requestBody := add.Request{
 		UserNamesOrEmails: getInvitees(c),
 		DeveloperRole:     isDeveloperRole(c),
 	}
@@ -68,7 +70,7 @@ func buildResource(c *cli.Context) (*api.AppMemberEndpoint, *api.Authority, *inv
 	return &endpoint, &authority, &requestBody, nil
 }
 
-func verifyInput(e api.AppMemberEndpoint, authority api.Authority, requestBody invite.Request) error {
+func verifyInput(e api.AppMemberEndpoint, authority api.Authority, requestBody add.Request) error {
 	if authority.Token == "" {
 		return errors.New("api token must be specified")
 	}
@@ -92,7 +94,7 @@ func verifyInput(e api.AppMemberEndpoint, authority api.Authority, requestBody i
 	return nil
 }
 
-func inviteUsers(e api.AppMemberEndpoint, authority api.Authority, requestBody invite.Request) (response.AppInviteResponse, error) {
+func inviteUsers(e api.AppMemberEndpoint, authority api.Authority, requestBody add.Request) (response.AppInviteResponse, error) {
 	var r response.AppInviteResponse
 
 	if bytes, err := e.MultiPartFormRequest(authority, requestBody); err != nil {

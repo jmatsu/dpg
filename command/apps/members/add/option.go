@@ -1,4 +1,4 @@
-package apps_invite
+package apps_members_add
 
 import (
 	"github.com/urfave/cli"

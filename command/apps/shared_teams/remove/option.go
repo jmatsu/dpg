@@ -1,10 +1,11 @@
-package apps_teams_list
+package apps_shared_teams_remove
 
 import (
 	"github.com/urfave/cli"
-	"github.com/jmatsu/dpg/command/apps/teams"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
+	"github.com/jmatsu/dpg/command/apps/teams"
+	"github.com/jmatsu/dpg/command/apps/shared_teams"
 )
 
 //type option string
@@ -16,18 +17,19 @@ func flags() []cli.Flag {
 		apps.AppId.Flag(),
 		apps.Android.Flag(),
 		apps.IOS.Flag(),
+		shared_teams.TeamName.Flag(),
 	}
 }
 
 //func (o option) name() string {
-//	switch name {
+//	switch o {
 //	}
 //
 //	panic("Option name mapping is not found")
 //}
 //
-//func (o option) flag() cli.flag {
-//	switch name {
+//func (o option) flag() cli.Flag {
+//	switch o {
 //	}
 //
 //	panic("Option name mapping is not found")

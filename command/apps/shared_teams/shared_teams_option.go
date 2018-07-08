@@ -1,4 +1,4 @@
-package teams
+package shared_teams
 
 import (
 	"github.com/urfave/cli"

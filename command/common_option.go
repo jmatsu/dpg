@@ -2,14 +2,13 @@ package command
 
 import (
 	"github.com/urfave/cli"
+	"github.com/sirupsen/logrus"
 )
 
 type option int
 
 const (
 	ApiToken option = iota
-	//OrganizationName CommonOptionName = "organization-name"
-	//TeamName CommonOptionName = "team-name"
 )
 
 func (o option) Flag() cli.Flag {
@@ -19,11 +18,6 @@ func (o option) Flag() cli.Flag {
 			Name:  o.name(),
 			Usage: "[Required] API token",
 		}
-		//case OrganizationName:
-		//	return cli.StringFlag{
-		//		name:  name.String(),
-		//		Usage: "[Required] A name of an organization",
-		//	}
 	}
 
 	panic("Option name mapping is not found")
@@ -40,5 +34,9 @@ func (o option) name() string {
 }
 
 func GetApiToken(c *cli.Context) string {
-	return c.String(ApiToken.name())
+	token := c.String(ApiToken.name())
+
+	logrus.Debugf("Token %s\n", token)
+
+	return token
 }

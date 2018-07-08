@@ -1,4 +1,4 @@
-package apps_teams_list
+package apps_shared_teams_remove
 
 import (
 	"errors"
@@ -7,31 +7,32 @@ import (
 	"strings"
 	"github.com/jmatsu/dpg/api/response"
 	"encoding/json"
-	"github.com/jmatsu/dpg/api/request/apps/teams/list"
-	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
+	"github.com/jmatsu/dpg/command"
+	"github.com/jmatsu/dpg/api/request/apps/shared_teams/remove"
+	"github.com/jmatsu/dpg/command/apps/shared_teams"
 )
 
 func Command() cli.Command {
 	return cli.Command{
-		Name:   "list",
-		Usage:  "Show teams which belong to the specified application",
+		Name:   "remove-teams",
+		Usage:  "Removed the team from the specified application",
 		Action: action,
 		Flags:  flags(),
 	}
 }
 
 func action(c *cli.Context) error {
-	endpoint, authority, requestParams, err := buildResource(c)
+	endpoint, authority, requestBody, err := buildResource(c)
 
 	if err != nil {
 		return err
 	}
 
-	_, err = listTeams(
+	_, err = removeTeamFromApp(
 		*endpoint,
 		*authority,
-		*requestParams,
+		*requestBody,
 	)
 
 	if err != nil {
@@ -41,7 +42,7 @@ func action(c *cli.Context) error {
 	return nil
 }
 
-func buildResource(c *cli.Context) (*api.OrganizationAppTeamsEndpoint, *api.Authority, *list.Request, error) {
+func buildResource(c *cli.Context) (*api.OrganizationAppSharedTeamsEndpoint, *api.Authority, *remove.Request, error) {
 	authority := api.Authority{
 		Token: command.GetApiToken(c),
 	}
@@ -52,23 +53,24 @@ func buildResource(c *cli.Context) (*api.OrganizationAppTeamsEndpoint, *api.Auth
 		return nil, nil, nil, err
 	}
 
-	endpoint := api.OrganizationAppTeamsEndpoint{
+	endpoint := api.OrganizationAppSharedTeamsEndpoint{
 		BaseURL:          "https://deploygate.com",
 		OrganizationName: apps.GetAppOwnerName(c),
 		AppId:            apps.GetAppId(c),
 		AppPlatform:      platform,
+		TeamName:         shared_teams.GetTeamName(c),
 	}
 
-	requestParams := list.Request{}
+	requestBody := remove.Request{}
 
-	if err := verifyInput(endpoint, authority, requestParams); err != nil {
+	if err := verifyInput(endpoint, authority, requestBody); err != nil {
 		return nil, nil, nil, err
 	}
 
-	return &endpoint, &authority, &requestParams, nil
+	return &endpoint, &authority, &requestBody, nil
 }
 
-func verifyInput(e api.OrganizationAppTeamsEndpoint, authority api.Authority, _ list.Request) error {
+func verifyInput(e api.OrganizationAppSharedTeamsEndpoint, authority api.Authority, _ remove.Request) error {
 	if authority.Token == "" {
 		return errors.New("api token must be specified")
 	}
@@ -85,17 +87,21 @@ func verifyInput(e api.OrganizationAppTeamsEndpoint, authority api.Authority, _ 
 		return errors.New("A platform must be either of `android` or `ios`")
 	}
 
+	if e.TeamName == "" {
+		return errors.New("team name must be specified")
+	}
+
 	return nil
 }
 
-func listTeams(e api.OrganizationAppTeamsEndpoint, authority api.Authority, requestParams list.Request) (response.AppsTeamsListResponse, error) {
-	var r response.AppsTeamsListResponse
+func removeTeamFromApp(e api.OrganizationAppSharedTeamsEndpoint, authority api.Authority, requestBody remove.Request) (response.AppsSharedTeamsRemoveResponse, error) {
+	var r response.AppsSharedTeamsRemoveResponse
 
-	if err := verifyInput(e, authority, requestParams); err != nil {
+	if err := verifyInput(e, authority, requestBody); err != nil {
 		return r, err
 	}
 
-	if bytes, err := e.GetQueryRequest(authority, requestParams); err != nil {
+	if bytes, err := e.DeleteRequest(authority, requestBody); err != nil {
 		return r, err
 	} else if err := json.Unmarshal(bytes, &r); err != nil {
 		return r, err

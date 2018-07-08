@@ -1,4 +1,4 @@
-package apps_teams_list
+package apps_shared_teams_list
 
 import (
 	"errors"
@@ -7,14 +7,14 @@ import (
 	"strings"
 	"github.com/jmatsu/dpg/api/response"
 	"encoding/json"
-	"github.com/jmatsu/dpg/api/request/apps/teams/list"
+	"github.com/jmatsu/dpg/api/request/apps/shared_teams/list"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
 )
 
 func Command() cli.Command {
 	return cli.Command{
-		Name:   "list",
+		Name:   "list-teams",
 		Usage:  "Show teams which belong to the specified application",
 		Action: action,
 		Flags:  flags(),
@@ -41,7 +41,7 @@ func action(c *cli.Context) error {
 	return nil
 }
 
-func buildResource(c *cli.Context) (*api.OrganizationAppTeamsEndpoint, *api.Authority, *list.Request, error) {
+func buildResource(c *cli.Context) (*api.OrganizationAppSharedTeamsEndpoint, *api.Authority, *list.Request, error) {
 	authority := api.Authority{
 		Token: command.GetApiToken(c),
 	}
@@ -52,7 +52,7 @@ func buildResource(c *cli.Context) (*api.OrganizationAppTeamsEndpoint, *api.Auth
 		return nil, nil, nil, err
 	}
 
-	endpoint := api.OrganizationAppTeamsEndpoint{
+	endpoint := api.OrganizationAppSharedTeamsEndpoint{
 		BaseURL:          "https://deploygate.com",
 		OrganizationName: apps.GetAppOwnerName(c),
 		AppId:            apps.GetAppId(c),
@@ -68,7 +68,7 @@ func buildResource(c *cli.Context) (*api.OrganizationAppTeamsEndpoint, *api.Auth
 	return &endpoint, &authority, &requestParams, nil
 }
 
-func verifyInput(e api.OrganizationAppTeamsEndpoint, authority api.Authority, _ list.Request) error {
+func verifyInput(e api.OrganizationAppSharedTeamsEndpoint, authority api.Authority, _ list.Request) error {
 	if authority.Token == "" {
 		return errors.New("api token must be specified")
 	}
@@ -88,8 +88,8 @@ func verifyInput(e api.OrganizationAppTeamsEndpoint, authority api.Authority, _ 
 	return nil
 }
 
-func listTeams(e api.OrganizationAppTeamsEndpoint, authority api.Authority, requestParams list.Request) (response.AppsTeamsListResponse, error) {
-	var r response.AppsTeamsListResponse
+func listTeams(e api.OrganizationAppSharedTeamsEndpoint, authority api.Authority, requestParams list.Request) (response.AppsSharedTeamsListResponse, error) {
+	var r response.AppsSharedTeamsListResponse
 
 	if err := verifyInput(e, authority, requestParams); err != nil {
 		return r, err

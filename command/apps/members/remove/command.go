@@ -14,7 +14,7 @@ import (
 
 func Command() cli.Command {
 	return cli.Command{
-		Name:   "remove",
+		Name:   "remove-user",
 		Usage:  "Remove users from the specified application space",
 		Action: action,
 		Flags:  flags(),

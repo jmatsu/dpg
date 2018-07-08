@@ -3,6 +3,7 @@ package apps
 import (
 	"github.com/urfave/cli"
 	"errors"
+	"github.com/sirupsen/logrus"
 )
 
 type option int
@@ -67,6 +68,8 @@ func GetAppId(c *cli.Context) string {
 func GetAppPlatform(c *cli.Context) (string, error) {
 	isAndroid := c.Bool(Android.Name())
 	isIOS := c.Bool(IOS.Name())
+
+	logrus.Debugf("android : %s, ios : %s\n", isAndroid, isIOS)
 
 	if isAndroid && isIOS {
 		return "", errors.New("only one option of android or ios is allowed")

@@ -44,7 +44,7 @@ func buildResource(c *cli.Context) (*api.AppUploadEndpoint, *api.Authority, *upl
 	}
 
 	endpoint := api.AppUploadEndpoint{
-		BaseURL:      "https://deploygate.com",
+		BaseURL:      api.EndpointURL,
 		AppOwnerName: apps.GetAppOwnerName(c),
 	}
 

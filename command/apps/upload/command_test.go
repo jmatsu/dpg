@@ -235,7 +235,6 @@ func testAction(t *testing.T, token string, appOwner string, request requestAppU
 		endpoint,
 		authority,
 		request,
-		false,
 	); err != nil {
 		if ! expectError {
 			t.Log("No error was expected")
