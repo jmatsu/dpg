@@ -223,3 +223,18 @@ func (e OrganizationsEndpoint) DeleteRequest(authority Authority, requestBody or
 func (e OrganizationsEndpoint) PatchRequest(authority Authority, requestBody organizationsUpdate.Request) ([]byte, error) {
 	return patchRequest(e, authority, requestBody)
 }
+
+// https://docs.deploygate.com/reference#organizations-members-index
+
+type OrganizationsMembersEndpoint struct {
+	BaseURL          string
+	OrganizationName string
+}
+
+func (e OrganizationsMembersEndpoint) ToURL() string {
+	url := fmt.Sprintf("%s/api/organizations/%s/members", e.BaseURL, e.OrganizationName)
+
+	logrus.Debugln(url)
+
+	return url
+}

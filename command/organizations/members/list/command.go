@@ -1,19 +1,18 @@
-package organizations_show
+package organizations_members_list
 
 import (
 	"errors"
 	"github.com/jmatsu/dpg/api"
-	"github.com/jmatsu/dpg/api/request/organizations/show"
+	"github.com/jmatsu/dpg/api/request/organizations/list"
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/command/organizations"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
 
 func Command() cli.Command {
 	return cli.Command{
-		Name:   "show",
-		Usage:  "Show the specified organization",
+		Name:   "list",
+		Usage:  "Show organizations which the user has",
 		Action: action,
 		Flags:  flags(),
 	}
@@ -26,7 +25,7 @@ func action(c *cli.Context) error {
 		return err
 	}
 
-	_, err = showOrganization(
+	_, err = listOrganizations(
 		*endpoint,
 		*authority,
 		*requestParams,
@@ -39,17 +38,16 @@ func action(c *cli.Context) error {
 	return nil
 }
 
-func buildResource(c *cli.Context) (*api.OrganizationsEndpoint, *api.Authority, *show.Request, error) {
+func buildResource(c *cli.Context) (*api.OrganizationsEndpoint, *api.Authority, *list.Request, error) {
 	authority := api.Authority{
 		Token: command.GetApiToken(c),
 	}
 
 	endpoint := api.OrganizationsEndpoint{
-		BaseURL:          api.EndpointURL,
-		OrganizationName: organizations.GetOrganizationName(c),
+		BaseURL: api.EndpointURL,
 	}
 
-	requestParams := show.Request{}
+	requestParams := list.Request{}
 
 	if err := verifyInput(endpoint, authority, requestParams); err != nil {
 		return nil, nil, nil, err
@@ -58,7 +56,7 @@ func buildResource(c *cli.Context) (*api.OrganizationsEndpoint, *api.Authority, 
 	return &endpoint, &authority, &requestParams, nil
 }
 
-func verifyInput(e api.OrganizationsEndpoint, authority api.Authority, _ show.Request) error {
+func verifyInput(e api.OrganizationsEndpoint, authority api.Authority, _ list.Request) error {
 	if authority.Token == "" {
 		return errors.New("api token must be specified")
 	}
@@ -70,8 +68,8 @@ func verifyInput(e api.OrganizationsEndpoint, authority api.Authority, _ show.Re
 	return nil
 }
 
-func showOrganization(e api.OrganizationsEndpoint, authority api.Authority, requestParams show.Request) (string, error) {
-	if bytes, err := e.GetSingleRequest(authority, requestParams); err != nil {
+func listOrganizations(e api.OrganizationsEndpoint, authority api.Authority, requestParams list.Request) (string, error) {
+	if bytes, err := e.GetListRequest(authority, requestParams); err != nil {
 		return "", err
 	} else {
 		return string(bytes), nil

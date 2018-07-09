@@ -4,19 +4,14 @@ import (
 	"github.com/sirupsen/logrus"
 	"os"
 
-	"github.com/jmatsu/dpg/command/apps/members/add"
-	"github.com/jmatsu/dpg/command/apps/members/list"
-	"github.com/jmatsu/dpg/command/apps/members/remove"
+	"github.com/jmatsu/dpg/command/apps/members"
+	"github.com/jmatsu/dpg/command/apps/shared_teams"
 	"github.com/jmatsu/dpg/command/apps/teams/add"
 	"github.com/jmatsu/dpg/command/apps/teams/list"
 	"github.com/jmatsu/dpg/command/apps/teams/remove"
 	"github.com/jmatsu/dpg/command/apps/upload"
-	"github.com/jmatsu/dpg/command/distributions/remove"
-	"github.com/jmatsu/dpg/command/organizations/create"
-	"github.com/jmatsu/dpg/command/organizations/destroy"
-	"github.com/jmatsu/dpg/command/organizations/list"
-	"github.com/jmatsu/dpg/command/organizations/show"
-	"github.com/jmatsu/dpg/command/organizations/update"
+	"github.com/jmatsu/dpg/command/distributions"
+	"github.com/jmatsu/dpg/command/organizations"
 	"github.com/urfave/cli"
 	"strconv"
 )
@@ -39,9 +34,9 @@ func main() {
 					Name:  "member",
 					Usage: "Application-based Member API",
 					Subcommands: []cli.Command{
-						apps_members_add.Command(),
-						apps_members_list.Command(),
-						apps_members_remove.Command(),
+						members.AddCommand(),
+						members.ListCommand(),
+						members.RemoveCommand(),
 					},
 				},
 				{
@@ -57,9 +52,9 @@ func main() {
 					Name:  "shared-team",
 					Usage: "Application-based Shared Team API",
 					Subcommands: []cli.Command{
-						apps_teams_list.Command(),
-						apps_teams_add.Command(),
-						apps_teams_remove.Command(),
+						shared_teams.AddCommand(),
+						shared_teams.RemoveCommand(),
+						shared_teams.ListCommand(),
 					},
 				},
 			},
@@ -68,18 +63,18 @@ func main() {
 			Name:  "distribution",
 			Usage: "Distribution-based Operation API",
 			Subcommands: []cli.Command{
-				distributions_destroy.Command(),
+				distributions.DestroyCommand(),
 			},
 		},
 		{
 			Name:  "organization",
 			Usage: "Organization-based Operation API",
 			Subcommands: []cli.Command{
-				organizations_create.Command(),
-				organizations_destroy.Command(),
-				organizations_list.Command(),
-				organizations_show.Command(),
-				organizations_update.Command(),
+				organizations.CreateCommand(),
+				organizations.DestroyCommand(),
+				organizations.ListCommand(),
+				organizations.ShowCommand(),
+				organizations.UpdateCommand(),
 			},
 		},
 	}

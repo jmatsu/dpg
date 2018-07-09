@@ -1,8 +1,9 @@
-package organizations_list
+package organizations_members_list
 
 import (
 	"github.com/jmatsu/dpg/command"
 	"github.com/urfave/cli"
+	"github.com/jmatsu/dpg/command/organizations"
 )
 
 //type option string
@@ -10,6 +11,7 @@ import (
 func flags() []cli.Flag {
 	return []cli.Flag{
 		command.ApiToken.Flag(),
+		organizations.OrganizationName.Flag(),
 	}
 }
 
