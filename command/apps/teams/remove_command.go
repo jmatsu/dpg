@@ -1,48 +1,49 @@
-package shared_teams
+package teams
 
 import (
 	"errors"
 	"github.com/jmatsu/dpg/api"
-	"github.com/jmatsu/dpg/api/request/apps/shared_teams/list"
+	"github.com/jmatsu/dpg/api/request/apps/teams/remove"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
 	"github.com/urfave/cli"
 	"strings"
 )
 
-func ListCommand() cli.Command {
+func RemoveCommand() cli.Command {
 	return cli.Command{
-		Name:   "list",
-		Usage:  "Show shared teams which belong to the specified application",
-		Action: command.CommandAction(newListCommand),
-		Flags:  listFlags(),
+		Name:   "remove",
+		Usage:  "Removed a team from the specified application",
+		Action: command.CommandAction(newRemoveCommand),
+		Flags:  removeFlags(),
 	}
 }
 
-type listCommand struct {
-	endpoint      *api.OrganizationAppSharedTeamsEndpoint
-	authority     *api.Authority
-	requestParams *list.Request
+type removeCommand struct {
+	endpoint    *api.OrganizationAppTeamsEndpoint
+	authority   *api.Authority
+	requestBody *remove.Request
 }
 
-func newListCommand(c *cli.Context) (command.Command, error) {
+func newRemoveCommand(c *cli.Context) (command.Command, error) {
 	platform, err := apps.GetAppPlatform(c)
 
 	if err != nil {
 		return nil, err
 	}
 
-	cmd := listCommand{
+	cmd := removeCommand{
 		authority: &api.Authority{
 			Token: command.GetApiToken(c),
 		},
-		endpoint: &api.OrganizationAppSharedTeamsEndpoint{
+		endpoint: &api.OrganizationAppTeamsEndpoint{
 			BaseURL:          api.EndpointURL,
 			OrganizationName: apps.GetAppOwnerName(c),
 			AppId:            apps.GetAppId(c),
 			AppPlatform:      platform,
+			TeamName:         getTeamName(c),
 		},
-		requestParams: &list.Request{},
+		requestBody: &remove.Request{},
 	}
 
 	if err := cmd.verifyInput(); err != nil {
@@ -52,13 +53,13 @@ func newListCommand(c *cli.Context) (command.Command, error) {
 	return cmd, nil
 }
 
-func (cmd listCommand) verifyInput() error {
+func (cmd removeCommand) verifyInput() error {
 	if cmd.authority.Token == "" {
 		return errors.New("api token must be specified")
 	}
 
 	if cmd.endpoint.OrganizationName == "" {
-		return errors.New("an app owner must be specified")
+		return errors.New("organization name must be specified")
 	}
 
 	if cmd.endpoint.AppId == "" {
@@ -69,11 +70,15 @@ func (cmd listCommand) verifyInput() error {
 		return errors.New("A platform must be either of `android` or `ios`")
 	}
 
+	if cmd.endpoint.TeamName == "" {
+		return errors.New("team name must be specified")
+	}
+
 	return nil
 }
 
-func (cmd listCommand) run() (string, error) {
-	if bytes, err := cmd.endpoint.GetListRequest(*cmd.authority, *cmd.requestParams); err != nil {
+func (cmd removeCommand) run() (string, error) {
+	if bytes, err := cmd.endpoint.DeleteRequest(*cmd.authority, *cmd.requestBody); err != nil {
 		return "", err
 	} else {
 		return string(bytes), nil

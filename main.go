@@ -4,14 +4,14 @@ import (
 	"github.com/sirupsen/logrus"
 	"os"
 
+	"github.com/jmatsu/dpg/command/apps"
 	"github.com/jmatsu/dpg/command/apps/members"
 	"github.com/jmatsu/dpg/command/apps/shared_teams"
-	"github.com/jmatsu/dpg/command/apps/teams/add"
-	"github.com/jmatsu/dpg/command/apps/teams/list"
-	"github.com/jmatsu/dpg/command/apps/teams/remove"
-	"github.com/jmatsu/dpg/command/apps/upload"
+	"github.com/jmatsu/dpg/command/apps/teams"
 	"github.com/jmatsu/dpg/command/distributions"
 	"github.com/jmatsu/dpg/command/organizations"
+	members2 "github.com/jmatsu/dpg/command/organizations/members"
+	members3 "github.com/jmatsu/dpg/command/organizations/teams/members"
 	"github.com/urfave/cli"
 	"strconv"
 )
@@ -29,7 +29,7 @@ func main() {
 			Name:  "app",
 			Usage: "Application-based Operation API",
 			Subcommands: []cli.Command{
-				apps_upload.Command(),
+				apps.UploadCommand(),
 				{
 					Name:  "member",
 					Usage: "Application-based Member API",
@@ -43,9 +43,9 @@ func main() {
 					Name:  "team",
 					Usage: "Application-based Team API",
 					Subcommands: []cli.Command{
-						apps_teams_list.Command(),
-						apps_teams_add.Command(),
-						apps_teams_remove.Command(),
+						teams.AddCommand(),
+						teams.RemoveCommand(),
+						teams.ListCommand(),
 					},
 				},
 				{
@@ -75,6 +75,30 @@ func main() {
 				organizations.ListCommand(),
 				organizations.ShowCommand(),
 				organizations.UpdateCommand(),
+				{
+					Name:  "members",
+					Usage: "Member-based Operation API",
+					Subcommands: []cli.Command{
+						members2.AddCommand(),
+						members2.RemoveCommand(),
+						members2.ListCommand(),
+					},
+				},
+				{
+					Name:  "teams",
+					Usage: "Team-based Operation API",
+					Subcommands: []cli.Command{
+						{
+							Name:  "members",
+							Usage: "Member-based Operation API",
+							Subcommands: []cli.Command{
+								members3.AddCommand(),
+								members3.RemoveCommand(),
+								members3.ListCommand(),
+							},
+						},
+					},
+				},
 			},
 		},
 	}

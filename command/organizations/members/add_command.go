@@ -1,49 +1,41 @@
-package shared_teams
+package members
 
 import (
 	"errors"
 	"github.com/jmatsu/dpg/api"
-	"github.com/jmatsu/dpg/api/request/apps/shared_teams/add"
+	"github.com/jmatsu/dpg/api/request/organizations/members/add"
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/command/apps"
+	"github.com/jmatsu/dpg/command/organizations"
 	"github.com/urfave/cli"
-	"strings"
 )
 
 func AddCommand() cli.Command {
 	return cli.Command{
 		Name:   "add",
-		Usage:  "Add a shared team to the specified application",
+		Usage:  "Invite users to the specified group",
 		Action: command.CommandAction(newAddCommand),
 		Flags:  addFlags(),
 	}
 }
 
 type addCommand struct {
-	endpoint    *api.OrganizationAppSharedTeamsEndpoint
+	endpoint    *api.OrganizationMembersEndpoint
 	authority   *api.Authority
 	requestBody *add.Request
 }
 
 func newAddCommand(c *cli.Context) (command.Command, error) {
-	platform, err := apps.GetAppPlatform(c)
-
-	if err != nil {
-		return nil, err
-	}
-
 	cmd := addCommand{
 		authority: &api.Authority{
 			Token: command.GetApiToken(c),
 		},
-		endpoint: &api.OrganizationAppSharedTeamsEndpoint{
+		endpoint: &api.OrganizationMembersEndpoint{
 			BaseURL:          api.EndpointURL,
-			OrganizationName: apps.GetAppOwnerName(c),
-			AppId:            apps.GetAppId(c),
-			AppPlatform:      platform,
+			OrganizationName: organizations.GetOrganizationName(c),
 		},
 		requestBody: &add.Request{
-			TeamName: getTeamName(c),
+			UserName:  getUserName(c),
+			UserEmail: getUserEmail(c),
 		},
 	}
 
@@ -60,19 +52,11 @@ func (cmd addCommand) verifyInput() error {
 	}
 
 	if cmd.endpoint.OrganizationName == "" {
-		return errors.New("an app owner name must be specified")
+		return errors.New("organization name must be specified")
 	}
 
-	if cmd.endpoint.AppId == "" {
-		return errors.New("application id must be specified")
-	}
-
-	if !strings.EqualFold(cmd.endpoint.AppPlatform, "android") && !strings.EqualFold(cmd.endpoint.AppPlatform, "ios") {
-		return errors.New("A platform must be either of `android` or `ios`")
-	}
-
-	if cmd.requestBody.TeamName == "" {
-		return errors.New("team name must be specified")
+	if !cmd.requestBody.UserName.Valid && !cmd.requestBody.UserEmail.Valid {
+		return errors.New("either of user name or user email must be specified")
 	}
 
 	return nil

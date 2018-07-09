@@ -1,9 +1,9 @@
-package members
+package teams
 
 import (
 	"errors"
 	"github.com/jmatsu/dpg/api"
-	"github.com/jmatsu/dpg/api/request/apps/members/add"
+	"github.com/jmatsu/dpg/api/request/apps/teams/add"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
 	"github.com/urfave/cli"
@@ -13,14 +13,14 @@ import (
 func AddCommand() cli.Command {
 	return cli.Command{
 		Name:   "add",
-		Usage:  "Invite users to the specified application space",
+		Usage:  "Add a team to the specified application",
 		Action: command.CommandAction(newAddCommand),
 		Flags:  addFlags(),
 	}
 }
 
 type addCommand struct {
-	endpoint    *api.AppMembersEndpoint
+	endpoint    *api.OrganizationAppTeamsEndpoint
 	authority   *api.Authority
 	requestBody *add.Request
 }
@@ -36,15 +36,14 @@ func newAddCommand(c *cli.Context) (command.Command, error) {
 		authority: &api.Authority{
 			Token: command.GetApiToken(c),
 		},
-		endpoint: &api.AppMembersEndpoint{
-			BaseURL:      api.EndpointURL,
-			AppOwnerName: apps.GetAppOwnerName(c),
-			AppId:        apps.GetAppId(c),
-			AppPlatform:  platform,
+		endpoint: &api.OrganizationAppTeamsEndpoint{
+			BaseURL:          api.EndpointURL,
+			OrganizationName: apps.GetAppOwnerName(c),
+			AppId:            apps.GetAppId(c),
+			AppPlatform:      platform,
 		},
 		requestBody: &add.Request{
-			UserNamesOrEmails: getInvitees(c),
-			DeveloperRole:     isDeveloperRole(c),
+			TeamName: getTeamName(c),
 		},
 	}
 
@@ -60,8 +59,8 @@ func (cmd addCommand) verifyInput() error {
 		return errors.New("api token must be specified")
 	}
 
-	if cmd.endpoint.AppOwnerName == "" {
-		return errors.New("application owner must be specified")
+	if cmd.endpoint.OrganizationName == "" {
+		return errors.New("an app owner name must be specified")
 	}
 
 	if cmd.endpoint.AppId == "" {
@@ -72,8 +71,8 @@ func (cmd addCommand) verifyInput() error {
 		return errors.New("A platform must be either of `android` or `ios`")
 	}
 
-	if len(cmd.requestBody.UserNamesOrEmails) == 0 {
-		return errors.New("the number of invitees must be greater than 0")
+	if cmd.requestBody.TeamName == "" {
+		return errors.New("team name must be specified")
 	}
 
 	return nil

@@ -1,9 +1,9 @@
-package shared_teams
+package teams
 
 import (
 	"errors"
 	"github.com/jmatsu/dpg/api"
-	"github.com/jmatsu/dpg/api/request/apps/shared_teams/list"
+	"github.com/jmatsu/dpg/api/request/apps/teams/list"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
 	"github.com/urfave/cli"
@@ -13,14 +13,14 @@ import (
 func ListCommand() cli.Command {
 	return cli.Command{
 		Name:   "list",
-		Usage:  "Show shared teams which belong to the specified application",
+		Usage:  "Show teams which belong to the specified application",
 		Action: command.CommandAction(newListCommand),
 		Flags:  listFlags(),
 	}
 }
 
 type listCommand struct {
-	endpoint      *api.OrganizationAppSharedTeamsEndpoint
+	endpoint      *api.OrganizationAppTeamsEndpoint
 	authority     *api.Authority
 	requestParams *list.Request
 }
@@ -36,7 +36,7 @@ func newListCommand(c *cli.Context) (command.Command, error) {
 		authority: &api.Authority{
 			Token: command.GetApiToken(c),
 		},
-		endpoint: &api.OrganizationAppSharedTeamsEndpoint{
+		endpoint: &api.OrganizationAppTeamsEndpoint{
 			BaseURL:          api.EndpointURL,
 			OrganizationName: apps.GetAppOwnerName(c),
 			AppId:            apps.GetAppId(c),
@@ -58,7 +58,7 @@ func (cmd listCommand) verifyInput() error {
 	}
 
 	if cmd.endpoint.OrganizationName == "" {
-		return errors.New("an app owner must be specified")
+		return errors.New("organization name must be specified")
 	}
 
 	if cmd.endpoint.AppId == "" {

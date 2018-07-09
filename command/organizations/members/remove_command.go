@@ -1,47 +1,44 @@
-package shared_teams
+package members
 
 import (
 	"errors"
 	"github.com/jmatsu/dpg/api"
-	"github.com/jmatsu/dpg/api/request/apps/shared_teams/remove"
+	"github.com/jmatsu/dpg/api/request/organizations/members/remove"
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/command/apps"
+	"github.com/jmatsu/dpg/command/organizations"
 	"github.com/urfave/cli"
-	"strings"
 )
 
 func RemoveCommand() cli.Command {
 	return cli.Command{
 		Name:   "remove",
-		Usage:  "Removed a shared team from the specified application",
+		Usage:  "Remove users from the specified group",
 		Action: command.CommandAction(newRemoveCommand),
 		Flags:  removeFlags(),
 	}
 }
 
 type removeCommand struct {
-	endpoint    *api.OrganizationAppSharedTeamsEndpoint
+	endpoint    *api.OrganizationMembersEndpoint
 	authority   *api.Authority
 	requestBody *remove.Request
 }
 
 func newRemoveCommand(c *cli.Context) (command.Command, error) {
-	platform, err := apps.GetAppPlatform(c)
+	userNameOrEmail := getUserNameOrEmail(c)
 
-	if err != nil {
-		return nil, err
+	if !userNameOrEmail.Valid {
+		return nil, errors.New("either username or email must be specified")
 	}
 
 	cmd := removeCommand{
 		authority: &api.Authority{
 			Token: command.GetApiToken(c),
 		},
-		endpoint: &api.OrganizationAppSharedTeamsEndpoint{
+		endpoint: &api.OrganizationMembersEndpoint{
 			BaseURL:          api.EndpointURL,
-			OrganizationName: apps.GetAppOwnerName(c),
-			AppId:            apps.GetAppId(c),
-			AppPlatform:      platform,
-			TeamName:         getTeamName(c),
+			OrganizationName: organizations.GetOrganizationName(c),
+			UserNameOrEmail:  userNameOrEmail.String,
 		},
 		requestBody: &remove.Request{},
 	}
@@ -59,19 +56,11 @@ func (cmd removeCommand) verifyInput() error {
 	}
 
 	if cmd.endpoint.OrganizationName == "" {
-		return errors.New("an app owner must be specified")
+		return errors.New("organization name must be specified")
 	}
 
-	if cmd.endpoint.AppId == "" {
-		return errors.New("application id must be specified")
-	}
-
-	if !strings.EqualFold(cmd.endpoint.AppPlatform, "android") && !strings.EqualFold(cmd.endpoint.AppPlatform, "ios") {
-		return errors.New("A platform must be either of `android` or `ios`")
-	}
-
-	if cmd.endpoint.TeamName == "" {
-		return errors.New("team name must be specified")
+	if cmd.endpoint.UserNameOrEmail == "" {
+		return errors.New("either username or email must not be empty")
 	}
 
 	return nil

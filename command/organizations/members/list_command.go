@@ -1,46 +1,37 @@
-package shared_teams
+package members
 
 import (
 	"errors"
 	"github.com/jmatsu/dpg/api"
-	"github.com/jmatsu/dpg/api/request/apps/shared_teams/list"
+	"github.com/jmatsu/dpg/api/request/organizations/members/list"
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/command/apps"
+	"github.com/jmatsu/dpg/command/organizations"
 	"github.com/urfave/cli"
-	"strings"
 )
 
 func ListCommand() cli.Command {
 	return cli.Command{
 		Name:   "list",
-		Usage:  "Show shared teams which belong to the specified application",
+		Usage:  "Show users who have joined to the specified group",
 		Action: command.CommandAction(newListCommand),
 		Flags:  listFlags(),
 	}
 }
 
 type listCommand struct {
-	endpoint      *api.OrganizationAppSharedTeamsEndpoint
+	endpoint      *api.OrganizationMembersEndpoint
 	authority     *api.Authority
 	requestParams *list.Request
 }
 
 func newListCommand(c *cli.Context) (command.Command, error) {
-	platform, err := apps.GetAppPlatform(c)
-
-	if err != nil {
-		return nil, err
-	}
-
 	cmd := listCommand{
 		authority: &api.Authority{
 			Token: command.GetApiToken(c),
 		},
-		endpoint: &api.OrganizationAppSharedTeamsEndpoint{
+		endpoint: &api.OrganizationMembersEndpoint{
 			BaseURL:          api.EndpointURL,
-			OrganizationName: apps.GetAppOwnerName(c),
-			AppId:            apps.GetAppId(c),
-			AppPlatform:      platform,
+			OrganizationName: organizations.GetOrganizationName(c),
 		},
 		requestParams: &list.Request{},
 	}
@@ -58,15 +49,7 @@ func (cmd listCommand) verifyInput() error {
 	}
 
 	if cmd.endpoint.OrganizationName == "" {
-		return errors.New("an app owner must be specified")
-	}
-
-	if cmd.endpoint.AppId == "" {
-		return errors.New("application id must be specified")
-	}
-
-	if !strings.EqualFold(cmd.endpoint.AppPlatform, "android") && !strings.EqualFold(cmd.endpoint.AppPlatform, "ios") {
-		return errors.New("A platform must be either of `android` or `ios`")
+		return errors.New("organization name must be specified")
 	}
 
 	return nil

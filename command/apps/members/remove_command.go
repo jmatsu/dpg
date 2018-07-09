@@ -20,7 +20,7 @@ func RemoveCommand() cli.Command {
 }
 
 type removeCommand struct {
-	endpoint    *api.AppMemberEndpoint
+	endpoint    *api.AppMembersEndpoint
 	authority   *api.Authority
 	requestBody *remove.Request
 }
@@ -36,7 +36,7 @@ func newRemoveCommand(c *cli.Context) (command.Command, error) {
 		authority: &api.Authority{
 			Token: command.GetApiToken(c),
 		},
-		endpoint: &api.AppMemberEndpoint{
+		endpoint: &api.AppMembersEndpoint{
 			BaseURL:      api.EndpointURL,
 			AppOwnerName: apps.GetAppOwnerName(c),
 			AppId:        apps.GetAppId(c),

@@ -16,7 +16,13 @@ import (
 	organizationsCreate "github.com/jmatsu/dpg/api/request/organizations/create"
 	organizationsRemove "github.com/jmatsu/dpg/api/request/organizations/destroy"
 	organizationsList "github.com/jmatsu/dpg/api/request/organizations/list"
+	organizationsMembersAdd "github.com/jmatsu/dpg/api/request/organizations/members/add"
+	organizationsMembersList "github.com/jmatsu/dpg/api/request/organizations/members/list"
+	organizationsMembersRemove "github.com/jmatsu/dpg/api/request/organizations/members/remove"
 	organizationsShow "github.com/jmatsu/dpg/api/request/organizations/show"
+	organizationsTeamsMembersAdd "github.com/jmatsu/dpg/api/request/organizations/teams/members/add"
+	organizationsTeamsMembersList "github.com/jmatsu/dpg/api/request/organizations/teams/members/list"
+	organizationsTeamsMembersRemove "github.com/jmatsu/dpg/api/request/organizations/teams/members/remove"
 	organizationsUpdate "github.com/jmatsu/dpg/api/request/organizations/update"
 	"github.com/sirupsen/logrus"
 	"os"
@@ -38,12 +44,12 @@ type Endpoint interface {
 
 // https://docs.deploygate.com/reference#upload
 
-type AppUploadEndpoint struct {
+type AppsEndpoint struct {
 	BaseURL      string
 	AppOwnerName string
 }
 
-func (e AppUploadEndpoint) ToURL() string {
+func (e AppsEndpoint) ToURL() string {
 	url := fmt.Sprintf("%s/api/users/%s/apps", e.BaseURL, e.AppOwnerName)
 
 	logrus.Debugln(url)
@@ -51,7 +57,7 @@ func (e AppUploadEndpoint) ToURL() string {
 	return url
 }
 
-func (e AppUploadEndpoint) MultiPartFormRequest(authority Authority, requestBody appsUpload.Request) ([]byte, error) {
+func (e AppsEndpoint) MultiPartFormRequest(authority Authority, requestBody appsUpload.Request) ([]byte, error) {
 	return multiPartFormRequest(e, authority, requestBody)
 }
 
@@ -59,14 +65,14 @@ func (e AppUploadEndpoint) MultiPartFormRequest(authority Authority, requestBody
 // https://docs.deploygate.com/reference#apps-members-index
 // https://docs.deploygate.com/reference#apps-members-destroy
 
-type AppMemberEndpoint struct {
+type AppMembersEndpoint struct {
 	BaseURL      string
 	AppOwnerName string
 	AppPlatform  string
 	AppId        string
 }
 
-func (e AppMemberEndpoint) ToURL() string {
+func (e AppMembersEndpoint) ToURL() string {
 	url := fmt.Sprintf("%s/api/users/%s/platforms/%s/apps/%s/members", e.BaseURL, e.AppOwnerName, e.AppPlatform, e.AppId)
 
 	logrus.Debugln(url)
@@ -74,15 +80,15 @@ func (e AppMemberEndpoint) ToURL() string {
 	return url
 }
 
-func (e AppMemberEndpoint) MultiPartFormRequest(authority Authority, requestBody appsMembersAdd.Request) ([]byte, error) {
+func (e AppMembersEndpoint) MultiPartFormRequest(authority Authority, requestBody appsMembersAdd.Request) ([]byte, error) {
 	return multiPartFormRequest(e, authority, requestBody)
 }
 
-func (e AppMemberEndpoint) GetRequest(authority Authority, requestParams appsMembersList.Request) ([]byte, error) {
+func (e AppMembersEndpoint) GetListRequest(authority Authority, requestParams appsMembersList.Request) ([]byte, error) {
 	return getRequest(e, authority, requestParams)
 }
 
-func (e AppMemberEndpoint) DeleteRequest(authority Authority, requestBody appsMembersRemove.Request) ([]byte, error) {
+func (e AppMembersEndpoint) DeleteRequest(authority Authority, requestBody appsMembersRemove.Request) ([]byte, error) {
 	return deleteRequest(e, authority, requestBody)
 }
 
@@ -114,7 +120,7 @@ func (e OrganizationAppTeamsEndpoint) MultiPartFormRequest(authority Authority, 
 	return multiPartFormRequest(e, authority, requestBody)
 }
 
-func (e OrganizationAppTeamsEndpoint) GetRequest(authority Authority, requestParams appsTeamsList.Request) ([]byte, error) {
+func (e OrganizationAppTeamsEndpoint) GetListRequest(authority Authority, requestParams appsTeamsList.Request) ([]byte, error) {
 	return getRequest(e, authority, requestParams)
 }
 
@@ -150,7 +156,7 @@ func (e OrganizationAppSharedTeamsEndpoint) MultiPartFormRequest(authority Autho
 	return multiPartFormRequest(e, authority, requestBody)
 }
 
-func (e OrganizationAppSharedTeamsEndpoint) GetRequest(authority Authority, requestParams appsSharedTeamsList.Request) ([]byte, error) {
+func (e OrganizationAppSharedTeamsEndpoint) GetListRequest(authority Authority, requestParams appsSharedTeamsList.Request) ([]byte, error) {
 	return getRequest(e, authority, requestParams)
 }
 
@@ -225,16 +231,70 @@ func (e OrganizationsEndpoint) PatchRequest(authority Authority, requestBody org
 }
 
 // https://docs.deploygate.com/reference#organizations-members-index
+// https://docs.deploygate.com/reference#organizations-members-create
+// https://docs.deploygate.com/reference#organizations-members-destroy
 
-type OrganizationsMembersEndpoint struct {
+type OrganizationMembersEndpoint struct {
 	BaseURL          string
 	OrganizationName string
+	UserNameOrEmail  string
 }
 
-func (e OrganizationsMembersEndpoint) ToURL() string {
+func (e OrganizationMembersEndpoint) ToURL() string {
 	url := fmt.Sprintf("%s/api/organizations/%s/members", e.BaseURL, e.OrganizationName)
+
+	if e.UserNameOrEmail != "" {
+		url = fmt.Sprintf("%s/%s", url, e.UserNameOrEmail)
+	}
 
 	logrus.Debugln(url)
 
 	return url
+}
+
+func (e OrganizationMembersEndpoint) MultiPartFormRequest(authority Authority, requestBody organizationsMembersAdd.Request) ([]byte, error) {
+	return multiPartFormRequest(e, authority, requestBody)
+}
+
+func (e OrganizationMembersEndpoint) GetListRequest(authority Authority, requestParams organizationsMembersList.Request) ([]byte, error) {
+	return getRequest(e, authority, requestParams)
+}
+
+func (e OrganizationMembersEndpoint) DeleteRequest(authority Authority, requestBody organizationsMembersRemove.Request) ([]byte, error) {
+	return deleteRequest(e, authority, requestBody)
+}
+
+// https://docs.deploygate.com/reference#organizations-teams-users-index
+// https://docs.deploygate.com/reference#organizations-teams-users-create
+// https://docs.deploygate.com/reference#organizations-teams-users-destroy
+
+type OrganizationTeamsMembersEndpoint struct {
+	BaseURL          string
+	OrganizationName string
+	TeamName         string
+	UserName         string
+}
+
+func (e OrganizationTeamsMembersEndpoint) ToURL() string {
+	url := fmt.Sprintf("%s/api/organizations/%s/teams/%s/users", e.BaseURL, e.OrganizationName, e.TeamName)
+
+	if e.UserName != "" {
+		url = fmt.Sprintf("%s/%s", url, e.UserName)
+	}
+
+	logrus.Debugln(url)
+
+	return url
+}
+
+func (e OrganizationTeamsMembersEndpoint) MultiPartFormRequest(authority Authority, requestBody organizationsTeamsMembersAdd.Request) ([]byte, error) {
+	return multiPartFormRequest(e, authority, requestBody)
+}
+
+func (e OrganizationTeamsMembersEndpoint) GetListRequest(authority Authority, requestParams organizationsTeamsMembersList.Request) ([]byte, error) {
+	return getRequest(e, authority, requestParams)
+}
+
+func (e OrganizationTeamsMembersEndpoint) DeleteRequest(authority Authority, requestBody organizationsTeamsMembersRemove.Request) ([]byte, error) {
+	return deleteRequest(e, authority, requestBody)
 }

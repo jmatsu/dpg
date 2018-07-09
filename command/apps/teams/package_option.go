@@ -1,4 +1,4 @@
-package shared_teams
+package teams
 
 import (
 	"github.com/jmatsu/dpg/command"

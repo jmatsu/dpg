@@ -8,11 +8,11 @@ import (
 
 func TestAppUploadEndpoint_ToURL(t *testing.T) {
 	cases := []struct {
-		in       AppUploadEndpoint
+		in       AppsEndpoint
 		expected string
 	}{
 		{
-			in: AppUploadEndpoint{
+			in: AppsEndpoint{
 				BaseURL:      "x",
 				AppOwnerName: "y",
 			},
@@ -33,11 +33,11 @@ func TestAppUploadEndpoint_ToURL(t *testing.T) {
 
 func TestAppMemberEndpoint_ToURL(t *testing.T) {
 	cases := []struct {
-		in       AppMemberEndpoint
+		in       AppMembersEndpoint
 		expected string
 	}{
 		{
-			in: AppMemberEndpoint{
+			in: AppMembersEndpoint{
 				BaseURL:      "x",
 				AppOwnerName: "y",
 				AppPlatform:  "android",

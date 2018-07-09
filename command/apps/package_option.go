@@ -1,30 +1,29 @@
-package apps_upload
+package apps
 
 import (
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/command/apps"
 	"github.com/urfave/cli"
 	"gopkg.in/guregu/null.v3"
 )
 
-type option string
+type packageOption int
 
 const (
-	appFilePath        option = "app"
-	isPublic           option = "visible"
-	enableNotification option = "enableNotification"
-	shortMessage       option = "message"
-	distributionKey    option = "distributionKey"
-	distributionName   option = "distributionName"
-	releaseNote        option = "releaseNote"
+	appFilePath        packageOption = iota
+	isPublic
+	enableNotification
+	shortMessage
+	distributionKey
+	distributionName
+	releaseNote
 )
 
-func flags() []cli.Flag {
+func uploadFlags() []cli.Flag {
 	return []cli.Flag{
 		command.ApiToken.Flag(),
-		apps.AppOwnerName.Flag(),
-		apps.Android.Flag(),
-		apps.IOS.Flag(),
+		AppOwnerName.Flag(),
+		Android.Flag(),
+		IOS.Flag(),
 		appFilePath.flag(),
 		isPublic.flag(),
 		enableNotification.flag(),
@@ -35,7 +34,7 @@ func flags() []cli.Flag {
 	}
 }
 
-func (o option) name() string {
+func (o packageOption) name() string {
 	switch o {
 	case appFilePath:
 		return "app"
@@ -56,7 +55,7 @@ func (o option) name() string {
 	panic("Option name mapping is not found")
 }
 
-func (o option) flag() cli.Flag {
+func (o packageOption) flag() cli.Flag {
 	switch o {
 	case appFilePath:
 		return cli.StringFlag{

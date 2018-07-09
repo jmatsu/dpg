@@ -1,4 +1,4 @@
-package shared_teams
+package members
 
 import (
 	"github.com/jmatsu/dpg/command"
@@ -10,12 +10,15 @@ type packageOption int
 
 const (
 	teamName packageOption = iota
+	userName
 )
 
 func (o packageOption) name() string {
 	switch o {
 	case teamName:
 		return "team-name"
+	case userName:
+		return "username"
 	}
 
 	panic("Option name mapping is not found")
@@ -24,17 +27,18 @@ func (o packageOption) name() string {
 func (o packageOption) flag() cli.Flag {
 	switch o {
 	case teamName:
-		return cli.StringFlag{
+		return cli.StringSliceFlag{
 			Name:  o.name(),
-			Usage: "[Required] A team name to be operated",
+			Usage: "[Required] A name of a team",
+		}
+	case userName:
+		return cli.StringSliceFlag{
+			Name:  o.name(),
+			Usage: "[Required] A name of a user. ",
 		}
 	}
 
 	panic("Option name mapping is not found")
-}
-
-func getTeamName(c *cli.Context) string {
-	return c.String(teamName.name())
 }
 
 func addFlags() []cli.Flag {
@@ -45,7 +49,16 @@ func addFlags() []cli.Flag {
 		apps.Android.Flag(),
 		apps.IOS.Flag(),
 		teamName.flag(),
+		userName.flag(),
 	}
+}
+
+func getTeamName(c *cli.Context) string {
+	return c.String(teamName.name())
+}
+
+func getUserName(c *cli.Context) string {
+	return c.String(userName.name())
 }
 
 func listFlags() []cli.Flag {
@@ -55,6 +68,7 @@ func listFlags() []cli.Flag {
 		apps.AppId.Flag(),
 		apps.Android.Flag(),
 		apps.IOS.Flag(),
+		teamName.flag(),
 	}
 }
 
@@ -66,5 +80,6 @@ func removeFlags() []cli.Flag {
 		apps.Android.Flag(),
 		apps.IOS.Flag(),
 		teamName.flag(),
+		userName.flag(),
 	}
 }

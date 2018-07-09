@@ -35,7 +35,7 @@ func (o option) Flag() cli.Flag {
 	case AppOwnerName:
 		return cli.StringFlag{
 			Name:  o.Name(),
-			Usage: "[Required] An owner of application(s)",
+			Usage: "[Required] An owner of an application",
 		}
 	case AppId:
 		return cli.StringFlag{

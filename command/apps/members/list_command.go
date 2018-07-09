@@ -20,7 +20,7 @@ func ListCommand() cli.Command {
 }
 
 type listCommand struct {
-	endpoint      *api.AppMemberEndpoint
+	endpoint      *api.AppMembersEndpoint
 	authority     *api.Authority
 	requestParams *list.Request
 }
@@ -36,7 +36,7 @@ func newListCommand(c *cli.Context) (command.Command, error) {
 		authority: &api.Authority{
 			Token: command.GetApiToken(c),
 		},
-		endpoint: &api.AppMemberEndpoint{
+		endpoint: &api.AppMembersEndpoint{
 			BaseURL:      api.EndpointURL,
 			AppOwnerName: apps.GetAppOwnerName(c),
 			AppId:        apps.GetAppId(c),
@@ -73,7 +73,7 @@ func (cmd listCommand) verifyInput() error {
 }
 
 func (cmd listCommand) run() (string, error) {
-	if bytes, err := cmd.endpoint.GetRequest(*cmd.authority, *cmd.requestParams); err != nil {
+	if bytes, err := cmd.endpoint.GetListRequest(*cmd.authority, *cmd.requestParams); err != nil {
 		return "", err
 	} else {
 		return string(bytes), nil
