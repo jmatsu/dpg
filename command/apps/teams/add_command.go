@@ -14,14 +14,13 @@ func AddCommand() cli.Command {
 	return cli.Command{
 		Name:   "add",
 		Usage:  "Add a team to the specified application",
-		Action: command.CommandAction(newAddCommand),
+		Action: command.AuthorizedCommandAction(newAddCommand),
 		Flags:  addFlags(),
 	}
 }
 
 type addCommand struct {
 	endpoint    *api.OrganizationAppTeamsEndpoint
-	authority   *api.Authority
 	requestBody *add.Request
 }
 
@@ -33,9 +32,6 @@ func newAddCommand(c *cli.Context) (command.Command, error) {
 	}
 
 	cmd := addCommand{
-		authority: &api.Authority{
-			Token: command.GetApiToken(c),
-		},
 		endpoint: &api.OrganizationAppTeamsEndpoint{
 			BaseURL:          api.EndpointURL,
 			OrganizationName: apps.GetAppOwnerName(c),
@@ -55,10 +51,6 @@ func newAddCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd addCommand) VerifyInput() error {
-	if cmd.authority.Token == "" {
-		return errors.New("api token must be specified")
-	}
-
 	if cmd.endpoint.OrganizationName == "" {
 		return errors.New("an app owner name must be specified")
 	}
@@ -78,8 +70,8 @@ func (cmd addCommand) VerifyInput() error {
 	return nil
 }
 
-func (cmd addCommand) Run() (string, error) {
-	if bytes, err := cmd.endpoint.MultiPartFormRequest(*cmd.authority, *cmd.requestBody); err != nil {
+func (cmd addCommand) Run(authorization *api.Authorization) (string, error) {
+	if bytes, err := cmd.endpoint.MultiPartFormRequest(*authorization, *cmd.requestBody); err != nil {
 		return "", err
 	} else {
 		return string(bytes), nil

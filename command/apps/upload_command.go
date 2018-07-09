@@ -14,14 +14,13 @@ func UploadCommand() cli.Command {
 	return cli.Command{
 		Name:   "upload",
 		Usage:  "Upload either android application or iOS application to the specified owner space",
-		Action: command.CommandAction(newUploadCommand),
+		Action: command.AuthorizedCommandAction(newUploadCommand),
 		Flags:  uploadFlags(),
 	}
 }
 
 type uploadCommand struct {
 	endpoint    *api.AppsEndpoint
-	authority   *api.Authority
 	requestBody *upload.Request
 }
 
@@ -41,9 +40,6 @@ func newUploadCommand(c *cli.Context) (command.Command, error) {
 	}
 
 	cmd := uploadCommand{
-		authority: &api.Authority{
-			Token: command.GetApiToken(c),
-		},
 		endpoint: &api.AppsEndpoint{
 			BaseURL:      api.EndpointURL,
 			AppOwnerName: GetAppOwnerName(c),
@@ -67,10 +63,6 @@ func newUploadCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd uploadCommand) VerifyInput() error {
-	if cmd.authority.Token == "" {
-		return errors.New("api token must be specified")
-	}
-
 	if cmd.endpoint.AppOwnerName == "" {
 		return errors.New("application owner must be specified")
 	}
@@ -94,8 +86,8 @@ func (cmd uploadCommand) VerifyInput() error {
 	return nil
 }
 
-func (cmd uploadCommand) Run() (string, error) {
-	if bytes, err := cmd.endpoint.MultiPartFormRequest(*cmd.authority, *cmd.requestBody); err != nil {
+func (cmd uploadCommand) Run(authorization *api.Authorization) (string, error) {
+	if bytes, err := cmd.endpoint.MultiPartFormRequest(*authorization, *cmd.requestBody); err != nil {
 		return "", err
 	} else {
 		return string(bytes), nil

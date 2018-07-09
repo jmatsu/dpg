@@ -9,14 +9,8 @@ import (
 	"net/http"
 )
 
-func getRequest(e Endpoint, authority Authority, requestParams request.Params) ([]byte, error) {
-	stringMap, err := requestParams.StringMap()
-
-	if err != nil {
-		return nil, err
-	}
-
-	query, err := authority.GetParams(stringMap)
+func getRequest(e Endpoint, authorization *Authorization, requestParams request.Params) ([]byte, error) {
+	query, err := request.ToQuery(requestParams)
 
 	if err != nil {
 		return nil, err
@@ -25,6 +19,10 @@ func getRequest(e Endpoint, authority Authority, requestParams request.Params) (
 	logrus.Debugf("query = %s\n", query)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s?%s", e.ToURL(), query), nil)
+
+	if authorization != nil {
+		authorization.doAuthorize(req)
+	}
 
 	if err != nil {
 		return nil, err
@@ -51,14 +49,8 @@ func getRequest(e Endpoint, authority Authority, requestParams request.Params) (
 	return bytes, nil
 }
 
-func deleteRequest(e Endpoint, authority Authority, requestBody request.Body) ([]byte, error) {
-	ioMap, err := requestBody.IoReaderMap()
-
-	if err != nil {
-		return nil, err
-	}
-
-	data, contentType, err := authority.MultiPartForm(ioMap)
+func deleteRequest(e Endpoint, authorization *Authorization, requestBody request.Body) ([]byte, error) {
+	data, contentType, err := request.ToMultiFormPart(requestBody)
 
 	if err != nil {
 		return nil, err
@@ -66,6 +58,10 @@ func deleteRequest(e Endpoint, authority Authority, requestBody request.Body) ([
 
 	req, err := http.NewRequest(http.MethodDelete, e.ToURL(), &data)
 
+	if authorization != nil {
+		authorization.doAuthorize(req)
+	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -93,14 +89,8 @@ func deleteRequest(e Endpoint, authority Authority, requestBody request.Body) ([
 	return bytes, nil
 }
 
-func multiPartFormRequest(e Endpoint, authority Authority, requestBody request.Body) ([]byte, error) {
-	ioMap, err := requestBody.IoReaderMap()
-
-	if err != nil {
-		return nil, err
-	}
-
-	data, contentType, err := authority.MultiPartForm(ioMap)
+func multiPartFormRequest(e Endpoint, authorization *Authorization, requestBody request.Body) ([]byte, error) {
+	data, contentType, err := request.ToMultiFormPart(requestBody)
 
 	if err != nil {
 		return nil, err
@@ -108,6 +98,10 @@ func multiPartFormRequest(e Endpoint, authority Authority, requestBody request.B
 
 	req, err := http.NewRequest(http.MethodPost, e.ToURL(), &data)
 
+	if authorization != nil {
+		authorization.doAuthorize(req)
+	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -135,20 +129,18 @@ func multiPartFormRequest(e Endpoint, authority Authority, requestBody request.B
 	return bytes, nil
 }
 
-func patchRequest(e Endpoint, authority Authority, requestBody request.Body) ([]byte, error) {
-	ioMap, err := requestBody.IoReaderMap()
-
-	if err != nil {
-		return nil, err
-	}
-
-	data, contentType, err := authority.MultiPartForm(ioMap)
+func patchRequest(e Endpoint, authorization *Authorization, requestBody request.Body) ([]byte, error) {
+	data, contentType, err := request.ToMultiFormPart(requestBody)
 
 	if err != nil {
 		return nil, err
 	}
 
 	req, err := http.NewRequest(http.MethodPatch, e.ToURL(), &data)
+
+	if authorization != nil {
+		authorization.doAuthorize(req)
+	}
 
 	if err != nil {
 		return nil, err

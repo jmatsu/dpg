@@ -12,14 +12,13 @@ func UpdateCommand() cli.Command {
 	return cli.Command{
 		Name:   "update",
 		Usage:  "Update an organization",
-		Action: command.CommandAction(newUpdateCommand),
+		Action: command.AuthorizedCommandAction(newUpdateCommand),
 		Flags:  updateFlags(),
 	}
 }
 
 type updateCommand struct {
 	endpoint    *api.OrganizationsEndpoint
-	authority   *api.Authority
 	requestBody *update.Request
 }
 
@@ -31,9 +30,6 @@ func newUpdateCommand(c *cli.Context) (command.Command, error) {
 	}
 
 	cmd := updateCommand{
-		authority: &api.Authority{
-			Token: command.GetApiToken(c),
-		},
 		endpoint: &api.OrganizationsEndpoint{
 			BaseURL:          api.EndpointURL,
 			OrganizationName: GetOrganizationName(c),
@@ -51,10 +47,6 @@ func newUpdateCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd updateCommand) VerifyInput() error {
-	if cmd.authority.Token == "" {
-		return errors.New("api token must be specified")
-	}
-
 	if cmd.endpoint.OrganizationName == "" {
 		return errors.New("organization name must be specified")
 	}
@@ -66,8 +58,8 @@ func (cmd updateCommand) VerifyInput() error {
 	return nil
 }
 
-func (cmd updateCommand) Run() (string, error) {
-	if bytes, err := cmd.endpoint.PatchRequest(*cmd.authority, *cmd.requestBody); err != nil {
+func (cmd updateCommand) Run(authorization *api.Authorization) (string, error) {
+	if bytes, err := cmd.endpoint.PatchRequest(*authorization, *cmd.requestBody); err != nil {
 		return "", err
 	} else {
 		return string(bytes), nil

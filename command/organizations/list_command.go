@@ -1,7 +1,6 @@
 package organizations
 
 import (
-	"errors"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/organizations/list"
 	"github.com/jmatsu/dpg/command"
@@ -13,22 +12,18 @@ func ListCommand() cli.Command {
 	return cli.Command{
 		Name:   "list",
 		Usage:  "Show organizations which the user has",
-		Action: command.CommandAction(newListCommand),
+		Action: command.AuthorizedCommandAction(newListCommand),
 		Flags:  listFlags(),
 	}
 }
 
 type listCommand struct {
 	endpoint      *api.OrganizationsEndpoint
-	authority     *api.Authority
 	requestParams *list.Request
 }
 
 func newListCommand(c *cli.Context) (command.Command, error) {
 	cmd := listCommand{
-		authority: &api.Authority{
-			Token: command.GetApiToken(c),
-		},
 		endpoint: &api.OrganizationsEndpoint{
 			BaseURL: api.EndpointURL,
 		},
@@ -43,10 +38,6 @@ func newListCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd listCommand) VerifyInput() error {
-	if cmd.authority.Token == "" {
-		return errors.New("api token must be specified")
-	}
-
 	if cmd.endpoint.OrganizationName != "" {
 		logrus.Fatalln("organization name must not be specified")
 	}
@@ -54,8 +45,8 @@ func (cmd listCommand) VerifyInput() error {
 	return nil
 }
 
-func (cmd listCommand) Run() (string, error) {
-	if bytes, err := cmd.endpoint.GetListRequest(*cmd.authority, *cmd.requestParams); err != nil {
+func (cmd listCommand) Run(authorization *api.Authorization) (string, error) {
+	if bytes, err := cmd.endpoint.GetListRequest(*authorization, *cmd.requestParams); err != nil {
 		return "", err
 	} else {
 		return string(bytes), nil

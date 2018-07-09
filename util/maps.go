@@ -3,40 +3,15 @@ package util
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"io"
 	"mime/multipart"
+	"net/url"
 	"os"
 	"path/filepath"
 	"reflect"
+	"strings"
 )
-
-func MergeIOReaderMap(m1, m2 map[string]io.Reader) map[string]io.Reader {
-	newMap := map[string]io.Reader{}
-
-	for k, v := range m1 {
-		newMap[k] = v
-	}
-
-	for k, v := range m2 {
-		newMap[k] = v
-	}
-
-	return newMap
-}
-
-func MergeStringMap(m1, m2 map[string]string) map[string]string {
-	newMap := map[string]string{}
-
-	for k, v := range m1 {
-		newMap[k] = v
-	}
-
-	for k, v := range m2 {
-		newMap[k] = v
-	}
-
-	return newMap
-}
 
 func StringifyKeysOfReaderMap(mustBeMap interface{}) (*map[string]io.Reader, error) {
 	m := reflect.ValueOf(mustBeMap)
@@ -112,4 +87,15 @@ func Buffering(readerMap map[string]io.Reader) (data bytes.Buffer, contentType s
 	}
 
 	return data, writer.FormDataContentType(), nil
+}
+
+func ToQuery(strMap map[string]string) (string, error) {
+
+	var slices []string
+
+	for k, v := range strMap {
+		slices = append(slices, fmt.Sprintf("%s=%s", k, url.QueryEscape(v)))
+	}
+
+	return strings.Join(slices, "&"), nil
 }

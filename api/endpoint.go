@@ -66,8 +66,8 @@ func (e AppsEndpoint) ToURL() string {
 	return url
 }
 
-func (e AppsEndpoint) MultiPartFormRequest(authority Authority, requestBody appsUpload.Request) ([]byte, error) {
-	return multiPartFormRequest(e, authority, requestBody)
+func (e AppsEndpoint) MultiPartFormRequest(authorization Authorization, requestBody appsUpload.Request) ([]byte, error) {
+	return multiPartFormRequest(e, &authorization, requestBody)
 }
 
 // https://docs.deploygate.com/reference#invite
@@ -89,16 +89,16 @@ func (e AppMembersEndpoint) ToURL() string {
 	return url
 }
 
-func (e AppMembersEndpoint) MultiPartFormRequest(authority Authority, requestBody appsMembersAdd.Request) ([]byte, error) {
-	return multiPartFormRequest(e, authority, requestBody)
+func (e AppMembersEndpoint) MultiPartFormRequest(authorization Authorization, requestBody appsMembersAdd.Request) ([]byte, error) {
+	return multiPartFormRequest(e, &authorization, requestBody)
 }
 
-func (e AppMembersEndpoint) GetListRequest(authority Authority, requestParams appsMembersList.Request) ([]byte, error) {
-	return getRequest(e, authority, requestParams)
+func (e AppMembersEndpoint) GetListRequest(authorization Authorization, requestParams appsMembersList.Request) ([]byte, error) {
+	return getRequest(e, &authorization, requestParams)
 }
 
-func (e AppMembersEndpoint) DeleteRequest(authority Authority, requestBody appsMembersRemove.Request) ([]byte, error) {
-	return deleteRequest(e, authority, requestBody)
+func (e AppMembersEndpoint) DeleteRequest(authorization Authorization, requestBody appsMembersRemove.Request) ([]byte, error) {
+	return deleteRequest(e, &authorization, requestBody)
 }
 
 // https://docs.deploygate.com/reference#apps-teams-index
@@ -125,16 +125,16 @@ func (e OrganizationAppTeamsEndpoint) ToURL() string {
 	return url
 }
 
-func (e OrganizationAppTeamsEndpoint) MultiPartFormRequest(authority Authority, requestBody appsTeamsAdd.Request) ([]byte, error) {
-	return multiPartFormRequest(e, authority, requestBody)
+func (e OrganizationAppTeamsEndpoint) MultiPartFormRequest(authorization Authorization, requestBody appsTeamsAdd.Request) ([]byte, error) {
+	return multiPartFormRequest(e, &authorization, requestBody)
 }
 
-func (e OrganizationAppTeamsEndpoint) GetListRequest(authority Authority, requestParams appsTeamsList.Request) ([]byte, error) {
-	return getRequest(e, authority, requestParams)
+func (e OrganizationAppTeamsEndpoint) GetListRequest(authorization Authorization, requestParams appsTeamsList.Request) ([]byte, error) {
+	return getRequest(e, &authorization, requestParams)
 }
 
-func (e OrganizationAppTeamsEndpoint) DeleteRequest(authority Authority, requestBody appsTeamsRemove.Request) ([]byte, error) {
-	return deleteRequest(e, authority, requestBody)
+func (e OrganizationAppTeamsEndpoint) DeleteRequest(authorization Authorization, requestBody appsTeamsRemove.Request) ([]byte, error) {
+	return deleteRequest(e, &authorization, requestBody)
 }
 
 // https://docs.deploygate.com/reference#apps-shared-teams-index
@@ -161,16 +161,16 @@ func (e OrganizationAppSharedTeamsEndpoint) ToURL() string {
 	return url
 }
 
-func (e OrganizationAppSharedTeamsEndpoint) MultiPartFormRequest(authority Authority, requestBody appsSharedTeamsAdd.Request) ([]byte, error) {
-	return multiPartFormRequest(e, authority, requestBody)
+func (e OrganizationAppSharedTeamsEndpoint) MultiPartFormRequest(authorization Authorization, requestBody appsSharedTeamsAdd.Request) ([]byte, error) {
+	return multiPartFormRequest(e, &authorization, requestBody)
 }
 
-func (e OrganizationAppSharedTeamsEndpoint) GetListRequest(authority Authority, requestParams appsSharedTeamsList.Request) ([]byte, error) {
-	return getRequest(e, authority, requestParams)
+func (e OrganizationAppSharedTeamsEndpoint) GetListRequest(authorization Authorization, requestParams appsSharedTeamsList.Request) ([]byte, error) {
+	return getRequest(e, &authorization, requestParams)
 }
 
-func (e OrganizationAppSharedTeamsEndpoint) DeleteRequest(authority Authority, requestBody appsSharedTeamsRemove.Request) ([]byte, error) {
-	return deleteRequest(e, authority, requestBody)
+func (e OrganizationAppSharedTeamsEndpoint) DeleteRequest(authorization Authorization, requestBody appsSharedTeamsRemove.Request) ([]byte, error) {
+	return deleteRequest(e, &authorization, requestBody)
 }
 
 // https://docs.deploygate.com/reference#%E3%82%A2%E3%83%97%E3%83%AA%E3%81%AE%E9%85%8D%E5%B8%83%E3%83%9A%E3%83%BC%E3%82%B8%E3%82%92%E5%89%8A%E9%99%A4%E3%81%99%E3%82%8B
@@ -192,8 +192,8 @@ func (e DistributionsEndpoint) ToURL() string {
 	return url
 }
 
-func (e DistributionsEndpoint) DeleteRequest(authority Authority, requestBody distributionsRemove.Request) ([]byte, error) {
-	return deleteRequest(e, authority, requestBody)
+func (e DistributionsEndpoint) DeleteRequest(authorization Authorization, requestBody distributionsRemove.Request) ([]byte, error) {
+	return deleteRequest(e, &authorization, requestBody)
 }
 
 // https://docs.deploygate.com/reference#organizations-index
@@ -219,24 +219,24 @@ func (e OrganizationsEndpoint) ToURL() string {
 	return url
 }
 
-func (e OrganizationsEndpoint) MultiPartFormRequest(authority Authority, requestBody organizationsCreate.Request) ([]byte, error) {
-	return multiPartFormRequest(e, authority, requestBody)
+func (e OrganizationsEndpoint) MultiPartFormRequest(authorization Authorization, requestBody organizationsCreate.Request) ([]byte, error) {
+	return multiPartFormRequest(e, &authorization, requestBody)
 }
 
-func (e OrganizationsEndpoint) GetListRequest(authority Authority, requestParams organizationsList.Request) ([]byte, error) {
-	return getRequest(e, authority, requestParams)
+func (e OrganizationsEndpoint) GetListRequest(authorization Authorization, requestParams organizationsList.Request) ([]byte, error) {
+	return getRequest(e, &authorization, requestParams)
 }
 
-func (e OrganizationsEndpoint) GetSingleRequest(authority Authority, requestParams organizationsShow.Request) ([]byte, error) {
-	return getRequest(e, authority, requestParams)
+func (e OrganizationsEndpoint) GetSingleRequest(authorization Authorization, requestParams organizationsShow.Request) ([]byte, error) {
+	return getRequest(e, &authorization, requestParams)
 }
 
-func (e OrganizationsEndpoint) DeleteRequest(authority Authority, requestBody organizationsRemove.Request) ([]byte, error) {
-	return deleteRequest(e, authority, requestBody)
+func (e OrganizationsEndpoint) DeleteRequest(authorization Authorization, requestBody organizationsRemove.Request) ([]byte, error) {
+	return deleteRequest(e, &authorization, requestBody)
 }
 
-func (e OrganizationsEndpoint) PatchRequest(authority Authority, requestBody organizationsUpdate.Request) ([]byte, error) {
-	return patchRequest(e, authority, requestBody)
+func (e OrganizationsEndpoint) PatchRequest(authorization Authorization, requestBody organizationsUpdate.Request) ([]byte, error) {
+	return patchRequest(e, &authorization, requestBody)
 }
 
 // https://docs.deploygate.com/reference#organizations-members-index
@@ -261,16 +261,16 @@ func (e OrganizationMembersEndpoint) ToURL() string {
 	return url
 }
 
-func (e OrganizationMembersEndpoint) MultiPartFormRequest(authority Authority, requestBody organizationsMembersAdd.Request) ([]byte, error) {
-	return multiPartFormRequest(e, authority, requestBody)
+func (e OrganizationMembersEndpoint) MultiPartFormRequest(authorization Authorization, requestBody organizationsMembersAdd.Request) ([]byte, error) {
+	return multiPartFormRequest(e, &authorization, requestBody)
 }
 
-func (e OrganizationMembersEndpoint) GetListRequest(authority Authority, requestParams organizationsMembersList.Request) ([]byte, error) {
-	return getRequest(e, authority, requestParams)
+func (e OrganizationMembersEndpoint) GetListRequest(authorization Authorization, requestParams organizationsMembersList.Request) ([]byte, error) {
+	return getRequest(e, &authorization, requestParams)
 }
 
-func (e OrganizationMembersEndpoint) DeleteRequest(authority Authority, requestBody organizationsMembersRemove.Request) ([]byte, error) {
-	return deleteRequest(e, authority, requestBody)
+func (e OrganizationMembersEndpoint) DeleteRequest(authorization Authorization, requestBody organizationsMembersRemove.Request) ([]byte, error) {
+	return deleteRequest(e, &authorization, requestBody)
 }
 
 // https://docs.deploygate.com/reference#organizations-teams-users-index
@@ -296,16 +296,16 @@ func (e OrganizationTeamsMembersEndpoint) ToURL() string {
 	return url
 }
 
-func (e OrganizationTeamsMembersEndpoint) MultiPartFormRequest(authority Authority, requestBody organizationsTeamsMembersAdd.Request) ([]byte, error) {
-	return multiPartFormRequest(e, authority, requestBody)
+func (e OrganizationTeamsMembersEndpoint) MultiPartFormRequest(authorization Authorization, requestBody organizationsTeamsMembersAdd.Request) ([]byte, error) {
+	return multiPartFormRequest(e, &authorization, requestBody)
 }
 
-func (e OrganizationTeamsMembersEndpoint) GetListRequest(authority Authority, requestParams organizationsTeamsMembersList.Request) ([]byte, error) {
-	return getRequest(e, authority, requestParams)
+func (e OrganizationTeamsMembersEndpoint) GetListRequest(authorization Authorization, requestParams organizationsTeamsMembersList.Request) ([]byte, error) {
+	return getRequest(e, &authorization, requestParams)
 }
 
-func (e OrganizationTeamsMembersEndpoint) DeleteRequest(authority Authority, requestBody organizationsTeamsMembersRemove.Request) ([]byte, error) {
-	return deleteRequest(e, authority, requestBody)
+func (e OrganizationTeamsMembersEndpoint) DeleteRequest(authorization Authorization, requestBody organizationsTeamsMembersRemove.Request) ([]byte, error) {
+	return deleteRequest(e, &authorization, requestBody)
 }
 
 // https://docs.deploygate.com/reference#enterprises-users-index
@@ -330,16 +330,16 @@ func (e EnterpriseMembersEndpoint) ToURL() string {
 	return url
 }
 
-func (e EnterpriseMembersEndpoint) MultiPartFormRequest(authority Authority, requestBody enterprisesMembersAdd.Request) ([]byte, error) {
-	return multiPartFormRequest(e, authority, requestBody)
+func (e EnterpriseMembersEndpoint) MultiPartFormRequest(authorization Authorization, requestBody enterprisesMembersAdd.Request) ([]byte, error) {
+	return multiPartFormRequest(e, &authorization, requestBody)
 }
 
-func (e EnterpriseMembersEndpoint) GetListRequest(authority Authority, requestParams enterprisesMembersList.Request) ([]byte, error) {
-	return getRequest(e, authority, requestParams)
+func (e EnterpriseMembersEndpoint) GetListRequest(authorization Authorization, requestParams enterprisesMembersList.Request) ([]byte, error) {
+	return getRequest(e, &authorization, requestParams)
 }
 
-func (e EnterpriseMembersEndpoint) DeleteRequest(authority Authority, requestBody enterprisesMembersRemove.Request) ([]byte, error) {
-	return deleteRequest(e, authority, requestBody)
+func (e EnterpriseMembersEndpoint) DeleteRequest(authorization Authorization, requestBody enterprisesMembersRemove.Request) ([]byte, error) {
+	return deleteRequest(e, &authorization, requestBody)
 }
 
 // https://docs.deploygate.com/reference#enterprises-organizations-users-index
@@ -365,16 +365,16 @@ func (e EnterpriseOrganizationsMembersEndpoint) ToURL() string {
 	return url
 }
 
-func (e EnterpriseOrganizationsMembersEndpoint) MultiPartFormRequest(authority Authority, requestBody enterprisesOrganizationsMembersAdd.Request) ([]byte, error) {
-	return multiPartFormRequest(e, authority, requestBody)
+func (e EnterpriseOrganizationsMembersEndpoint) MultiPartFormRequest(authorization Authorization, requestBody enterprisesOrganizationsMembersAdd.Request) ([]byte, error) {
+	return multiPartFormRequest(e, &authorization, requestBody)
 }
 
-func (e EnterpriseOrganizationsMembersEndpoint) GetListRequest(authority Authority, requestParams enterprisesOrganizationsMembersList.Request) ([]byte, error) {
-	return getRequest(e, authority, requestParams)
+func (e EnterpriseOrganizationsMembersEndpoint) GetListRequest(authorization Authorization, requestParams enterprisesOrganizationsMembersList.Request) ([]byte, error) {
+	return getRequest(e, &authorization, requestParams)
 }
 
-func (e EnterpriseOrganizationsMembersEndpoint) DeleteRequest(authority Authority, requestBody enterprisesOrganizationsMembersRemove.Request) ([]byte, error) {
-	return deleteRequest(e, authority, requestBody)
+func (e EnterpriseOrganizationsMembersEndpoint) DeleteRequest(authorization Authorization, requestBody enterprisesOrganizationsMembersRemove.Request) ([]byte, error) {
+	return deleteRequest(e, &authorization, requestBody)
 }
 
 // https://docs.deploygate.com/reference#enterprises-shared-teams-index
@@ -399,14 +399,14 @@ func (e EnterpriseSharedTeamsEndpoint) ToURL() string {
 	return url
 }
 
-func (e EnterpriseSharedTeamsEndpoint) MultiPartFormRequest(authority Authority, requestBody enterprisesSharedTeamsAdd.Request) ([]byte, error) {
-	return multiPartFormRequest(e, authority, requestBody)
+func (e EnterpriseSharedTeamsEndpoint) MultiPartFormRequest(authorization Authorization, requestBody enterprisesSharedTeamsAdd.Request) ([]byte, error) {
+	return multiPartFormRequest(e, &authorization, requestBody)
 }
 
-func (e EnterpriseSharedTeamsEndpoint) GetListRequest(authority Authority, requestParams enterprisesSharedTeamsList.Request) ([]byte, error) {
-	return getRequest(e, authority, requestParams)
+func (e EnterpriseSharedTeamsEndpoint) GetListRequest(authorization Authorization, requestParams enterprisesSharedTeamsList.Request) ([]byte, error) {
+	return getRequest(e, &authorization, requestParams)
 }
 
-func (e EnterpriseSharedTeamsEndpoint) DeleteRequest(authority Authority, requestBody enterprisesSharedTeamsRemove.Request) ([]byte, error) {
-	return deleteRequest(e, authority, requestBody)
+func (e EnterpriseSharedTeamsEndpoint) DeleteRequest(authorization Authorization, requestBody enterprisesSharedTeamsRemove.Request) ([]byte, error) {
+	return deleteRequest(e, &authorization, requestBody)
 }

@@ -12,22 +12,18 @@ func DestroyCommand() cli.Command {
 	return cli.Command{
 		Name:   "destroy",
 		Usage:  "Destroy the specified organization",
-		Action: command.CommandAction(newDestroyCommand),
+		Action: command.AuthorizedCommandAction(newDestroyCommand),
 		Flags:  destroyFlags(),
 	}
 }
 
 type destroyCommand struct {
 	endpoint    *api.OrganizationsEndpoint
-	authority   *api.Authority
 	requestBody *destroy.Request
 }
 
 func newDestroyCommand(c *cli.Context) (command.Command, error) {
 	cmd := destroyCommand{
-		authority: &api.Authority{
-			Token: command.GetApiToken(c),
-		},
 		endpoint: &api.OrganizationsEndpoint{
 			BaseURL:          api.EndpointURL,
 			OrganizationName: GetOrganizationName(c),
@@ -43,10 +39,6 @@ func newDestroyCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd destroyCommand) VerifyInput() error {
-	if cmd.authority.Token == "" {
-		return errors.New("api token must be specified")
-	}
-
 	if cmd.endpoint.OrganizationName == "" {
 		return errors.New("organization name must be specified")
 	}
@@ -54,8 +46,8 @@ func (cmd destroyCommand) VerifyInput() error {
 	return nil
 }
 
-func (cmd destroyCommand) Run() (string, error) {
-	if bytes, err := cmd.endpoint.DeleteRequest(*cmd.authority, *cmd.requestBody); err != nil {
+func (cmd destroyCommand) Run(authorization *api.Authorization) (string, error) {
+	if bytes, err := cmd.endpoint.DeleteRequest(*authorization, *cmd.requestBody); err != nil {
 		return "", err
 	} else {
 		return string(bytes), nil

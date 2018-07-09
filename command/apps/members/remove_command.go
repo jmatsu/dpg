@@ -14,14 +14,13 @@ func RemoveCommand() cli.Command {
 	return cli.Command{
 		Name:   "remove",
 		Usage:  "Remove users from the specified application space",
-		Action: command.CommandAction(newRemoveCommand),
+		Action: command.AuthorizedCommandAction(newRemoveCommand),
 		Flags:  removeFlags(),
 	}
 }
 
 type removeCommand struct {
 	endpoint    *api.AppMembersEndpoint
-	authority   *api.Authority
 	requestBody *remove.Request
 }
 
@@ -33,9 +32,6 @@ func newRemoveCommand(c *cli.Context) (command.Command, error) {
 	}
 
 	cmd := removeCommand{
-		authority: &api.Authority{
-			Token: command.GetApiToken(c),
-		},
 		endpoint: &api.AppMembersEndpoint{
 			BaseURL:      api.EndpointURL,
 			AppOwnerName: apps.GetAppOwnerName(c),
@@ -55,10 +51,6 @@ func newRemoveCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd removeCommand) VerifyInput() error {
-	if cmd.authority.Token == "" {
-		return errors.New("api token must be specified")
-	}
-
 	if cmd.endpoint.AppOwnerName == "" {
 		return errors.New("application owner must be specified")
 	}
@@ -78,8 +70,8 @@ func (cmd removeCommand) VerifyInput() error {
 	return nil
 }
 
-func (cmd removeCommand) Run() (string, error) {
-	if bytes, err := cmd.endpoint.DeleteRequest(*cmd.authority, *cmd.requestBody); err != nil {
+func (cmd removeCommand) Run(authorization *api.Authorization) (string, error) {
+	if bytes, err := cmd.endpoint.DeleteRequest(*authorization, *cmd.requestBody); err != nil {
 		return "", err
 	} else {
 		return string(bytes), nil
