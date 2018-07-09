@@ -4,6 +4,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"os"
 
+	"fmt"
 	"github.com/jmatsu/dpg/command/apps"
 	"github.com/jmatsu/dpg/command/apps/members"
 	"github.com/jmatsu/dpg/command/apps/shared_teams"
@@ -106,6 +107,6 @@ func main() {
 	err := app.Run(os.Args)
 
 	if err != nil {
-		logrus.Errorln(err.Error())
+		fmt.Fprintln(os.Stderr, err.Error())
 	}
 }

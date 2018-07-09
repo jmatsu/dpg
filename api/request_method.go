@@ -45,7 +45,7 @@ func getRequest(e Endpoint, authority Authority, requestParams request.Params) (
 	}
 
 	if errResp != nil {
-		return nil, errors.New(fmt.Sprintf("api returned an error response : %s", errResp.Message))
+		return nil, errors.New(errResp.Message)
 	}
 
 	return bytes, nil
