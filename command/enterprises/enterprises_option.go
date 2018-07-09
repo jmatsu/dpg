@@ -1,4 +1,4 @@
-package organizations
+package enterprises
 
 import (
 	"github.com/urfave/cli"
@@ -7,13 +7,13 @@ import (
 type option int
 
 const (
-	OrganizationName option = iota
+	EnterpriseName option = iota
 )
 
 func (o option) name() string {
 	switch o {
-	case OrganizationName:
-		return "organization-name"
+	case EnterpriseName:
+		return "enterprise-name"
 	}
 
 	panic("Option name mapping is not found")
@@ -21,16 +21,16 @@ func (o option) name() string {
 
 func (o option) Flag() cli.Flag {
 	switch o {
-	case OrganizationName:
+	case EnterpriseName:
 		return cli.StringFlag{
 			Name:  o.name(),
-			Usage: "[Required] A name of an organization to be operated.",
+			Usage: "[Required] A name of a enterprise to be operated.",
 		}
 	}
 
 	panic("Option name mapping is not found")
 }
 
-func GetOrganizationName(c *cli.Context) string {
-	return c.String(OrganizationName.name())
+func GetEnterpriseName(c *cli.Context) string {
+	return c.String(EnterpriseName.name())
 }

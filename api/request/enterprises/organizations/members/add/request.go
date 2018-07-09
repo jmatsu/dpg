@@ -7,18 +7,18 @@ import (
 )
 
 type Request struct {
-	SharedTeamName string
+	UserName string
 }
 
 type Key string
 
 const (
-	keyTeamName Key = "team"
+	keyUserName Key = "user"
 )
 
 func (req Request) IoReaderMap() (*map[string]io.Reader, error) {
 	parts := map[Key]io.Reader{
-		keyTeamName: strings.NewReader(req.SharedTeamName),
+		keyUserName: strings.NewReader(req.UserName),
 	}
 
 	out, err := util.StringifyKeysOfReaderMap(parts)

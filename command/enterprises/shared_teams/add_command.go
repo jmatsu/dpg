@@ -3,44 +3,35 @@ package shared_teams
 import (
 	"errors"
 	"github.com/jmatsu/dpg/api"
-	"github.com/jmatsu/dpg/api/request/apps/shared_teams/add"
+	"github.com/jmatsu/dpg/api/request/enterprises/shared_teams/add"
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/command/apps"
+	"github.com/jmatsu/dpg/command/enterprises"
 	"github.com/urfave/cli"
-	"strings"
 )
 
 func AddCommand() cli.Command {
 	return cli.Command{
 		Name:   "add",
-		Usage:  "Add a shared team to the specified application",
+		Usage:  "Invite users to the specified shared team",
 		Action: command.CommandAction(newAddCommand),
 		Flags:  addFlags(),
 	}
 }
 
 type addCommand struct {
-	endpoint    *api.OrganizationAppSharedTeamsEndpoint
+	endpoint    *api.EnterpriseSharedTeamsEndpoint
 	authority   *api.Authority
 	requestBody *add.Request
 }
 
 func newAddCommand(c *cli.Context) (command.Command, error) {
-	platform, err := apps.GetAppPlatform(c)
-
-	if err != nil {
-		return nil, err
-	}
-
 	cmd := addCommand{
 		authority: &api.Authority{
 			Token: command.GetApiToken(c),
 		},
-		endpoint: &api.OrganizationAppSharedTeamsEndpoint{
-			BaseURL:          api.EndpointURL,
-			OrganizationName: apps.GetAppOwnerName(c),
-			AppId:            apps.GetAppId(c),
-			AppPlatform:      platform,
+		endpoint: &api.EnterpriseSharedTeamsEndpoint{
+			BaseURL:        api.EndpointURL,
+			EnterpriseName: enterprises.GetEnterpriseName(c),
 		},
 		requestBody: &add.Request{
 			SharedTeamName: getSharedTeamName(c),
@@ -59,20 +50,12 @@ func (cmd addCommand) VerifyInput() error {
 		return errors.New("api token must be specified")
 	}
 
-	if cmd.endpoint.OrganizationName == "" {
-		return errors.New("an app owner name must be specified")
-	}
-
-	if cmd.endpoint.AppId == "" {
-		return errors.New("application id must be specified")
-	}
-
-	if !strings.EqualFold(cmd.endpoint.AppPlatform, "android") && !strings.EqualFold(cmd.endpoint.AppPlatform, "ios") {
-		return errors.New("A platform must be either of `android` or `ios`")
+	if cmd.endpoint.EnterpriseName == "" {
+		return errors.New("an enterprise name must be specified")
 	}
 
 	if cmd.requestBody.SharedTeamName == "" {
-		return errors.New("a shared team name must be specified")
+		return errors.New("a team name must be specified")
 	}
 
 	return nil

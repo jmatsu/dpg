@@ -10,9 +10,12 @@ import (
 	"github.com/jmatsu/dpg/command/apps/shared_teams"
 	"github.com/jmatsu/dpg/command/apps/teams"
 	"github.com/jmatsu/dpg/command/distributions"
+	enterpriseMembers "github.com/jmatsu/dpg/command/enterprises/members"
+	enterpriseOrgMembers "github.com/jmatsu/dpg/command/enterprises/organizations/members"
+	enterpriseSharedTeams "github.com/jmatsu/dpg/command/enterprises/shared_teams"
 	"github.com/jmatsu/dpg/command/organizations"
-	members2 "github.com/jmatsu/dpg/command/organizations/members"
-	members3 "github.com/jmatsu/dpg/command/organizations/teams/members"
+	orgMembers "github.com/jmatsu/dpg/command/organizations/members"
+	orgTeamMembers "github.com/jmatsu/dpg/command/organizations/teams/members"
 	"github.com/urfave/cli"
 	"strconv"
 )
@@ -77,27 +80,66 @@ func main() {
 				organizations.ShowCommand(),
 				organizations.UpdateCommand(),
 				{
-					Name:  "members",
-					Usage: "Member-based Operation API",
+					Name:  "member",
+					Usage: "Organization-based Member API",
 					Subcommands: []cli.Command{
-						members2.AddCommand(),
-						members2.RemoveCommand(),
-						members2.ListCommand(),
+						orgMembers.AddCommand(),
+						orgMembers.RemoveCommand(),
+						orgMembers.ListCommand(),
 					},
 				},
 				{
-					Name:  "teams",
-					Usage: "Team-based Operation API",
+					Name:  "team",
+					Usage: "Organization-based Team API",
+					Subcommands: []cli.Command{
+						{
+							Name:  "member",
+							Usage: "Organization-based Team Member API",
+							Subcommands: []cli.Command{
+								orgTeamMembers.AddCommand(),
+								orgTeamMembers.RemoveCommand(),
+								orgTeamMembers.ListCommand(),
+							},
+						},
+					},
+				},
+			},
+		},
+		{
+			Name:  "enterprise",
+			Usage: "Enterprise-based Operation API",
+			Subcommands: []cli.Command{
+				{
+					Name:  "member",
+					Usage: "Enterprise-based Member API",
+					Subcommands: []cli.Command{
+						enterpriseMembers.AddCommand(),
+						enterpriseMembers.RemoveCommand(),
+						enterpriseMembers.ListCommand(),
+					},
+				},
+				{
+					Name:  "organization",
+					Usage: "Enterprise-based Organization API",
 					Subcommands: []cli.Command{
 						{
 							Name:  "members",
-							Usage: "Member-based Operation API",
+							Usage: "Enterprise-based Organization Member API",
 							Subcommands: []cli.Command{
-								members3.AddCommand(),
-								members3.RemoveCommand(),
-								members3.ListCommand(),
+								enterpriseOrgMembers.AddCommand(),
+								enterpriseOrgMembers.RemoveCommand(),
+								enterpriseOrgMembers.ListCommand(),
 							},
 						},
+					},
+				},
+				{
+					Name:  "shared-team",
+					Usage: "Enterprise-based Shared Team API",
+					Subcommands: []cli.Command{
+						enterpriseSharedTeams.AddCommand(),
+						enterpriseSharedTeams.RemoveCommand(),
+						enterpriseSharedTeams.ListCommand(),
 					},
 				},
 			},

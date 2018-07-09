@@ -2,7 +2,7 @@ package shared_teams
 
 import (
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/command/apps"
+	"github.com/jmatsu/dpg/command/enterprises"
 	"github.com/urfave/cli"
 )
 
@@ -24,9 +24,9 @@ func (o packageOption) name() string {
 func (o packageOption) flag() cli.Flag {
 	switch o {
 	case sharedTeamName:
-		return cli.StringFlag{
+		return cli.StringSliceFlag{
 			Name:  o.name(),
-			Usage: "[Required] A team name to be operated",
+			Usage: "A name of a shared team",
 		}
 	}
 
@@ -40,10 +40,7 @@ func getSharedTeamName(c *cli.Context) string {
 func addFlags() []cli.Flag {
 	return []cli.Flag{
 		command.ApiToken.Flag(),
-		apps.AppOwnerName.Flag(),
-		apps.AppId.Flag(),
-		apps.Android.Flag(),
-		apps.IOS.Flag(),
+		enterprises.EnterpriseName.Flag(),
 		sharedTeamName.flag(),
 	}
 }
@@ -51,20 +48,14 @@ func addFlags() []cli.Flag {
 func listFlags() []cli.Flag {
 	return []cli.Flag{
 		command.ApiToken.Flag(),
-		apps.AppOwnerName.Flag(),
-		apps.AppId.Flag(),
-		apps.Android.Flag(),
-		apps.IOS.Flag(),
+		enterprises.EnterpriseName.Flag(),
 	}
 }
 
 func removeFlags() []cli.Flag {
 	return []cli.Flag{
 		command.ApiToken.Flag(),
-		apps.AppOwnerName.Flag(),
-		apps.AppId.Flag(),
-		apps.Android.Flag(),
-		apps.IOS.Flag(),
+		enterprises.EnterpriseName.Flag(),
 		sharedTeamName.flag(),
 	}
 }

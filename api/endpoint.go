@@ -13,6 +13,15 @@ import (
 	appsTeamsRemove "github.com/jmatsu/dpg/api/request/apps/teams/remove"
 	appsUpload "github.com/jmatsu/dpg/api/request/apps/upload"
 	distributionsRemove "github.com/jmatsu/dpg/api/request/distributions/destroy"
+	enterprisesMembersAdd "github.com/jmatsu/dpg/api/request/enterprises/members/add"
+	enterprisesMembersList "github.com/jmatsu/dpg/api/request/enterprises/members/list"
+	enterprisesMembersRemove "github.com/jmatsu/dpg/api/request/enterprises/members/remove"
+	enterprisesOrganizationsMembersAdd "github.com/jmatsu/dpg/api/request/enterprises/organizations/members/add"
+	enterprisesOrganizationsMembersList "github.com/jmatsu/dpg/api/request/enterprises/organizations/members/list"
+	enterprisesOrganizationsMembersRemove "github.com/jmatsu/dpg/api/request/enterprises/organizations/members/remove"
+	enterprisesSharedTeamsAdd "github.com/jmatsu/dpg/api/request/enterprises/shared_teams/add"
+	enterprisesSharedTeamsList "github.com/jmatsu/dpg/api/request/enterprises/shared_teams/list"
+	enterprisesSharedTeamsRemove "github.com/jmatsu/dpg/api/request/enterprises/shared_teams/remove"
 	organizationsCreate "github.com/jmatsu/dpg/api/request/organizations/create"
 	organizationsRemove "github.com/jmatsu/dpg/api/request/organizations/destroy"
 	organizationsList "github.com/jmatsu/dpg/api/request/organizations/list"
@@ -296,5 +305,108 @@ func (e OrganizationTeamsMembersEndpoint) GetListRequest(authority Authority, re
 }
 
 func (e OrganizationTeamsMembersEndpoint) DeleteRequest(authority Authority, requestBody organizationsTeamsMembersRemove.Request) ([]byte, error) {
+	return deleteRequest(e, authority, requestBody)
+}
+
+// https://docs.deploygate.com/reference#enterprises-users-index
+// https://docs.deploygate.com/reference#enterprises-users-create
+// https://docs.deploygate.com/reference#enterprises-users-destroy
+
+type EnterpriseMembersEndpoint struct {
+	BaseURL        string
+	EnterpriseName string
+	UserName       string
+}
+
+func (e EnterpriseMembersEndpoint) ToURL() string {
+	url := fmt.Sprintf("%s/api/enterprises/%s/users", e.BaseURL, e.EnterpriseName)
+
+	if e.UserName != "" {
+		url = fmt.Sprintf("%s/%s", url, e.UserName)
+	}
+
+	logrus.Debugln(url)
+
+	return url
+}
+
+func (e EnterpriseMembersEndpoint) MultiPartFormRequest(authority Authority, requestBody enterprisesMembersAdd.Request) ([]byte, error) {
+	return multiPartFormRequest(e, authority, requestBody)
+}
+
+func (e EnterpriseMembersEndpoint) GetListRequest(authority Authority, requestParams enterprisesMembersList.Request) ([]byte, error) {
+	return getRequest(e, authority, requestParams)
+}
+
+func (e EnterpriseMembersEndpoint) DeleteRequest(authority Authority, requestBody enterprisesMembersRemove.Request) ([]byte, error) {
+	return deleteRequest(e, authority, requestBody)
+}
+
+// https://docs.deploygate.com/reference#enterprises-organizations-users-index
+// https://docs.deploygate.com/reference#enterprises-organizations-users-create
+// https://docs.deploygate.com/reference#enterprises-organizations-users-destroy
+
+type EnterpriseOrganizationsMembersEndpoint struct {
+	BaseURL          string
+	EnterpriseName   string
+	OrganizationName string
+	UserName         string
+}
+
+func (e EnterpriseOrganizationsMembersEndpoint) ToURL() string {
+	url := fmt.Sprintf("%s/api/enterprises/%s/organizations/%s/users", e.BaseURL, e.EnterpriseName, e.OrganizationName)
+
+	if e.UserName != "" {
+		url = fmt.Sprintf("%s/%s", url, e.UserName)
+	}
+
+	logrus.Debugln(url)
+
+	return url
+}
+
+func (e EnterpriseOrganizationsMembersEndpoint) MultiPartFormRequest(authority Authority, requestBody enterprisesOrganizationsMembersAdd.Request) ([]byte, error) {
+	return multiPartFormRequest(e, authority, requestBody)
+}
+
+func (e EnterpriseOrganizationsMembersEndpoint) GetListRequest(authority Authority, requestParams enterprisesOrganizationsMembersList.Request) ([]byte, error) {
+	return getRequest(e, authority, requestParams)
+}
+
+func (e EnterpriseOrganizationsMembersEndpoint) DeleteRequest(authority Authority, requestBody enterprisesOrganizationsMembersRemove.Request) ([]byte, error) {
+	return deleteRequest(e, authority, requestBody)
+}
+
+// https://docs.deploygate.com/reference#enterprises-shared-teams-index
+// https://docs.deploygate.com/reference#enterprises-shared-teams-create
+// https://docs.deploygate.com/reference#enterprises-shared-teams-destroy
+
+type EnterpriseSharedTeamsEndpoint struct {
+	BaseURL        string
+	EnterpriseName string
+	SharedTeamName string
+}
+
+func (e EnterpriseSharedTeamsEndpoint) ToURL() string {
+	url := fmt.Sprintf("%s/api/enterprises/%s/shared_teams", e.BaseURL, e.EnterpriseName)
+
+	if e.SharedTeamName != "" {
+		url = fmt.Sprintf("%s/%s", url, e.SharedTeamName)
+	}
+
+	logrus.Debugln(url)
+
+	return url
+}
+
+func (e EnterpriseSharedTeamsEndpoint) MultiPartFormRequest(authority Authority, requestBody enterprisesSharedTeamsAdd.Request) ([]byte, error) {
+	return multiPartFormRequest(e, authority, requestBody)
+}
+
+func (e EnterpriseSharedTeamsEndpoint) GetListRequest(authority Authority, requestParams enterprisesSharedTeamsList.Request) ([]byte, error) {
+	return getRequest(e, authority, requestParams)
+}
+
+func (e EnterpriseSharedTeamsEndpoint) DeleteRequest(authority Authority, requestBody enterprisesSharedTeamsRemove.Request) ([]byte, error) {
 	return deleteRequest(e, authority, requestBody)
 }
