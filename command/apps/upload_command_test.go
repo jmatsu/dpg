@@ -99,15 +99,14 @@ var requestCases = []struct {
 			},
 			requestBody: &requestAppUpload.Request{
 				AppFilePath:        existingFilePath(),
-				AppVisible:         false,
 				EnableNotification: true,
 				ShortMessage:       null.StringFrom("xxxxxx"),
 				DistributionKey:    null.StringFrom("xxxxxx"),
-				DistributionName:   null.StringFrom(""),
+				DistributionName:   null.StringFrom("xxxxxx"),
 				ReleaseNote:        null.StringFrom("xxxxxx"),
 			},
 		},
-		expectError: true,
+		expectedResponse: true,
 	},
 	{
 		command: uploadCommand{
@@ -117,10 +116,11 @@ var requestCases = []struct {
 			},
 			requestBody: &requestAppUpload.Request{
 				AppFilePath:        existingFilePath(),
+				AppVisible:         false,
 				EnableNotification: true,
 				ShortMessage:       null.StringFrom("xxxxxx"),
 				DistributionKey:    null.StringFrom("xxxxxx"),
-				DistributionName:   null.StringFrom("xxxxxx"),
+				DistributionName:   null.StringFrom(""),
 				ReleaseNote:        null.StringFrom("xxxxxx"),
 			},
 		},

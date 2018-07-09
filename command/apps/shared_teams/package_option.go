@@ -1,6 +1,8 @@
 package shared_teams
 
 import (
+	"errors"
+	"fmt"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
 	"github.com/urfave/cli"
@@ -26,7 +28,7 @@ func (o packageOption) flag() cli.Flag {
 	case sharedTeamName:
 		return cli.StringFlag{
 			Name:  o.name(),
-			Usage: "[Required] A team name to be operated",
+			Usage: "[Required] A name of a target team",
 		}
 	}
 
@@ -35,6 +37,14 @@ func (o packageOption) flag() cli.Flag {
 
 func getSharedTeamName(c *cli.Context) string {
 	return c.String(sharedTeamName.name())
+}
+
+func requireSharedTeamName(name string) error {
+	if name != "" {
+		return nil
+	}
+
+	return errors.New(fmt.Sprintf("--%s must not be empty", sharedTeamName.name()))
 }
 
 func addFlags() []cli.Flag {

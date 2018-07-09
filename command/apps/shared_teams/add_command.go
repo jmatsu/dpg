@@ -1,13 +1,11 @@
 package shared_teams
 
 import (
-	"errors"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/apps/shared_teams/add"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
 	"github.com/urfave/cli"
-	"strings"
 )
 
 func AddCommand() cli.Command {
@@ -20,7 +18,7 @@ func AddCommand() cli.Command {
 }
 
 type addCommand struct {
-	endpoint    *api.OrganizationAppSharedTeamsEndpoint
+	endpoint    *api.EnterpriseOrganizationAppSharedTeamsEndpoint
 	requestBody *add.Request
 }
 
@@ -32,7 +30,7 @@ func newAddCommand(c *cli.Context) (command.Command, error) {
 	}
 
 	cmd := addCommand{
-		endpoint: &api.OrganizationAppSharedTeamsEndpoint{
+		endpoint: &api.EnterpriseOrganizationAppSharedTeamsEndpoint{
 			BaseURL:          api.EndpointURL,
 			OrganizationName: apps.GetAppOwnerName(c),
 			AppId:            apps.GetAppId(c),
@@ -51,20 +49,16 @@ func newAddCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd addCommand) VerifyInput() error {
-	if cmd.endpoint.OrganizationName == "" {
-		return errors.New("an app owner name must be specified")
+	if err := apps.RequireAppOwnerName(cmd.endpoint.OrganizationName); err != nil {
+		return err
 	}
 
-	if cmd.endpoint.AppId == "" {
-		return errors.New("application id must be specified")
+	if err := apps.RequireAppId(cmd.endpoint.AppId); err != nil {
+		return err
 	}
 
-	if !strings.EqualFold(cmd.endpoint.AppPlatform, "android") && !strings.EqualFold(cmd.endpoint.AppPlatform, "ios") {
-		return errors.New("A platform must be either of `android` or `ios`")
-	}
-
-	if cmd.requestBody.SharedTeamName == "" {
-		return errors.New("a shared team name must be specified")
+	if err := requireSharedTeamName(cmd.requestBody.SharedTeamName); err != nil {
+		return err
 	}
 
 	return nil

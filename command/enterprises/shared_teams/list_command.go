@@ -1,7 +1,6 @@
 package shared_teams
 
 import (
-	"errors"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/enterprises/shared_teams/list"
 	"github.com/jmatsu/dpg/command"
@@ -12,7 +11,7 @@ import (
 func ListCommand() cli.Command {
 	return cli.Command{
 		Name:   "list",
-		Usage:  "Show users who have joined to the specified shared team",
+		Usage:  "Show shared teams which belong to the specified enterprise",
 		Action: command.AuthorizedCommandAction(newListCommand),
 		Flags:  listFlags(),
 	}
@@ -40,8 +39,8 @@ func newListCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd listCommand) VerifyInput() error {
-	if cmd.endpoint.EnterpriseName == "" {
-		return errors.New("an enterprise name must be specified")
+	if err := enterprises.RequireEnterpriseName(cmd.endpoint.EnterpriseName); err != nil {
+		return err
 	}
 
 	return nil

@@ -1,7 +1,6 @@
 package members
 
 import (
-	"errors"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/organizations/members/remove"
 	"github.com/jmatsu/dpg/command"
@@ -12,7 +11,7 @@ import (
 func RemoveCommand() cli.Command {
 	return cli.Command{
 		Name:   "remove",
-		Usage:  "Remove users from the specified group",
+		Usage:  "Remove users from the specified organization",
 		Action: command.AuthorizedCommandAction(newRemoveCommand),
 		Flags:  removeFlags(),
 	}
@@ -24,17 +23,12 @@ type removeCommand struct {
 }
 
 func newRemoveCommand(c *cli.Context) (command.Command, error) {
-	userNameOrEmail := getUserNameOrEmail(c)
-
-	if !userNameOrEmail.Valid {
-		return nil, errors.New("either username or email must be specified")
-	}
-
 	cmd := removeCommand{
 		endpoint: &api.OrganizationMembersEndpoint{
 			BaseURL:          api.EndpointURL,
 			OrganizationName: organizations.GetOrganizationName(c),
-			UserNameOrEmail:  userNameOrEmail.String,
+			UserEmail:        getUserEmail(c),
+			UserName:         getUserName(c),
 		},
 		requestBody: &remove.Request{},
 	}
@@ -47,12 +41,12 @@ func newRemoveCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd removeCommand) VerifyInput() error {
-	if cmd.endpoint.OrganizationName == "" {
-		return errors.New("organization name must be specified")
+	if err := organizations.RequireOrganizationName(cmd.endpoint.OrganizationName); err != nil {
+		return err
 	}
 
-	if cmd.endpoint.UserNameOrEmail == "" {
-		return errors.New("either username or email must not be empty")
+	if err := requireUserNameOrUserEmail(cmd.endpoint.UserName, cmd.endpoint.UserEmail); err != nil {
+		return err
 	}
 
 	return nil

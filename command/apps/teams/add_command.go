@@ -1,13 +1,11 @@
 package teams
 
 import (
-	"errors"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/apps/teams/add"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
 	"github.com/urfave/cli"
-	"strings"
 )
 
 func AddCommand() cli.Command {
@@ -51,20 +49,16 @@ func newAddCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd addCommand) VerifyInput() error {
-	if cmd.endpoint.OrganizationName == "" {
-		return errors.New("an app owner name must be specified")
+	if err := apps.RequireAppOwnerName(cmd.endpoint.OrganizationName); err != nil {
+		return err
 	}
 
-	if cmd.endpoint.AppId == "" {
-		return errors.New("application id must be specified")
+	if err := apps.RequireAppId(cmd.endpoint.AppId); err != nil {
+		return err
 	}
 
-	if !strings.EqualFold(cmd.endpoint.AppPlatform, "android") && !strings.EqualFold(cmd.endpoint.AppPlatform, "ios") {
-		return errors.New("A platform must be either of `android` or `ios`")
-	}
-
-	if cmd.requestBody.TeamName == "" {
-		return errors.New("team name must be specified")
+	if err := requireTeamName(cmd.requestBody.TeamName); err != nil {
+		return err
 	}
 
 	return nil

@@ -9,7 +9,7 @@ import (
 type packageOption int
 
 const (
-	appFilePath        packageOption = iota
+	appFilePath packageOption = iota
 	isPublic
 	enableNotification
 	shortMessage
@@ -60,7 +60,7 @@ func (o packageOption) flag() cli.Flag {
 	case appFilePath:
 		return cli.StringFlag{
 			Name:  o.name(),
-			Usage: "[Required] A path of an application file to be uploaded",
+			Usage: "[Required] The file path of the application to be uploaded",
 		}
 	case isPublic:
 		return cli.BoolFlag{
@@ -80,12 +80,12 @@ func (o packageOption) flag() cli.Flag {
 	case distributionKey:
 		return cli.StringFlag{
 			Name:  o.name(),
-			Usage: "A key of a distribution which an application will be uploaded to",
+			Usage: "A key of a distribution to be updated",
 		}
 	case distributionName:
 		return cli.StringFlag{
 			Name:  o.name(),
-			Usage: "A name of a distribution which an application will be uploaded to",
+			Usage: "A name of a distribution to be updated",
 		}
 	case releaseNote:
 		return cli.StringFlag{

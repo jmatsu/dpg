@@ -1,6 +1,8 @@
 package members
 
 import (
+	"errors"
+	"fmt"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
 	"github.com/urfave/cli"
@@ -57,8 +59,24 @@ func getTeamName(c *cli.Context) string {
 	return c.String(teamName.name())
 }
 
+func requireTeamName(name string) error {
+	if name != "" {
+		return nil
+	}
+
+	return errors.New(fmt.Sprintf("--%s must not be empty", teamName.name()))
+}
+
 func getUserName(c *cli.Context) string {
 	return c.String(userName.name())
+}
+
+func requireUserName(name string) error {
+	if name != "" {
+		return nil
+	}
+
+	return errors.New(fmt.Sprintf("--%s must not be empty", userName.name()))
 }
 
 func listFlags() []cli.Flag {

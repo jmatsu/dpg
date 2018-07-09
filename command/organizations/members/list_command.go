@@ -1,7 +1,6 @@
 package members
 
 import (
-	"errors"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/organizations/members/list"
 	"github.com/jmatsu/dpg/command"
@@ -12,7 +11,7 @@ import (
 func ListCommand() cli.Command {
 	return cli.Command{
 		Name:   "list",
-		Usage:  "Show users who have joined to the specified group",
+		Usage:  "Show users who belong to the specified organization",
 		Action: command.AuthorizedCommandAction(newListCommand),
 		Flags:  listFlags(),
 	}
@@ -40,8 +39,10 @@ func newListCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd listCommand) VerifyInput() error {
-	if cmd.endpoint.OrganizationName == "" {
-		return errors.New("organization name must be specified")
+	err := organizations.RequireOrganizationName(cmd.endpoint.OrganizationName)
+
+	if err != nil {
+		return err
 	}
 
 	return nil

@@ -2,9 +2,11 @@ package apps
 
 import (
 	"errors"
+	"fmt"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/apps/upload"
 	"github.com/jmatsu/dpg/command"
+	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 	"os"
 	"strings"
@@ -31,11 +33,11 @@ func newUploadCommand(c *cli.Context) (command.Command, error) {
 		return nil, err
 	} else if platform == "android" {
 		if !strings.HasSuffix(appFilePath, ".apk") {
-			return nil, errors.New("A file path must be an apk file")
+			return nil, errors.New("an application file must be an apk file")
 		}
 	} else {
 		if !strings.HasSuffix(appFilePath, ".ipa") {
-			return nil, errors.New("A file path must be an ipa file")
+			return nil, errors.New("an application file must be an ipa file")
 		}
 	}
 
@@ -63,24 +65,28 @@ func newUploadCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd uploadCommand) VerifyInput() error {
-	if cmd.endpoint.AppOwnerName == "" {
-		return errors.New("application owner must be specified")
-	}
-
-	if cmd.requestBody.AppFilePath == "" {
-		return errors.New("application file path must be specified")
-	}
-
-	if _, err := os.Stat(cmd.requestBody.AppFilePath); os.IsNotExist(err) {
+	if err := RequireAppOwnerName(cmd.endpoint.AppOwnerName); err != nil {
 		return err
 	}
 
-	if cmd.requestBody.DistributionKey.Valid && cmd.requestBody.DistributionKey.String == "" {
-		return errors.New("empty distribution key is not allowed")
+	if cmd.requestBody.AppFilePath == "" {
+		return errors.New(fmt.Sprintf("--%s must not be empty", appFilePath.name()))
 	}
 
-	if cmd.requestBody.DistributionName.Valid && cmd.requestBody.DistributionName.String == "" {
-		return errors.New("empty distribution name is not allowed")
+	if f, err := os.Stat(cmd.requestBody.AppFilePath); os.IsNotExist(err) {
+		return errors.New(fmt.Sprintf("%s is not found", cmd.requestBody.AppFilePath))
+	} else if err != nil {
+		return errors.New(fmt.Sprintf("seriously wrong when trying to open %s", cmd.requestBody.AppFilePath))
+	} else if f != nil && f.Size() == 0 {
+		return errors.New("an application file must not be an empty file")
+	}
+
+	if cmd.requestBody.DistributionKey.Valid && cmd.requestBody.DistributionKey.String == "" {
+		return errors.New(fmt.Sprintf("--%s must not be empty if specified", distributionKey.name()))
+	}
+
+	if !cmd.requestBody.DistributionKey.Valid && cmd.requestBody.DistributionName.String != "" {
+		logrus.Warnf("--%s was empty so --%s was ignored", distributionKey.name(), distributionName.name())
 	}
 
 	return nil

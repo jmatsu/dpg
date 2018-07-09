@@ -1,6 +1,7 @@
 package api
 
 import (
+	"gopkg.in/guregu/null.v3"
 	"testing"
 )
 
@@ -89,11 +90,11 @@ func TestOrganizationAppTeamsEndpoint_ToURL(t *testing.T) {
 
 func TestOrganizationAppSharedTeamsEndpoint_ToURL(t *testing.T) {
 	cases := []struct {
-		in       OrganizationAppSharedTeamsEndpoint
+		in       EnterpriseOrganizationAppSharedTeamsEndpoint
 		expected string
 	}{
 		{
-			in: OrganizationAppSharedTeamsEndpoint{
+			in: EnterpriseOrganizationAppSharedTeamsEndpoint{
 				BaseURL:          "x",
 				OrganizationName: "y",
 				AppPlatform:      "android",
@@ -102,7 +103,7 @@ func TestOrganizationAppSharedTeamsEndpoint_ToURL(t *testing.T) {
 			expected: "x/api/organizations/y/platforms/android/apps/package/shared_teams",
 		},
 		{
-			in: OrganizationAppSharedTeamsEndpoint{
+			in: EnterpriseOrganizationAppSharedTeamsEndpoint{
 				BaseURL:          "x",
 				OrganizationName: "y",
 				AppPlatform:      "android",
@@ -196,7 +197,8 @@ func TestOrganizationMembersEndpoint_ToURL(t *testing.T) {
 			in: OrganizationMembersEndpoint{
 				BaseURL:          "x",
 				OrganizationName: "y",
-				UserNameOrEmail:  "z",
+				UserName:         null.StringFrom("z"),
+				UserEmail:        null.StringFromPtr(nil),
 			},
 			expected: "x/api/organizations/y/members/z",
 		},
@@ -204,7 +206,8 @@ func TestOrganizationMembersEndpoint_ToURL(t *testing.T) {
 			in: OrganizationMembersEndpoint{
 				BaseURL:          "x",
 				OrganizationName: "y",
-				UserNameOrEmail:  "z@why",
+				UserName:         null.StringFromPtr(nil),
+				UserEmail:        null.StringFrom("z@why"),
 			},
 			expected: "x/api/organizations/y/members/z%40why",
 		},

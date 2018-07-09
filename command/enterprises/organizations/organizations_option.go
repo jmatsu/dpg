@@ -24,9 +24,9 @@ func (o option) name() string {
 func (o option) Flag() cli.Flag {
 	switch o {
 	case OrganizationName:
-		return cli.StringFlag{
+		return cli.StringSliceFlag{
 			Name:  o.name(),
-			Usage: "[Required] The name of the organization",
+			Usage: "The name of the target enterprise's organization",
 		}
 	}
 

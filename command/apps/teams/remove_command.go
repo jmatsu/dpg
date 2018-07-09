@@ -1,13 +1,11 @@
 package teams
 
 import (
-	"errors"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/apps/teams/remove"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
 	"github.com/urfave/cli"
-	"strings"
 )
 
 func RemoveCommand() cli.Command {
@@ -50,20 +48,16 @@ func newRemoveCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd removeCommand) VerifyInput() error {
-	if cmd.endpoint.OrganizationName == "" {
-		return errors.New("organization name must be specified")
+	if err := apps.RequireAppOwnerName(cmd.endpoint.OrganizationName); err != nil {
+		return err
 	}
 
-	if cmd.endpoint.AppId == "" {
-		return errors.New("application id must be specified")
+	if err := apps.RequireAppId(cmd.endpoint.AppId); err != nil {
+		return err
 	}
 
-	if !strings.EqualFold(cmd.endpoint.AppPlatform, "android") && !strings.EqualFold(cmd.endpoint.AppPlatform, "ios") {
-		return errors.New("A platform must be either of `android` or `ios`")
-	}
-
-	if cmd.endpoint.TeamName == "" {
-		return errors.New("team name must be specified")
+	if err := requireTeamName(cmd.endpoint.TeamName); err != nil {
+		return err
 	}
 
 	return nil

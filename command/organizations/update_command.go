@@ -2,6 +2,7 @@ package organizations
 
 import (
 	"errors"
+	"fmt"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/organizations/update"
 	"github.com/jmatsu/dpg/command"
@@ -11,7 +12,7 @@ import (
 func UpdateCommand() cli.Command {
 	return cli.Command{
 		Name:   "update",
-		Usage:  "Update an organization",
+		Usage:  "Update the specified organization",
 		Action: command.AuthorizedCommandAction(newUpdateCommand),
 		Flags:  updateFlags(),
 	}
@@ -47,12 +48,12 @@ func newUpdateCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd updateCommand) VerifyInput() error {
-	if cmd.endpoint.OrganizationName == "" {
-		return errors.New("organization name must be specified")
+	if err := RequireOrganizationName(cmd.endpoint.OrganizationName); err != nil {
+		return err
 	}
 
 	if cmd.requestBody.Description == "" {
-		return errors.New("organization name must be specified")
+		return errors.New(fmt.Sprintf("--%s must not be empty", description.name()))
 	}
 
 	return nil

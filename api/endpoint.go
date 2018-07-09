@@ -34,6 +34,7 @@ import (
 	organizationsTeamsMembersRemove "github.com/jmatsu/dpg/api/request/organizations/teams/members/remove"
 	organizationsUpdate "github.com/jmatsu/dpg/api/request/organizations/update"
 	"github.com/sirupsen/logrus"
+	"gopkg.in/guregu/null.v3"
 	netUrl "net/url"
 	"os"
 )
@@ -142,7 +143,7 @@ func (e OrganizationAppTeamsEndpoint) DeleteRequest(authorization Authorization,
 // https://docs.deploygate.com/reference#apps-shared-teams-create
 // https://docs.deploygate.com/reference#apps-shared-teams-destroy
 
-type OrganizationAppSharedTeamsEndpoint struct {
+type EnterpriseOrganizationAppSharedTeamsEndpoint struct {
 	BaseURL          string
 	OrganizationName string
 	AppPlatform      string
@@ -150,7 +151,7 @@ type OrganizationAppSharedTeamsEndpoint struct {
 	SharedTeamName   string
 }
 
-func (e OrganizationAppSharedTeamsEndpoint) ToURL() string {
+func (e EnterpriseOrganizationAppSharedTeamsEndpoint) ToURL() string {
 	var url string
 
 	if url = fmt.Sprintf("%s/api/organizations/%s/platforms/%s/apps/%s/shared_teams", e.BaseURL, e.OrganizationName, e.AppPlatform, e.AppId); e.SharedTeamName != "" {
@@ -162,15 +163,15 @@ func (e OrganizationAppSharedTeamsEndpoint) ToURL() string {
 	return url
 }
 
-func (e OrganizationAppSharedTeamsEndpoint) MultiPartFormRequest(authorization Authorization, requestBody appsSharedTeamsAdd.Request) ([]byte, error) {
+func (e EnterpriseOrganizationAppSharedTeamsEndpoint) MultiPartFormRequest(authorization Authorization, requestBody appsSharedTeamsAdd.Request) ([]byte, error) {
 	return multiPartFormRequest(e, &authorization, requestBody)
 }
 
-func (e OrganizationAppSharedTeamsEndpoint) GetListRequest(authorization Authorization, requestParams appsSharedTeamsList.Request) ([]byte, error) {
+func (e EnterpriseOrganizationAppSharedTeamsEndpoint) GetListRequest(authorization Authorization, requestParams appsSharedTeamsList.Request) ([]byte, error) {
 	return getRequest(e, &authorization, requestParams)
 }
 
-func (e OrganizationAppSharedTeamsEndpoint) DeleteRequest(authorization Authorization, requestBody appsSharedTeamsRemove.Request) ([]byte, error) {
+func (e EnterpriseOrganizationAppSharedTeamsEndpoint) DeleteRequest(authorization Authorization, requestBody appsSharedTeamsRemove.Request) ([]byte, error) {
 	return deleteRequest(e, &authorization, requestBody)
 }
 
@@ -247,14 +248,17 @@ func (e OrganizationsEndpoint) PatchRequest(authorization Authorization, request
 type OrganizationMembersEndpoint struct {
 	BaseURL          string
 	OrganizationName string
-	UserNameOrEmail  string
+	UserName         null.String
+	UserEmail        null.String
 }
 
 func (e OrganizationMembersEndpoint) ToURL() string {
 	url := fmt.Sprintf("%s/api/organizations/%s/members", e.BaseURL, e.OrganizationName)
 
-	if e.UserNameOrEmail != "" {
-		url = fmt.Sprintf("%s/%s", url, netUrl.QueryEscape(e.UserNameOrEmail))
+	if e.UserName.Valid {
+		url = fmt.Sprintf("%s/%s", url, e.UserName.String)
+	} else if e.UserEmail.Valid {
+		url = fmt.Sprintf("%s/%s", url, netUrl.QueryEscape(e.UserEmail.String))
 	}
 
 	logrus.Debugln(url)

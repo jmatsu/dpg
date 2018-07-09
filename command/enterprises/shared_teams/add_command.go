@@ -1,7 +1,6 @@
 package shared_teams
 
 import (
-	"errors"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/enterprises/shared_teams/add"
 	"github.com/jmatsu/dpg/command"
@@ -12,7 +11,7 @@ import (
 func AddCommand() cli.Command {
 	return cli.Command{
 		Name:   "add",
-		Usage:  "Invite users to the specified shared team",
+		Usage:  "Added a shared team to the specified enterprise",
 		Action: command.AuthorizedCommandAction(newAddCommand),
 		Flags:  addFlags(),
 	}
@@ -42,12 +41,12 @@ func newAddCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd addCommand) VerifyInput() error {
-	if cmd.endpoint.EnterpriseName == "" {
-		return errors.New("an enterprise name must be specified")
+	if err := enterprises.RequireEnterpriseName(cmd.endpoint.EnterpriseName); err != nil {
+		return err
 	}
 
-	if cmd.requestBody.SharedTeamName == "" {
-		return errors.New("a team name must be specified")
+	if err := requireSharedTeamName(cmd.requestBody.SharedTeamName); err != nil {
+		return err
 	}
 
 	return nil

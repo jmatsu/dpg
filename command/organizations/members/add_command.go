@@ -1,7 +1,6 @@
 package members
 
 import (
-	"errors"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/organizations/members/add"
 	"github.com/jmatsu/dpg/command"
@@ -12,7 +11,7 @@ import (
 func AddCommand() cli.Command {
 	return cli.Command{
 		Name:   "add",
-		Usage:  "Invite users to the specified group",
+		Usage:  "Invite users to the specified organization",
 		Action: command.AuthorizedCommandAction(newAddCommand),
 		Flags:  addFlags(),
 	}
@@ -43,12 +42,12 @@ func newAddCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd addCommand) VerifyInput() error {
-	if cmd.endpoint.OrganizationName == "" {
-		return errors.New("organization name must be specified")
+	if err := organizations.RequireOrganizationName(cmd.endpoint.OrganizationName); err != nil {
+		return err
 	}
 
-	if !cmd.requestBody.UserName.Valid && !cmd.requestBody.UserEmail.Valid {
-		return errors.New("either of user name or user email must be specified")
+	if err := requireUserNameOrUserEmail(cmd.requestBody.UserName, cmd.requestBody.UserEmail); err != nil {
+		return err
 	}
 
 	return nil

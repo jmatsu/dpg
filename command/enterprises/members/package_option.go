@@ -1,6 +1,8 @@
 package members
 
 import (
+	"errors"
+	"fmt"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/enterprises"
 	"github.com/urfave/cli"
@@ -35,6 +37,14 @@ func (o packageOption) flag() cli.Flag {
 
 func getUserName(c *cli.Context) string {
 	return c.String(userName.name())
+}
+
+func requireUserName(name string) error {
+	if name != "" {
+		return nil
+	}
+
+	return errors.New(fmt.Sprintf("--%s must not be empty", userName.name()))
 }
 
 func addFlags() []cli.Flag {

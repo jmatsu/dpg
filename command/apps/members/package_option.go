@@ -9,7 +9,7 @@ import (
 type packageOption int
 
 const (
-	invitees      packageOption = iota
+	invitees packageOption = iota
 	developerRole
 	removees
 )
@@ -32,18 +32,18 @@ func (o packageOption) flag() cli.Flag {
 	case invitees:
 		return cli.StringSliceFlag{
 			Name:  o.name(),
-			Usage: "[Required] Comma separated names or e-mails of those who you want to invite",
+			Usage: "[Required] Comma-separated names or e-mails of those whom you want to invite",
 		}
 	case developerRole:
 		return cli.BoolFlag{
 			Name:   o.name(),
-			Usage:  "[Old Free/Lite/Pro/Biz plans only] Specify this if invitee(s) should be the developer role, otherwise they would be the tester role. tester will be selected by default",
+			Usage:  "[Old Free/Lite/Pro/Biz plans only] Specify this if invitee(s) should be Developer Role, otherwise they would have Tester Role. Tester Role will be selected by default",
 			Hidden: true,
 		}
 	case removees:
 		return cli.StringSliceFlag{
 			Name:  o.name(),
-			Usage: "[Required] Comma separated names or e-mails of those who you want to remove",
+			Usage: "[Required] Comma-separated names or e-mails of those who you want to remove",
 		}
 	}
 

@@ -4,7 +4,6 @@ import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/organizations/show"
 	"github.com/jmatsu/dpg/command"
-	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
 
@@ -39,8 +38,8 @@ func newShowCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd showCommand) VerifyInput() error {
-	if cmd.endpoint.OrganizationName != "" {
-		logrus.Fatalln("organization name must not be specified")
+	if err := RequireOrganizationName(cmd.endpoint.OrganizationName); err != nil {
+		return err
 	}
 
 	return nil

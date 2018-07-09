@@ -2,6 +2,7 @@ package distributions
 
 import (
 	"errors"
+	"fmt"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/distributions/destroy"
 	"github.com/jmatsu/dpg/command"
@@ -40,7 +41,7 @@ func newDestroyCommand(c *cli.Context) (command.Command, error) {
 
 func (cmd destroyCommand) VerifyInput() error {
 	if cmd.endpoint.DistributionKey == "" {
-		return errors.New("a distribution key must be specified")
+		return errors.New(fmt.Sprintf("--%s must not be empty if specified", DistributionKey.name()))
 	}
 
 	return nil

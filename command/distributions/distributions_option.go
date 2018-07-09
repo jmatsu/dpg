@@ -24,7 +24,7 @@ func (o option) Flag() cli.Flag {
 	case DistributionKey:
 		return cli.StringFlag{
 			Name:  o.name(),
-			Usage: "[Required] A key of a distribution to be operated.",
+			Usage: "[Required] The key of the target distribution.",
 		}
 	}
 

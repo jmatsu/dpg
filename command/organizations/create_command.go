@@ -1,11 +1,9 @@
 package organizations
 
 import (
-	"errors"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/organizations/create"
 	"github.com/jmatsu/dpg/command"
-	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
 
@@ -42,12 +40,8 @@ func newCreateCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd createCommand) VerifyInput() error {
-	if cmd.endpoint.OrganizationName != "" {
-		logrus.Fatalln("an organization name must not be specified")
-	}
-
-	if cmd.requestBody.OrganizationName == "" {
-		return errors.New("organization name must be specified")
+	if err := RequireOrganizationName(cmd.requestBody.OrganizationName); err != nil {
+		return err
 	}
 
 	return nil

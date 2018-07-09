@@ -4,7 +4,6 @@ import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/organizations/list"
 	"github.com/jmatsu/dpg/command"
-	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
 
@@ -22,7 +21,7 @@ type listCommand struct {
 	requestParams *list.Request
 }
 
-func newListCommand(c *cli.Context) (command.Command, error) {
+func newListCommand(_ *cli.Context) (command.Command, error) {
 	cmd := listCommand{
 		endpoint: &api.OrganizationsEndpoint{
 			BaseURL: api.EndpointURL,
@@ -38,10 +37,6 @@ func newListCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd listCommand) VerifyInput() error {
-	if cmd.endpoint.OrganizationName != "" {
-		logrus.Fatalln("organization name must not be specified")
-	}
-
 	return nil
 }
 

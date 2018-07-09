@@ -1,19 +1,17 @@
 package members
 
 import (
-	"errors"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/apps/members/list"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
 	"github.com/urfave/cli"
-	"strings"
 )
 
 func ListCommand() cli.Command {
 	return cli.Command{
 		Name:   "list",
-		Usage:  "Show users who have joined to the specified application (expect the apps owner)",
+		Usage:  "Show users who belong to the specified application (expect the apps owner)",
 		Action: command.AuthorizedCommandAction(newListCommand),
 		Flags:  listFlags(),
 	}
@@ -49,16 +47,12 @@ func newListCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd listCommand) VerifyInput() error {
-	if cmd.endpoint.AppOwnerName == "" {
-		return errors.New("application owner must be specified")
+	if err := apps.RequireAppOwnerName(cmd.endpoint.AppOwnerName); err != nil {
+		return err
 	}
 
-	if cmd.endpoint.AppId == "" {
-		return errors.New("application id must be specified")
-	}
-
-	if !strings.EqualFold(cmd.endpoint.AppPlatform, "android") && !strings.EqualFold(cmd.endpoint.AppPlatform, "ios") {
-		return errors.New("A platform must be either of `android` or `ios`")
+	if err := apps.RequireAppId(cmd.endpoint.AppId); err != nil {
+		return err
 	}
 
 	return nil

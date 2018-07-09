@@ -1,18 +1,18 @@
 package members
 
 import (
-	"errors"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/enterprises/organizations/members/remove"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/enterprises"
+	"github.com/jmatsu/dpg/command/enterprises/organizations"
 	"github.com/urfave/cli"
 )
 
 func RemoveCommand() cli.Command {
 	return cli.Command{
 		Name:   "remove",
-		Usage:  "Remove users from the specified enterprise",
+		Usage:  "Remove users from the specified enterprise's organization",
 		Action: command.AuthorizedCommandAction(newRemoveCommand),
 		Flags:  removeFlags(),
 	}
@@ -28,7 +28,7 @@ func newRemoveCommand(c *cli.Context) (command.Command, error) {
 		endpoint: &api.EnterpriseOrganizationsMembersEndpoint{
 			BaseURL:          api.EndpointURL,
 			EnterpriseName:   enterprises.GetEnterpriseName(c),
-			OrganizationName: getOrganizationName(c),
+			OrganizationName: organizations.GetOrganizationName(c),
 			UserName:         getUserName(c),
 		},
 		requestBody: &remove.Request{},
@@ -42,16 +42,16 @@ func newRemoveCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd removeCommand) VerifyInput() error {
-	if cmd.endpoint.EnterpriseName == "" {
-		return errors.New("enterprise name must be specified")
+	if err := enterprises.RequireEnterpriseName(cmd.endpoint.EnterpriseName); err != nil {
+		return err
 	}
 
-	if cmd.endpoint.OrganizationName == "" {
-		return errors.New("an organization name must be specified")
+	if err := organizations.RequireOrganizationName(cmd.endpoint.OrganizationName); err != nil {
+		return err
 	}
 
-	if cmd.endpoint.UserName == "" {
-		return errors.New("username must not be empty")
+	if err := requireUserName(cmd.endpoint.UserName); err != nil {
+		return err
 	}
 
 	return nil

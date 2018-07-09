@@ -13,17 +13,17 @@ type Command interface {
 
 type generateCommandFunc func(c *cli.Context) (Command, error)
 
-func CommandAction(fun generateCommandFunc) func(ctx *cli.Context) error {
-	return func(c *cli.Context) error {
-		if cmd, err := fun(c); err != nil {
-			return err
-		} else if _, err := cmd.Run(nil); err != nil {
-			return err
-		} else {
-			return nil
-		}
-	}
-}
+//func CommandAction(fun generateCommandFunc) func(ctx *cli.Context) error {
+//	return func(c *cli.Context) error {
+//		if cmd, err := fun(c); err != nil {
+//			return err
+//		} else if _, err := cmd.Run(nil); err != nil {
+//			return err
+//		} else {
+//			return nil
+//		}
+//	}
+//}
 
 func AuthorizedCommandAction(fun generateCommandFunc) func(ctx *cli.Context) error {
 	return func(c *cli.Context) error {

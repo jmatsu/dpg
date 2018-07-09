@@ -1,13 +1,11 @@
 package shared_teams
 
 import (
-	"errors"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/apps/shared_teams/list"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
 	"github.com/urfave/cli"
-	"strings"
 )
 
 func ListCommand() cli.Command {
@@ -20,7 +18,7 @@ func ListCommand() cli.Command {
 }
 
 type listCommand struct {
-	endpoint      *api.OrganizationAppSharedTeamsEndpoint
+	endpoint      *api.EnterpriseOrganizationAppSharedTeamsEndpoint
 	requestParams *list.Request
 }
 
@@ -32,7 +30,7 @@ func newListCommand(c *cli.Context) (command.Command, error) {
 	}
 
 	cmd := listCommand{
-		endpoint: &api.OrganizationAppSharedTeamsEndpoint{
+		endpoint: &api.EnterpriseOrganizationAppSharedTeamsEndpoint{
 			BaseURL:          api.EndpointURL,
 			OrganizationName: apps.GetAppOwnerName(c),
 			AppId:            apps.GetAppId(c),
@@ -49,16 +47,12 @@ func newListCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd listCommand) VerifyInput() error {
-	if cmd.endpoint.OrganizationName == "" {
-		return errors.New("an app owner must be specified")
+	if err := apps.RequireAppOwnerName(cmd.endpoint.OrganizationName); err != nil {
+		return err
 	}
 
-	if cmd.endpoint.AppId == "" {
-		return errors.New("application id must be specified")
-	}
-
-	if !strings.EqualFold(cmd.endpoint.AppPlatform, "android") && !strings.EqualFold(cmd.endpoint.AppPlatform, "ios") {
-		return errors.New("A platform must be either of `android` or `ios`")
+	if err := apps.RequireAppId(cmd.endpoint.AppId); err != nil {
+		return err
 	}
 
 	return nil

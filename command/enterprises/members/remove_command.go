@@ -1,7 +1,6 @@
 package members
 
 import (
-	"errors"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/enterprises/members/remove"
 	"github.com/jmatsu/dpg/command"
@@ -41,12 +40,12 @@ func newRemoveCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd removeCommand) VerifyInput() error {
-	if cmd.endpoint.EnterpriseName == "" {
-		return errors.New("enterprise name must be specified")
+	if err := enterprises.RequireEnterpriseName(cmd.endpoint.EnterpriseName); err != nil {
+		return err
 	}
 
-	if cmd.endpoint.UserName == "" {
-		return errors.New("username must not be empty")
+	if err := requireUserName(cmd.endpoint.UserName); err != nil {
+		return err
 	}
 
 	return nil

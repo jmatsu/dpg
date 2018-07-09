@@ -1,7 +1,6 @@
 package organizations
 
 import (
-	"errors"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/organizations/destroy"
 	"github.com/jmatsu/dpg/command"
@@ -39,8 +38,8 @@ func newDestroyCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd destroyCommand) VerifyInput() error {
-	if cmd.endpoint.OrganizationName == "" {
-		return errors.New("organization name must be specified")
+	if err := RequireOrganizationName(cmd.endpoint.OrganizationName); err != nil {
+		return err
 	}
 
 	return nil

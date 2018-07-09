@@ -1,18 +1,18 @@
 package members
 
 import (
-	"errors"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/enterprises/organizations/members/add"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/enterprises"
+	"github.com/jmatsu/dpg/command/enterprises/organizations"
 	"github.com/urfave/cli"
 )
 
 func AddCommand() cli.Command {
 	return cli.Command{
 		Name:   "add",
-		Usage:  "Invite users to the specified enterprise",
+		Usage:  "Invite users to the specified enterprise's organization",
 		Action: command.AuthorizedCommandAction(newAddCommand),
 		Flags:  addFlags(),
 	}
@@ -28,7 +28,7 @@ func newAddCommand(c *cli.Context) (command.Command, error) {
 		endpoint: &api.EnterpriseOrganizationsMembersEndpoint{
 			BaseURL:          api.EndpointURL,
 			EnterpriseName:   enterprises.GetEnterpriseName(c),
-			OrganizationName: getOrganizationName(c),
+			OrganizationName: organizations.GetOrganizationName(c),
 		},
 		requestBody: &add.Request{
 			UserName: getUserName(c),
@@ -43,16 +43,16 @@ func newAddCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd addCommand) VerifyInput() error {
-	if cmd.endpoint.EnterpriseName == "" {
-		return errors.New("an enterprise name must be specified")
+	if err := enterprises.RequireEnterpriseName(cmd.endpoint.EnterpriseName); err != nil {
+		return err
 	}
 
-	if cmd.endpoint.OrganizationName == "" {
-		return errors.New("an organization name must be specified")
+	if err := organizations.RequireOrganizationName(cmd.endpoint.OrganizationName); err != nil {
+		return err
 	}
 
-	if cmd.requestBody.UserName == "" {
-		return errors.New("username must be specified")
+	if err := requireUserName(cmd.requestBody.UserName); err != nil {
+		return err
 	}
 
 	return nil

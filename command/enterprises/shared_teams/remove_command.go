@@ -1,7 +1,6 @@
 package shared_teams
 
 import (
-	"errors"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/enterprises/shared_teams/remove"
 	"github.com/jmatsu/dpg/command"
@@ -12,7 +11,7 @@ import (
 func RemoveCommand() cli.Command {
 	return cli.Command{
 		Name:   "remove",
-		Usage:  "Remove users from the specified enterprise",
+		Usage:  "Remove a shared team from the specified enterprise",
 		Action: command.AuthorizedCommandAction(newRemoveCommand),
 		Flags:  removeFlags(),
 	}
@@ -41,12 +40,12 @@ func newRemoveCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd removeCommand) VerifyInput() error {
-	if cmd.endpoint.EnterpriseName == "" {
-		return errors.New("enterprise name must be specified")
+	if err := enterprises.RequireEnterpriseName(cmd.endpoint.EnterpriseName); err != nil {
+		return err
 	}
 
-	if cmd.endpoint.SharedTeamName == "" {
-		return errors.New("a shared team must not be empty")
+	if err := requireSharedTeamName(cmd.endpoint.SharedTeamName); err != nil {
+		return err
 	}
 
 	return nil

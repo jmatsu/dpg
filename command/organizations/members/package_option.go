@@ -1,6 +1,8 @@
 package members
 
 import (
+	"errors"
+	"fmt"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
 	"github.com/urfave/cli"
@@ -63,6 +65,16 @@ func getUserEmail(c *cli.Context) null.String {
 	return null.NewString(c.String(userEmail.name()), c.IsSet(userEmail.name()))
 }
 
+func requireUserNameOrUserEmail(name, email null.String) error {
+	if name.String != "" && email.String == "" {
+		return errors.New(fmt.Sprintf("only one of --%s or --%s is allowed", userName.name(), userEmail.name()))
+	} else if name.String == "" && email.String == "" {
+		return errors.New(fmt.Sprintf("either of --%s or --%s must be specified", userName.name(), userEmail.name()))
+	}
+
+	return nil
+}
+
 func listFlags() []cli.Flag {
 	return []cli.Flag{
 		command.ApiToken.Flag(),
@@ -82,15 +94,5 @@ func removeFlags() []cli.Flag {
 		apps.IOS.Flag(),
 		userName.flag(),
 		userEmail.flag(),
-	}
-}
-
-func getUserNameOrEmail(c *cli.Context) null.String {
-	if c.IsSet(userName.name()) {
-		return null.StringFrom(c.String(userName.name()))
-	} else if c.IsSet(userEmail.name()) {
-		return null.StringFrom(c.String(userEmail.name()))
-	} else {
-		return null.StringFromPtr(nil)
 	}
 }

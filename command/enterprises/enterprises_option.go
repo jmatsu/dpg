@@ -1,6 +1,8 @@
 package enterprises
 
 import (
+	"errors"
+	"fmt"
 	"github.com/urfave/cli"
 )
 
@@ -24,7 +26,7 @@ func (o option) Flag() cli.Flag {
 	case EnterpriseName:
 		return cli.StringFlag{
 			Name:  o.name(),
-			Usage: "[Required] A name of a enterprise to be operated.",
+			Usage: "[Required] The name of the target enterprise.",
 		}
 	}
 
@@ -33,4 +35,12 @@ func (o option) Flag() cli.Flag {
 
 func GetEnterpriseName(c *cli.Context) string {
 	return c.String(EnterpriseName.name())
+}
+
+func RequireEnterpriseName(name string) error {
+	if name != "" {
+		return nil
+	}
+
+	return errors.New(fmt.Sprintf("--%s must not be empty", EnterpriseName.name()))
 }

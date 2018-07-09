@@ -1,7 +1,6 @@
 package members
 
 import (
-	"errors"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/organizations/teams/members/add"
 	"github.com/jmatsu/dpg/command"
@@ -43,16 +42,16 @@ func newAddCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd addCommand) VerifyInput() error {
-	if cmd.endpoint.OrganizationName == "" {
-		return errors.New("organization name must be specified")
+	if err := organizations.RequireOrganizationName(cmd.endpoint.OrganizationName); err != nil {
+		return err
 	}
 
-	if cmd.endpoint.TeamName == "" {
-		return errors.New("team name must be specified")
+	if err := requireTeamName(cmd.endpoint.TeamName); err != nil {
+		return err
 	}
 
-	if cmd.requestBody.UserName == "" {
-		return errors.New("username must be specified")
+	if err := requireUserName(cmd.requestBody.UserName); err != nil {
+		return err
 	}
 
 	return nil
