@@ -37,7 +37,7 @@ func newRemoveCommand(c *cli.Context) (command.Command, error) {
 			OrganizationName: apps.GetAppOwnerName(c),
 			AppId:            apps.GetAppId(c),
 			AppPlatform:      platform,
-			TeamName:         getSharedTeamName(c),
+			SharedTeamName:   getSharedTeamName(c),
 		},
 		requestBody: &remove.Request{},
 	}
@@ -62,7 +62,7 @@ func (cmd removeCommand) VerifyInput() error {
 		return errors.New("A platform must be either of `android` or `ios`")
 	}
 
-	if cmd.endpoint.TeamName == "" {
+	if cmd.endpoint.SharedTeamName == "" {
 		return errors.New("a shared team name must be specified")
 	}
 

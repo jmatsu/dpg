@@ -34,6 +34,7 @@ import (
 	organizationsTeamsMembersRemove "github.com/jmatsu/dpg/api/request/organizations/teams/members/remove"
 	organizationsUpdate "github.com/jmatsu/dpg/api/request/organizations/update"
 	"github.com/sirupsen/logrus"
+	netUrl "net/url"
 	"os"
 )
 
@@ -146,14 +147,14 @@ type OrganizationAppSharedTeamsEndpoint struct {
 	OrganizationName string
 	AppPlatform      string
 	AppId            string
-	TeamName         string
+	SharedTeamName   string
 }
 
 func (e OrganizationAppSharedTeamsEndpoint) ToURL() string {
 	var url string
 
-	if url = fmt.Sprintf("%s/api/organizations/%s/platforms/%s/apps/%s/shared_teams", e.BaseURL, e.OrganizationName, e.AppPlatform, e.AppId); e.TeamName != "" {
-		url = fmt.Sprintf("%s/%s", url, e.TeamName)
+	if url = fmt.Sprintf("%s/api/organizations/%s/platforms/%s/apps/%s/shared_teams", e.BaseURL, e.OrganizationName, e.AppPlatform, e.AppId); e.SharedTeamName != "" {
+		url = fmt.Sprintf("%s/%s", url, e.SharedTeamName)
 	}
 
 	logrus.Debugln(url)
@@ -253,7 +254,7 @@ func (e OrganizationMembersEndpoint) ToURL() string {
 	url := fmt.Sprintf("%s/api/organizations/%s/members", e.BaseURL, e.OrganizationName)
 
 	if e.UserNameOrEmail != "" {
-		url = fmt.Sprintf("%s/%s", url, e.UserNameOrEmail)
+		url = fmt.Sprintf("%s/%s", url, netUrl.QueryEscape(e.UserNameOrEmail))
 	}
 
 	logrus.Debugln(url)

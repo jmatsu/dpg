@@ -19,10 +19,7 @@ func getRequest(e Endpoint, authorization *Authorization, requestParams request.
 	logrus.Debugf("query = %s\n", query)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s?%s", e.ToURL(), query), nil)
-
-	if authorization != nil {
-		authorization.doAuthorize(req)
-	}
+	authorization.doAuthorize(req)
 
 	if err != nil {
 		return nil, err
@@ -57,10 +54,7 @@ func deleteRequest(e Endpoint, authorization *Authorization, requestBody request
 	}
 
 	req, err := http.NewRequest(http.MethodDelete, e.ToURL(), &data)
-
-	if authorization != nil {
-		authorization.doAuthorize(req)
-	}
+	authorization.doAuthorize(req)
 
 	if err != nil {
 		return nil, err
@@ -97,10 +91,7 @@ func multiPartFormRequest(e Endpoint, authorization *Authorization, requestBody 
 	}
 
 	req, err := http.NewRequest(http.MethodPost, e.ToURL(), &data)
-
-	if authorization != nil {
-		authorization.doAuthorize(req)
-	}
+	authorization.doAuthorize(req)
 
 	if err != nil {
 		return nil, err
@@ -137,10 +128,7 @@ func patchRequest(e Endpoint, authorization *Authorization, requestBody request.
 	}
 
 	req, err := http.NewRequest(http.MethodPatch, e.ToURL(), &data)
-
-	if authorization != nil {
-		authorization.doAuthorize(req)
-	}
+	authorization.doAuthorize(req)
 
 	if err != nil {
 		return nil, err
