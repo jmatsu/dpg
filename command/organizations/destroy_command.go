@@ -35,14 +35,14 @@ func newDestroyCommand(c *cli.Context) (command.Command, error) {
 		requestBody: &destroy.Request{},
 	}
 
-	if err := cmd.verifyInput(); err != nil {
+	if err := cmd.VerifyInput(); err != nil {
 		return nil, err
 	}
 
 	return cmd, nil
 }
 
-func (cmd destroyCommand) verifyInput() error {
+func (cmd destroyCommand) VerifyInput() error {
 	if cmd.authority.Token == "" {
 		return errors.New("api token must be specified")
 	}
@@ -54,7 +54,7 @@ func (cmd destroyCommand) verifyInput() error {
 	return nil
 }
 
-func (cmd destroyCommand) run() (string, error) {
+func (cmd destroyCommand) Run() (string, error) {
 	if bytes, err := cmd.endpoint.DeleteRequest(*cmd.authority, *cmd.requestBody); err != nil {
 		return "", err
 	} else {

@@ -39,14 +39,14 @@ func newAddCommand(c *cli.Context) (command.Command, error) {
 		},
 	}
 
-	if err := cmd.verifyInput(); err != nil {
+	if err := cmd.VerifyInput(); err != nil {
 		return nil, err
 	}
 
 	return cmd, nil
 }
 
-func (cmd addCommand) verifyInput() error {
+func (cmd addCommand) VerifyInput() error {
 	if cmd.authority.Token == "" {
 		return errors.New("api token must be specified")
 	}
@@ -62,7 +62,7 @@ func (cmd addCommand) verifyInput() error {
 	return nil
 }
 
-func (cmd addCommand) run() (string, error) {
+func (cmd addCommand) Run() (string, error) {
 	if bytes, err := cmd.endpoint.MultiPartFormRequest(*cmd.authority, *cmd.requestBody); err != nil {
 		return "", err
 	} else {

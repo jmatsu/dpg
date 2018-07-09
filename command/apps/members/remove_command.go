@@ -47,14 +47,14 @@ func newRemoveCommand(c *cli.Context) (command.Command, error) {
 		},
 	}
 
-	if err := cmd.verifyInput(); err != nil {
+	if err := cmd.VerifyInput(); err != nil {
 		return nil, err
 	}
 
 	return cmd, nil
 }
 
-func (cmd removeCommand) verifyInput() error {
+func (cmd removeCommand) VerifyInput() error {
 	if cmd.authority.Token == "" {
 		return errors.New("api token must be specified")
 	}
@@ -78,7 +78,7 @@ func (cmd removeCommand) verifyInput() error {
 	return nil
 }
 
-func (cmd removeCommand) run() (string, error) {
+func (cmd removeCommand) Run() (string, error) {
 	if bytes, err := cmd.endpoint.DeleteRequest(*cmd.authority, *cmd.requestBody); err != nil {
 		return "", err
 	} else {

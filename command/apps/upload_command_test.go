@@ -191,7 +191,7 @@ func TestVerifyInput(t *testing.T) {
 	for i, c := range verifyCases {
 		t.Logf("testVerifyInput at %d", i)
 
-		if err := verifyInput(c.endpoint, c.authority, c.requestBody); err == nil && c.expectError {
+		if err := VerifyInput(c.endpoint, c.authority, c.requestBody); err == nil && c.expectError {
 			t.Error("an error was expected.")
 		}
 	}

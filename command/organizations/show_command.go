@@ -36,14 +36,14 @@ func newShowCommand(c *cli.Context) (command.Command, error) {
 		requestParams: &show.Request{},
 	}
 
-	if err := cmd.verifyInput(); err != nil {
+	if err := cmd.VerifyInput(); err != nil {
 		return nil, err
 	}
 
 	return cmd, nil
 }
 
-func (cmd showCommand) verifyInput() error {
+func (cmd showCommand) VerifyInput() error {
 	if cmd.authority.Token == "" {
 		return errors.New("api token must be specified")
 	}
@@ -55,7 +55,7 @@ func (cmd showCommand) verifyInput() error {
 	return nil
 }
 
-func (cmd showCommand) run() (string, error) {
+func (cmd showCommand) Run() (string, error) {
 	if bytes, err := cmd.endpoint.GetSingleRequest(*cmd.authority, *cmd.requestParams); err != nil {
 		return "", err
 	} else {

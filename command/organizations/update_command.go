@@ -43,14 +43,14 @@ func newUpdateCommand(c *cli.Context) (command.Command, error) {
 		},
 	}
 
-	if err := cmd.verifyInput(); err != nil {
+	if err := cmd.VerifyInput(); err != nil {
 		return nil, err
 	}
 
 	return cmd, nil
 }
 
-func (cmd updateCommand) verifyInput() error {
+func (cmd updateCommand) VerifyInput() error {
 	if cmd.authority.Token == "" {
 		return errors.New("api token must be specified")
 	}
@@ -66,7 +66,7 @@ func (cmd updateCommand) verifyInput() error {
 	return nil
 }
 
-func (cmd updateCommand) run() (string, error) {
+func (cmd updateCommand) Run() (string, error) {
 	if bytes, err := cmd.endpoint.PatchRequest(*cmd.authority, *cmd.requestBody); err != nil {
 		return "", err
 	} else {

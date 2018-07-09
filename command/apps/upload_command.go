@@ -59,14 +59,14 @@ func newUploadCommand(c *cli.Context) (command.Command, error) {
 		},
 	}
 
-	if err := cmd.verifyInput(); err != nil {
+	if err := cmd.VerifyInput(); err != nil {
 		return nil, err
 	}
 
 	return cmd, nil
 }
 
-func (cmd uploadCommand) verifyInput() error {
+func (cmd uploadCommand) VerifyInput() error {
 	if cmd.authority.Token == "" {
 		return errors.New("api token must be specified")
 	}
@@ -94,7 +94,7 @@ func (cmd uploadCommand) verifyInput() error {
 	return nil
 }
 
-func (cmd uploadCommand) run() (string, error) {
+func (cmd uploadCommand) Run() (string, error) {
 	if bytes, err := cmd.endpoint.MultiPartFormRequest(*cmd.authority, *cmd.requestBody); err != nil {
 		return "", err
 	} else {
