@@ -85,8 +85,8 @@ func (cmd uploadCommand) VerifyInput() error {
 		return errors.New(fmt.Sprintf("--%s must not be empty if specified", distributionKey.name()))
 	}
 
-	if !cmd.requestBody.DistributionKey.Valid && cmd.requestBody.DistributionName.String != "" {
-		logrus.Warnf("--%s was empty so --%s was ignored", distributionKey.name(), distributionName.name())
+	if cmd.requestBody.DistributionKey.Valid && cmd.requestBody.DistributionName.String != "" {
+		logrus.Warnf("--%s was specified so --%s wouldn't be used", distributionKey.name(), distributionName.name())
 	}
 
 	return nil

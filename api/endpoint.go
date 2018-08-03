@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	appsDistributionsDelete "github.com/jmatsu/dpg/api/request/apps/distributions/destroy"
 	appsMembersAdd "github.com/jmatsu/dpg/api/request/apps/members/add"
 	appsMembersList "github.com/jmatsu/dpg/api/request/apps/members/list"
 	appsMembersRemove "github.com/jmatsu/dpg/api/request/apps/members/remove"
@@ -100,6 +101,27 @@ func (e AppMembersEndpoint) GetListRequest(authorization Authorization, requestP
 }
 
 func (e AppMembersEndpoint) DeleteRequest(authorization Authorization, requestBody appsMembersRemove.Request) ([]byte, error) {
+	return deleteRequest(e, &authorization, requestBody)
+}
+
+// https://docs.deploygate.com/reference#invite
+
+type AppDistributionsEndpoint struct {
+	BaseURL      string
+	AppOwnerName string
+	AppPlatform  string
+	AppId        string
+}
+
+func (e AppDistributionsEndpoint) ToURL() string {
+	url := fmt.Sprintf("%s/api/users/%s/platforms/%s/apps/%s/distributions", e.BaseURL, e.AppOwnerName, e.AppPlatform, e.AppId)
+
+	logrus.Debugln(url)
+
+	return url
+}
+
+func (e AppDistributionsEndpoint) DeleteRequest(authorization Authorization, requestBody appsDistributionsDelete.Request) ([]byte, error) {
 	return deleteRequest(e, &authorization, requestBody)
 }
 
