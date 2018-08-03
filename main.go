@@ -6,6 +6,7 @@ import (
 
 	"fmt"
 	"github.com/jmatsu/dpg/command/apps"
+	appDistributions "github.com/jmatsu/dpg/command/apps/distributions"
 	"github.com/jmatsu/dpg/command/apps/members"
 	"github.com/jmatsu/dpg/command/apps/shared_teams"
 	"github.com/jmatsu/dpg/command/apps/teams"
@@ -59,6 +60,13 @@ func main() {
 						shared_teams.AddCommand(),
 						shared_teams.RemoveCommand(),
 						shared_teams.ListCommand(),
+					},
+				},
+				{
+					Name:  "distributions",
+					Usage: "Application-based Distribution API",
+					Subcommands: []cli.Command{
+						appDistributions.DestroyCommand(),
 					},
 				},
 			},
@@ -150,5 +158,6 @@ func main() {
 
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(1)
 	}
 }
