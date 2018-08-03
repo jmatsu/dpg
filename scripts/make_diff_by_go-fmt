@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -u
+
+gofiles="$(git diff --cached --name-only --diff-filter=ACM HEAD^ | grep '\.go$')"
+
+if [[ -z "$gofiles" ]]; then
+	exit 0
+fi
+
+unformatted=$(gofmt -l $gofiles)
+
+[[ -z "$unformatted" ]]

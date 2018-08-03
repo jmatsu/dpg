@@ -5,9 +5,9 @@ import (
 	"github.com/urfave/cli"
 )
 
-func removeFlags() []cli.Flag {
+func destroyFlags() []cli.Flag {
 	return []cli.Flag{
 		command.ApiToken.Flag(),
-		DistributionKey.Flag(),
+		DistributionName.Flag(),
 	}
 }

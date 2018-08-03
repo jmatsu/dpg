@@ -15,7 +15,7 @@ func DestroyCommand() cli.Command {
 		Name:   "destroy",
 		Usage:  "Destroy the specified distribution",
 		Action: command.AuthorizedCommandAction(newDestroyCommand),
-		Flags:  removeFlags(),
+		Flags:  destroyFlags(),
 	}
 }
 
