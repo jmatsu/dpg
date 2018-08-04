@@ -4,11 +4,11 @@ import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/organizations/list"
 	"github.com/jmatsu/dpg/command"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 )
 
-func ListCommand() cli.Command {
-	return cli.Command{
+func ListCommand() *cli.Command {
+	return &cli.Command{
 		Name:   "list",
 		Usage:  "Show organizations which the user has",
 		Action: command.AuthorizedCommandAction(newListCommand),

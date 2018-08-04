@@ -2,8 +2,8 @@ package organizations
 
 import (
 	"github.com/jmatsu/dpg/command"
-	"github.com/urfave/cli"
 	"gopkg.in/guregu/null.v3"
+	"gopkg.in/urfave/cli.v2"
 )
 
 type packageOption int
@@ -24,7 +24,7 @@ func (o packageOption) name() string {
 func (o packageOption) flag() cli.Flag {
 	switch o {
 	case description:
-		return cli.StringFlag{
+		return &cli.StringFlag{
 			Name:  o.name(),
 			Usage: "A description for an organization",
 		}

@@ -20,7 +20,7 @@ import (
 	"github.com/jmatsu/dpg/command/organizations"
 	organizationMembers "github.com/jmatsu/dpg/command/organizations/members"
 	organizationTeamMembers "github.com/jmatsu/dpg/command/organizations/teams/members"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 	"strconv"
 )
 
@@ -29,20 +29,20 @@ func main() {
 		logrus.SetLevel(logrus.DebugLevel)
 	}
 
-	app := cli.NewApp()
+	app := (&cli.App{})
 	app.Name = "dpg"
 	app.Usage = "DeployGate API client CLI"
 	app.Version = "0.1"
-	app.Commands = []cli.Command{
+	app.Commands = []*cli.Command{
 		{
 			Name:  "app",
 			Usage: "application-based Operation API",
-			Subcommands: []cli.Command{
+			Subcommands: []*cli.Command{
 				apps.UploadCommand(),
 				{
 					Name:  "member",
 					Usage: "application-based Member API",
-					Subcommands: []cli.Command{
+					Subcommands: []*cli.Command{
 						members.AddCommand(),
 						members.ListCommand(),
 						members.RemoveCommand(),
@@ -51,7 +51,7 @@ func main() {
 				{
 					Name:  "team",
 					Usage: "application-based Team API",
-					Subcommands: []cli.Command{
+					Subcommands: []*cli.Command{
 						teams.AddCommand(),
 						teams.RemoveCommand(),
 						teams.ListCommand(),
@@ -60,7 +60,7 @@ func main() {
 				{
 					Name:  "shared-team",
 					Usage: "application-based Shared Team API",
-					Subcommands: []cli.Command{
+					Subcommands: []*cli.Command{
 						shared_teams.AddCommand(),
 						shared_teams.RemoveCommand(),
 						shared_teams.ListCommand(),
@@ -69,7 +69,7 @@ func main() {
 				{
 					Name:  "distributions",
 					Usage: "application-based Distribution API",
-					Subcommands: []cli.Command{
+					Subcommands: []*cli.Command{
 						appDistributions.DestroyCommand(),
 					},
 				},
@@ -78,14 +78,14 @@ func main() {
 		{
 			Name:  "distribution",
 			Usage: "distribution-based Operation API",
-			Subcommands: []cli.Command{
+			Subcommands: []*cli.Command{
 				distributions.DestroyCommand(),
 			},
 		},
 		{
 			Name:  "organization",
 			Usage: "organization-based Operation API",
-			Subcommands: []cli.Command{
+			Subcommands: []*cli.Command{
 				organizations.CreateCommand(),
 				organizations.DestroyCommand(),
 				organizations.ListCommand(),
@@ -94,7 +94,7 @@ func main() {
 				{
 					Name:  "member",
 					Usage: "organization-based Member API",
-					Subcommands: []cli.Command{
+					Subcommands: []*cli.Command{
 						organizationMembers.AddCommand(),
 						organizationMembers.RemoveCommand(),
 						organizationMembers.ListCommand(),
@@ -103,11 +103,11 @@ func main() {
 				{
 					Name:  "team",
 					Usage: "organization-based Team API",
-					Subcommands: []cli.Command{
+					Subcommands: []*cli.Command{
 						{
 							Name:  "member",
 							Usage: "Organization-based Team Member API",
-							Subcommands: []cli.Command{
+							Subcommands: []*cli.Command{
 								organizationTeamMembers.AddCommand(),
 								organizationTeamMembers.RemoveCommand(),
 								organizationTeamMembers.ListCommand(),
@@ -120,11 +120,11 @@ func main() {
 		{
 			Name:  "enterprise",
 			Usage: "enterprise-based Operation API",
-			Subcommands: []cli.Command{
+			Subcommands: []*cli.Command{
 				{
 					Name:  "member",
 					Usage: "enterprise-based Member API",
-					Subcommands: []cli.Command{
+					Subcommands: []*cli.Command{
 						enterpriseMembers.AddCommand(),
 						enterpriseMembers.RemoveCommand(),
 						enterpriseMembers.ListCommand(),
@@ -133,11 +133,11 @@ func main() {
 				{
 					Name:  "organization",
 					Usage: "enterprise-based Organization API",
-					Subcommands: []cli.Command{
+					Subcommands: []*cli.Command{
 						{
 							Name:  "members",
 							Usage: "enterprise-based Organization Member API",
-							Subcommands: []cli.Command{
+							Subcommands: []*cli.Command{
 								enterpriseOrganizationMembers.AddCommand(),
 								enterpriseOrganizationMembers.RemoveCommand(),
 								enterpriseOrganizationMembers.ListCommand(),
@@ -148,7 +148,7 @@ func main() {
 				{
 					Name:  "shared-team",
 					Usage: "enterprise-based Shared Team API",
-					Subcommands: []cli.Command{
+					Subcommands: []*cli.Command{
 						enterpriseSharedTeams.AddCommand(),
 						enterpriseSharedTeams.RemoveCommand(),
 						enterpriseSharedTeams.ListCommand(),

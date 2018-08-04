@@ -6,11 +6,11 @@ import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/organizations/update"
 	"github.com/jmatsu/dpg/command"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 )
 
-func UpdateCommand() cli.Command {
-	return cli.Command{
+func UpdateCommand() *cli.Command {
+	return &cli.Command{
 		Name:   "update",
 		Usage:  "Update the specified organization",
 		Action: command.AuthorizedCommandAction(newUpdateCommand),

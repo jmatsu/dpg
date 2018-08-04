@@ -3,7 +3,7 @@ package command
 import (
 	"errors"
 	"github.com/jmatsu/dpg/api"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 )
 
 type Command interface {

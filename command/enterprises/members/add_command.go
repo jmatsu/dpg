@@ -5,11 +5,11 @@ import (
 	"github.com/jmatsu/dpg/api/request/enterprises/members/add"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/enterprises"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 )
 
-func AddCommand() cli.Command {
-	return cli.Command{
+func AddCommand() *cli.Command {
+	return &cli.Command{
 		Name:   "add",
 		Usage:  "Invite users to the specified enterprise",
 		Action: command.AuthorizedCommandAction(newAddCommand),

@@ -2,8 +2,8 @@ package apps
 
 import (
 	"github.com/jmatsu/dpg/command"
-	"github.com/urfave/cli"
 	"gopkg.in/guregu/null.v3"
+	"gopkg.in/urfave/cli.v2"
 )
 
 type packageOption int
@@ -58,37 +58,37 @@ func (o packageOption) name() string {
 func (o packageOption) flag() cli.Flag {
 	switch o {
 	case appFilePath:
-		return cli.StringFlag{
+		return &cli.StringFlag{
 			Name:  o.name(),
 			Usage: "[Required] The file path of the application to be uploaded",
 		}
 	case isPublic:
-		return cli.BoolFlag{
+		return &cli.BoolFlag{
 			Name:  o.name(),
 			Usage: "Specify true if an application to be uploaded should be public",
 		}
 	case enableNotification:
-		return cli.BoolFlag{
+		return &cli.BoolFlag{
 			Name:  o.name(),
 			Usage: "[iOS only] Specify true if iOS's notifications should be enabled",
 		}
 	case shortMessage:
-		return cli.StringFlag{
+		return &cli.StringFlag{
 			Name:  o.name(),
 			Usage: "A short message to explain this update",
 		}
 	case distributionKey:
-		return cli.StringFlag{
+		return &cli.StringFlag{
 			Name:  o.name(),
 			Usage: "A key of a distribution to be updated",
 		}
 	case distributionName:
-		return cli.StringFlag{
+		return &cli.StringFlag{
 			Name:  o.name(),
 			Usage: "A name of a distribution to be updated",
 		}
 	case releaseNote:
-		return cli.StringFlag{
+		return &cli.StringFlag{
 			Name:  o.name(),
 			Usage: "A release note for this revision",
 		}

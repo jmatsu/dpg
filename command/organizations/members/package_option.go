@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
-	"github.com/urfave/cli"
 	"gopkg.in/guregu/null.v3"
+	"gopkg.in/urfave/cli.v2"
 )
 
 type packageOption int
@@ -30,12 +30,12 @@ func (o packageOption) name() string {
 func (o packageOption) flag() cli.Flag {
 	switch o {
 	case userName:
-		return cli.StringSliceFlag{
+		return &cli.StringSliceFlag{
 			Name:  o.name(),
 			Usage: "[Either of this or email is required] A name of a user. ",
 		}
 	case userEmail:
-		return cli.BoolFlag{
+		return &cli.BoolFlag{
 			Name:   o.name(),
 			Usage:  "[Either of this or username is required] An email of a user",
 			Hidden: true,

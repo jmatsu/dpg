@@ -7,13 +7,13 @@ import (
 	"github.com/jmatsu/dpg/api/request/apps/upload"
 	"github.com/jmatsu/dpg/command"
 	"github.com/sirupsen/logrus"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 	"os"
 	"strings"
 )
 
-func UploadCommand() cli.Command {
-	return cli.Command{
+func UploadCommand() *cli.Command {
+	return &cli.Command{
 		Name:   "upload",
 		Usage:  "Upload either android application or iOS application to the specified owner space",
 		Action: command.AuthorizedCommandAction(newUploadCommand),
