@@ -64,8 +64,10 @@ fi
 create_helps
 create_readme > README.md
 
-branch_name="update_doc_on_${CIRCLE_SHA1}"
+branch_name="update_doc_on_$(git rev-parse --short HEAD)"
 
+git config user.email "jmatsu.drm+github@gmail.com"
+git config user.name "CircleCI job"
 git checkout -b "$branch_name"
 git add docs
 git commit -m "Updated docs based on the script"
