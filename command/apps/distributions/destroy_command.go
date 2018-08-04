@@ -14,7 +14,7 @@ func DestroyCommand() *cli.Command {
 	return &cli.Command{
 		Name:   "destroy",
 		Usage:  "Destroy the specified distribution",
-		Action: command.AuthorizedCommandAction(newDestroyCommand),
+		Action: command.AuthorizedCommandAction(NewDestroyCommand),
 		Flags:  destroyFlags(),
 	}
 }
@@ -24,7 +24,7 @@ type destroyCommand struct {
 	requestBody *destroy.Request
 }
 
-func newDestroyCommand(c *cli.Context) (command.Command, error) {
+func NewDestroyCommand(c *cli.Context) (command.Command, error) {
 	platform, err := apps.GetAppPlatform(c)
 
 	if err != nil {

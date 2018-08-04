@@ -13,7 +13,7 @@ func UpdateCommand() *cli.Command {
 	return &cli.Command{
 		Name:   "update",
 		Usage:  "Update the specified organization",
-		Action: command.AuthorizedCommandAction(newUpdateCommand),
+		Action: command.AuthorizedCommandAction(NewUpdateCommand),
 		Flags:  updateFlags(),
 	}
 }
@@ -23,7 +23,7 @@ type updateCommand struct {
 	requestBody *update.Request
 }
 
-func newUpdateCommand(c *cli.Context) (command.Command, error) {
+func NewUpdateCommand(c *cli.Context) (command.Command, error) {
 	description := getUpdateDescription(c)
 
 	if !description.Valid {

@@ -13,7 +13,7 @@ func ListCommand() *cli.Command {
 	return &cli.Command{
 		Name:   "list",
 		Usage:  "Show users who have joined to the specified enterprise's organization",
-		Action: command.AuthorizedCommandAction(newListCommand),
+		Action: command.AuthorizedCommandAction(NewListCommand),
 		Flags:  listFlags(),
 	}
 }
@@ -23,7 +23,7 @@ type listCommand struct {
 	requestParams *list.Request
 }
 
-func newListCommand(c *cli.Context) (command.Command, error) {
+func NewListCommand(c *cli.Context) (command.Command, error) {
 	cmd := listCommand{
 		endpoint: &api.EnterpriseOrganizationsMembersEndpoint{
 			BaseURL:          api.EndpointURL,

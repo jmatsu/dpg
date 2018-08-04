@@ -11,7 +11,7 @@ func CreateCommand() *cli.Command {
 	return &cli.Command{
 		Name:   "create",
 		Usage:  "Create an organization",
-		Action: command.AuthorizedCommandAction(newCreateCommand),
+		Action: command.AuthorizedCommandAction(NewCreateCommand),
 		Flags:  createFlags(),
 	}
 }
@@ -21,7 +21,7 @@ type createCommand struct {
 	requestBody *create.Request
 }
 
-func newCreateCommand(c *cli.Context) (command.Command, error) {
+func NewCreateCommand(c *cli.Context) (command.Command, error) {
 	cmd := createCommand{
 		endpoint: &api.OrganizationsEndpoint{
 			BaseURL: api.EndpointURL,

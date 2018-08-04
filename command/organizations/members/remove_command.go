@@ -12,7 +12,7 @@ func RemoveCommand() *cli.Command {
 	return &cli.Command{
 		Name:   "remove",
 		Usage:  "Remove users from the specified organization",
-		Action: command.AuthorizedCommandAction(newRemoveCommand),
+		Action: command.AuthorizedCommandAction(NewRemoveCommand),
 		Flags:  removeFlags(),
 	}
 }
@@ -22,7 +22,7 @@ type removeCommand struct {
 	requestBody *remove.Request
 }
 
-func newRemoveCommand(c *cli.Context) (command.Command, error) {
+func NewRemoveCommand(c *cli.Context) (command.Command, error) {
 	cmd := removeCommand{
 		endpoint: &api.OrganizationMembersEndpoint{
 			BaseURL:          api.EndpointURL,

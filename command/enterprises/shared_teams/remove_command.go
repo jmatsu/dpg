@@ -12,7 +12,7 @@ func RemoveCommand() *cli.Command {
 	return &cli.Command{
 		Name:   "remove",
 		Usage:  "Remove a shared team from the specified enterprise",
-		Action: command.AuthorizedCommandAction(newRemoveCommand),
+		Action: command.AuthorizedCommandAction(NewRemoveCommand),
 		Flags:  removeFlags(),
 	}
 }
@@ -22,7 +22,7 @@ type removeCommand struct {
 	requestBody *remove.Request
 }
 
-func newRemoveCommand(c *cli.Context) (command.Command, error) {
+func NewRemoveCommand(c *cli.Context) (command.Command, error) {
 	cmd := removeCommand{
 		endpoint: &api.EnterpriseSharedTeamsEndpoint{
 			BaseURL:        api.EndpointURL,

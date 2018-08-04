@@ -11,7 +11,7 @@ func ListCommand() *cli.Command {
 	return &cli.Command{
 		Name:   "list",
 		Usage:  "Show organizations which the user has",
-		Action: command.AuthorizedCommandAction(newListCommand),
+		Action: command.AuthorizedCommandAction(NewListCommand),
 		Flags:  listFlags(),
 	}
 }
@@ -21,7 +21,7 @@ type listCommand struct {
 	requestParams *list.Request
 }
 
-func newListCommand(_ *cli.Context) (command.Command, error) {
+func NewListCommand(_ *cli.Context) (command.Command, error) {
 	cmd := listCommand{
 		endpoint: &api.OrganizationsEndpoint{
 			BaseURL: api.EndpointURL,

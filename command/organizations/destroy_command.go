@@ -11,7 +11,7 @@ func DestroyCommand() *cli.Command {
 	return &cli.Command{
 		Name:   "destroy",
 		Usage:  "Destroy the specified organization",
-		Action: command.AuthorizedCommandAction(newDestroyCommand),
+		Action: command.AuthorizedCommandAction(NewDestroyCommand),
 		Flags:  destroyFlags(),
 	}
 }
@@ -21,7 +21,7 @@ type destroyCommand struct {
 	requestBody *destroy.Request
 }
 
-func newDestroyCommand(c *cli.Context) (command.Command, error) {
+func NewDestroyCommand(c *cli.Context) (command.Command, error) {
 	cmd := destroyCommand{
 		endpoint: &api.OrganizationsEndpoint{
 			BaseURL:          api.EndpointURL,
