@@ -44,7 +44,7 @@ If you'd like to see the version, then run `dpg version`.
 EOF
 
 while read COMMAND; do
-    echo  "\`${COMMAND}\` [HELP](./"docs/$(split_by_space_and_get_tail ${COMMAND} | tr " " ".").md")"
+    echo  "- \`${COMMAND}\` [HELP](./"docs/$(split_by_space_and_get_tail ${COMMAND} | tr " " ".").md")"
 done < <($(dirname "$0")/list_all_command.bash)
 
 cat<<'EOF'
