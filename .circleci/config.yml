@@ -31,7 +31,7 @@ workflows:
       - on_every_commit
   on_master:
     jobs:
-      - update_docs
-    filters:
-      branches:
-        only: /master/
+      - update_docs:
+          filters:
+            branches:
+              only: /master/
