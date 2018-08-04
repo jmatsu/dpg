@@ -20,7 +20,7 @@ create_helps() {
 
 create_readme() {
 cat<<'EOF'
-[![CircleCI](https://circleci.com/gh/jmatsu/deploygate-cli-go/tree/master.svg?style=svg)](https://circleci.com/gh/jmatsu/deploygate-cli-go/tree/master)
+[![CircleCI](https://circleci.com/gh/jmatsu/dpg/tree/master.svg?style=svg)](https://circleci.com/gh/jmatsu/dpg/tree/master)
 
 # dpg
 
@@ -77,6 +77,6 @@ branch_name="update_doc_on_$(git rev-parse --short HEAD)"
 git config user.email "jmatsu.drm+github@gmail.com"
 git config user.name "CircleCI job"
 git checkout -b "$branch_name"
-git add docs
+git add .
 git commit -m "Updated docs based on the script"
 git push origin "$branch_name"
