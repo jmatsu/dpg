@@ -50,6 +50,12 @@ func newAddCommand(c *cli.Context) (command.Command, error) {
 	return cmd, nil
 }
 
+// endpoint:
+//   app owner's name is required
+//   app id is required
+//   app platform is required
+// parameters:
+//   distribution name is required
 func (cmd addCommand) VerifyInput() error {
 	if err := apps.RequireAppOwnerName(cmd.endpoint.AppOwnerName); err != nil {
 		return err

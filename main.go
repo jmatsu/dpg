@@ -1,3 +1,6 @@
+/*
+	package main is an entry point of all commands
+*/
 package main
 
 import (
@@ -12,11 +15,11 @@ import (
 	"github.com/jmatsu/dpg/command/apps/teams"
 	"github.com/jmatsu/dpg/command/distributions"
 	enterpriseMembers "github.com/jmatsu/dpg/command/enterprises/members"
-	enterpriseOrgMembers "github.com/jmatsu/dpg/command/enterprises/organizations/members"
+	enterpriseOrganizationMembers "github.com/jmatsu/dpg/command/enterprises/organizations/members"
 	enterpriseSharedTeams "github.com/jmatsu/dpg/command/enterprises/shared_teams"
 	"github.com/jmatsu/dpg/command/organizations"
-	orgMembers "github.com/jmatsu/dpg/command/organizations/members"
-	orgTeamMembers "github.com/jmatsu/dpg/command/organizations/teams/members"
+	organizationMembers "github.com/jmatsu/dpg/command/organizations/members"
+	organizationTeamMembers "github.com/jmatsu/dpg/command/organizations/teams/members"
 	"github.com/urfave/cli"
 	"strconv"
 )
@@ -32,12 +35,12 @@ func main() {
 	app.Commands = []cli.Command{
 		{
 			Name:  "app",
-			Usage: "Application-based Operation API",
+			Usage: "application-based Operation API",
 			Subcommands: []cli.Command{
 				apps.UploadCommand(),
 				{
 					Name:  "member",
-					Usage: "Application-based Member API",
+					Usage: "application-based Member API",
 					Subcommands: []cli.Command{
 						members.AddCommand(),
 						members.ListCommand(),
@@ -46,7 +49,7 @@ func main() {
 				},
 				{
 					Name:  "team",
-					Usage: "Application-based Team API",
+					Usage: "application-based Team API",
 					Subcommands: []cli.Command{
 						teams.AddCommand(),
 						teams.RemoveCommand(),
@@ -55,7 +58,7 @@ func main() {
 				},
 				{
 					Name:  "shared-team",
-					Usage: "Application-based Shared Team API",
+					Usage: "application-based Shared Team API",
 					Subcommands: []cli.Command{
 						shared_teams.AddCommand(),
 						shared_teams.RemoveCommand(),
@@ -64,7 +67,7 @@ func main() {
 				},
 				{
 					Name:  "distributions",
-					Usage: "Application-based Distribution API",
+					Usage: "application-based Distribution API",
 					Subcommands: []cli.Command{
 						appDistributions.DestroyCommand(),
 					},
@@ -73,14 +76,14 @@ func main() {
 		},
 		{
 			Name:  "distribution",
-			Usage: "Distribution-based Operation API",
+			Usage: "distribution-based Operation API",
 			Subcommands: []cli.Command{
 				distributions.DestroyCommand(),
 			},
 		},
 		{
 			Name:  "organization",
-			Usage: "Organization-based Operation API",
+			Usage: "organization-based Operation API",
 			Subcommands: []cli.Command{
 				organizations.CreateCommand(),
 				organizations.DestroyCommand(),
@@ -89,24 +92,24 @@ func main() {
 				organizations.UpdateCommand(),
 				{
 					Name:  "member",
-					Usage: "Organization-based Member API",
+					Usage: "organization-based Member API",
 					Subcommands: []cli.Command{
-						orgMembers.AddCommand(),
-						orgMembers.RemoveCommand(),
-						orgMembers.ListCommand(),
+						organizationMembers.AddCommand(),
+						organizationMembers.RemoveCommand(),
+						organizationMembers.ListCommand(),
 					},
 				},
 				{
 					Name:  "team",
-					Usage: "Organization-based Team API",
+					Usage: "organization-based Team API",
 					Subcommands: []cli.Command{
 						{
 							Name:  "member",
 							Usage: "Organization-based Team Member API",
 							Subcommands: []cli.Command{
-								orgTeamMembers.AddCommand(),
-								orgTeamMembers.RemoveCommand(),
-								orgTeamMembers.ListCommand(),
+								organizationTeamMembers.AddCommand(),
+								organizationTeamMembers.RemoveCommand(),
+								organizationTeamMembers.ListCommand(),
 							},
 						},
 					},
@@ -115,11 +118,11 @@ func main() {
 		},
 		{
 			Name:  "enterprise",
-			Usage: "Enterprise-based Operation API",
+			Usage: "enterprise-based Operation API",
 			Subcommands: []cli.Command{
 				{
 					Name:  "member",
-					Usage: "Enterprise-based Member API",
+					Usage: "enterprise-based Member API",
 					Subcommands: []cli.Command{
 						enterpriseMembers.AddCommand(),
 						enterpriseMembers.RemoveCommand(),
@@ -128,22 +131,22 @@ func main() {
 				},
 				{
 					Name:  "organization",
-					Usage: "Enterprise-based Organization API",
+					Usage: "enterprise-based Organization API",
 					Subcommands: []cli.Command{
 						{
 							Name:  "members",
-							Usage: "Enterprise-based Organization Member API",
+							Usage: "enterprise-based Organization Member API",
 							Subcommands: []cli.Command{
-								enterpriseOrgMembers.AddCommand(),
-								enterpriseOrgMembers.RemoveCommand(),
-								enterpriseOrgMembers.ListCommand(),
+								enterpriseOrganizationMembers.AddCommand(),
+								enterpriseOrganizationMembers.RemoveCommand(),
+								enterpriseOrganizationMembers.ListCommand(),
 							},
 						},
 					},
 				},
 				{
 					Name:  "shared-team",
-					Usage: "Enterprise-based Shared Team API",
+					Usage: "enterprise-based Shared Team API",
 					Subcommands: []cli.Command{
 						enterpriseSharedTeams.AddCommand(),
 						enterpriseSharedTeams.RemoveCommand(),

@@ -47,6 +47,11 @@ func newRemoveCommand(c *cli.Context) (command.Command, error) {
 	return cmd, nil
 }
 
+// endpoint:
+//   app owner's name is required
+//   app id is required
+// parameters:
+//   team name is required
 func (cmd removeCommand) VerifyInput() error {
 	if err := apps.RequireAppOwnerName(cmd.endpoint.OrganizationName); err != nil {
 		return err

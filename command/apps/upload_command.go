@@ -64,6 +64,12 @@ func newUploadCommand(c *cli.Context) (command.Command, error) {
 	return cmd, nil
 }
 
+// endpoint:
+//   app owner's name is required
+// parameters:
+//   the specified file must exist
+//   the specified distribution key must not be empty
+//   the specified distribution name is not used if a distribution key is also specified
 func (cmd uploadCommand) VerifyInput() error {
 	if err := RequireAppOwnerName(cmd.endpoint.AppOwnerName); err != nil {
 		return err

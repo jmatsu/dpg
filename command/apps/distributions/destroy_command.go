@@ -50,7 +50,25 @@ func newDestroyCommand(c *cli.Context) (command.Command, error) {
 	return cmd, nil
 }
 
+// endpoint:
+//   app owner's name is required
+//   app id is required
+//   app platform is required
+// parameters:
+//   distribution name is required
 func (cmd destroyCommand) VerifyInput() error {
+	if err := apps.RequireAppOwnerName(cmd.endpoint.AppOwnerName); err != nil {
+		return err
+	}
+
+	if err := apps.RequireAppId(cmd.endpoint.AppId); err != nil {
+		return err
+	}
+
+	if err := apps.RequireAppId(cmd.endpoint.AppPlatform); err != nil {
+		return err
+	}
+
 	if cmd.requestBody.DistributionName == "" {
 		return errors.New(fmt.Sprintf("--%s must not be empty if specified", DistributionName.name()))
 	}
