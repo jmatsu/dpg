@@ -7,4 +7,5 @@ USAGE:
 OPTIONS:
    --token value            [Required] API token
    --enterprise-name value  [Required] The name of the target enterprise.
+   --help, -h               show help (default: false)
    

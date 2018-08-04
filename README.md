@@ -2,7 +2,7 @@
 
 # dpg
 
-dpg - Golang implementation of  DeployGate API Client CLI
+dpg - Golang implementation of Unofficial DeployGate API Client CLI
 
 DeployGate API reference is https://docs.deploygate.com/reference#deploygate-api
 
@@ -22,6 +22,20 @@ go get github.com/jmatsu/dpg
 
 `help, h` option is avaiable for all commands.
 If you'd like to see the version, then run `dpg -v`.
+
+*Bash/Zsh completion*
+
+```
+// For Bash
+eval $(dpg --init-completion bash)
+dpg --init-completion bash >> ~/.bashrc
+
+
+// For Zsh
+eval $(dpg --init-completion zsh)
+dpg --init-completion zsh >> ~/.zshrc
+
+```
 
 - `dpg app upload` [HELP](./docs/app.upload.txt)
 - `dpg app member add` [HELP](./docs/app.member.add.txt)

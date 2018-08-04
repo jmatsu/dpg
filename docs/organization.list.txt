@@ -6,4 +6,5 @@ USAGE:
 
 OPTIONS:
    --token value  [Required] API token
+   --help, -h     show help (default: false)
    
