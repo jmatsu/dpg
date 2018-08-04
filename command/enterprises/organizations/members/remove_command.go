@@ -6,11 +6,11 @@ import (
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/enterprises"
 	"github.com/jmatsu/dpg/command/enterprises/organizations"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 )
 
-func RemoveCommand() cli.Command {
-	return cli.Command{
+func RemoveCommand() *cli.Command {
+	return &cli.Command{
 		Name:   "remove",
 		Usage:  "Remove users from the specified enterprise's organization",
 		Action: command.AuthorizedCommandAction(newRemoveCommand),

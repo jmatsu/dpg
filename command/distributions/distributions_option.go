@@ -1,7 +1,7 @@
 package distributions
 
 import (
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 )
 
 type option int
@@ -22,7 +22,7 @@ func (o option) name() string {
 func (o option) Flag() cli.Flag {
 	switch o {
 	case DistributionKey:
-		return cli.StringFlag{
+		return &cli.StringFlag{
 			Name:  o.name(),
 			Usage: "[Required] The key of the target distribution.",
 		}

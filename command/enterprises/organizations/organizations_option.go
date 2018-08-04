@@ -3,7 +3,7 @@ package organizations
 import (
 	"errors"
 	"fmt"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 )
 
 type option int
@@ -24,7 +24,7 @@ func (o option) name() string {
 func (o option) Flag() cli.Flag {
 	switch o {
 	case OrganizationName:
-		return cli.StringSliceFlag{
+		return &cli.StringSliceFlag{
 			Name:  o.name(),
 			Usage: "The name of the target enterprise's organization",
 		}

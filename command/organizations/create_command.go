@@ -4,11 +4,11 @@ import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/organizations/create"
 	"github.com/jmatsu/dpg/command"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 )
 
-func CreateCommand() cli.Command {
-	return cli.Command{
+func CreateCommand() *cli.Command {
+	return &cli.Command{
 		Name:   "create",
 		Usage:  "Create an organization",
 		Action: command.AuthorizedCommandAction(newCreateCommand),

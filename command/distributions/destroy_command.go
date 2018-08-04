@@ -6,11 +6,11 @@ import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/distributions/destroy"
 	"github.com/jmatsu/dpg/command"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 )
 
-func DestroyCommand() cli.Command {
-	return cli.Command{
+func DestroyCommand() *cli.Command {
+	return &cli.Command{
 		Name:   "destroy",
 		Usage:  "Destroy the specified distribution",
 		Action: command.AuthorizedCommandAction(newDestroyCommand),

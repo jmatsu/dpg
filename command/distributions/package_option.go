@@ -2,7 +2,7 @@ package distributions
 
 import (
 	"github.com/jmatsu/dpg/command"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 )
 
 func removeFlags() []cli.Flag {

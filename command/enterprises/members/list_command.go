@@ -5,11 +5,11 @@ import (
 	"github.com/jmatsu/dpg/api/request/enterprises/members/list"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/enterprises"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 )
 
-func ListCommand() cli.Command {
-	return cli.Command{
+func ListCommand() *cli.Command {
+	return &cli.Command{
 		Name:   "list",
 		Usage:  "Show users who belong to the specified enterprise",
 		Action: command.AuthorizedCommandAction(newListCommand),

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 )
 
 type packageOption int
@@ -29,12 +29,12 @@ func (o packageOption) name() string {
 func (o packageOption) flag() cli.Flag {
 	switch o {
 	case teamName:
-		return cli.StringSliceFlag{
+		return &cli.StringSliceFlag{
 			Name:  o.name(),
 			Usage: "[Required] A name of a team",
 		}
 	case userName:
-		return cli.StringSliceFlag{
+		return &cli.StringSliceFlag{
 			Name:  o.name(),
 			Usage: "[Required] A name of a user. ",
 		}

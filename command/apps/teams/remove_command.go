@@ -5,11 +5,11 @@ import (
 	"github.com/jmatsu/dpg/api/request/apps/teams/remove"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 )
 
-func RemoveCommand() cli.Command {
-	return cli.Command{
+func RemoveCommand() *cli.Command {
+	return &cli.Command{
 		Name:   "remove",
 		Usage:  "Removed a team from the specified application",
 		Action: command.AuthorizedCommandAction(newRemoveCommand),

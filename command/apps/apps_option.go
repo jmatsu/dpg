@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/sirupsen/logrus"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 )
 
 type option int
@@ -34,22 +34,22 @@ func (o option) name() string {
 func (o option) Flag() cli.Flag {
 	switch o {
 	case AppOwnerName:
-		return cli.StringFlag{
+		return &cli.StringFlag{
 			Name:  o.name(),
 			Usage: "[Required] The owner of the application",
 		}
 	case AppId:
-		return cli.StringFlag{
+		return &cli.StringFlag{
 			Name:  o.name(),
 			Usage: "[Required] The application id. e.g. com.deploygate.sample",
 		}
 	case Android:
-		return cli.BoolFlag{
+		return &cli.BoolFlag{
 			Name:  o.name(),
 			Usage: "[Required] Specify this if the application is an android application",
 		}
 	case IOS:
-		return cli.BoolFlag{
+		return &cli.BoolFlag{
 			Name:  o.name(),
 			Usage: "[Required] Specify this if the application is an iOS application",
 		}
