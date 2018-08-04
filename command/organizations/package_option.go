@@ -2,6 +2,7 @@ package organizations
 
 import (
 	"github.com/jmatsu/dpg/command"
+	"github.com/jmatsu/dpg/command/constant"
 	"gopkg.in/guregu/null.v3"
 	"gopkg.in/urfave/cli.v2"
 )
@@ -15,7 +16,7 @@ const (
 func (o packageOption) name() string {
 	switch o {
 	case description:
-		return "description"
+		return constant.Description
 	}
 
 	panic("Option name mapping is not found")

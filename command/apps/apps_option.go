@@ -3,6 +3,7 @@ package apps
 import (
 	"errors"
 	"fmt"
+	"github.com/jmatsu/dpg/command/constant"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/urfave/cli.v2"
 )
@@ -19,13 +20,13 @@ const (
 func (o option) name() string {
 	switch o {
 	case AppOwnerName:
-		return "app-owner"
+		return constant.AppOwnerName
 	case AppId:
-		return "app-id"
+		return constant.AppId
 	case Android:
-		return "android"
+		return constant.Android
 	case IOS:
-		return "ios"
+		return constant.IOS
 	}
 
 	panic("Option name mapping is not found")

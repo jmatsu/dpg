@@ -17,7 +17,7 @@ func UploadCommand() *cli.Command {
 		Name:   "upload",
 		Usage:  "Upload either android application or iOS application to the specified owner space",
 		Action: command.AuthorizedCommandAction(NewUploadCommand),
-		Flags:  uploadFlags(),
+		Flags:  UploadFlags(),
 	}
 }
 

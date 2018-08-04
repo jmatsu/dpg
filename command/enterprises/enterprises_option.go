@@ -3,6 +3,7 @@ package enterprises
 import (
 	"errors"
 	"fmt"
+	"github.com/jmatsu/dpg/command/constant"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -15,7 +16,7 @@ const (
 func (o option) name() string {
 	switch o {
 	case EnterpriseName:
-		return "enterprise-name"
+		return constant.EnterpriseName
 	}
 
 	panic("Option name mapping is not found")

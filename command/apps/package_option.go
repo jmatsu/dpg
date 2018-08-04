@@ -2,6 +2,7 @@ package apps
 
 import (
 	"github.com/jmatsu/dpg/command"
+	"github.com/jmatsu/dpg/command/constant"
 	"gopkg.in/guregu/null.v3"
 	"gopkg.in/urfave/cli.v2"
 )
@@ -18,7 +19,7 @@ const (
 	releaseNote
 )
 
-func uploadFlags() []cli.Flag {
+func UploadFlags() []cli.Flag {
 	return []cli.Flag{
 		command.ApiToken.Flag(),
 		AppOwnerName.Flag(),
@@ -37,19 +38,19 @@ func uploadFlags() []cli.Flag {
 func (o packageOption) name() string {
 	switch o {
 	case appFilePath:
-		return "app"
+		return constant.AppFilePath
 	case isPublic:
-		return "public"
+		return constant.IsPublic
 	case enableNotification:
-		return "enableNotification"
+		return constant.EnableNotification
 	case shortMessage:
-		return "message"
+		return constant.ShortMessage
 	case distributionKey:
-		return "distributionKey"
+		return constant.DistributionKey
 	case distributionName:
-		return "distributionName"
+		return constant.DistributionName
 	case releaseNote:
-		return "releaseNote"
+		return constant.ReleaseNote
 	}
 
 	panic("Option name mapping is not found")

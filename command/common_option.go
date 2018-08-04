@@ -1,6 +1,7 @@
 package command
 
 import (
+	"github.com/jmatsu/dpg/command/constant"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/urfave/cli.v2"
 )
@@ -27,7 +28,7 @@ func (o option) name() string {
 	switch o {
 	case
 		ApiToken:
-		return "token"
+		return constant.ApiToken
 	}
 
 	panic("Option name mapping is not found")
