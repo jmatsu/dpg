@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/jmatsu/deploygate-cli-go/tree/master.svg?style=svg)](https://circleci.com/gh/jmatsu/deploygate-cli-go/tree/master)
+
 # dpg
 
     dpg - Golang implementation of  DeployGate API Client CLI
