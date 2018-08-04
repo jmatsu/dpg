@@ -11,6 +11,7 @@ split_by_space_and_get_tail() {
 }
 
 create_helps() {
+    rm -fr docs || :
     mkdir -p docs
 
     while read COMMAND; do
