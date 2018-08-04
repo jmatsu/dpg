@@ -1,12 +1,33 @@
+default_env: &default_env
+  docker:
+    - image: circleci/golang:1.10.3
+  working_directory: /go/src/github.com/jmatsu/dpg
+
 version: 2
 jobs:
-  build:
-    docker:
-      - image: circleci/golang:1.10.3
-
-    working_directory: /go/src/github.com/jmatsu/dpg
+  on_every_commit:
+    <<: *default_env
     steps:
       - checkout
       - run: go get -v -t -d ./...
       - run: go test -v ./...
       - run: ./scripts/make_diff_by_go-fmt
+  update_docs:
+    <<: *default_env
+    steps:
+      - checkout
+      - run: |
+          go build
+          PATH=$PWD:$PATH ./scripts/update_README.bash
+
+workflows:
+  version: 2
+  every_branch:
+    jobs:
+      - on_every_commit
+  on_master:
+    jobs:
+      - update_docs:
+          filters:
+            branches:
+              only: /master/

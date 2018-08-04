@@ -40,6 +40,12 @@ func newAddCommand(c *cli.Context) (command.Command, error) {
 	return cmd, nil
 }
 
+/*
+Endpoint:
+	enterprise name is required
+Parameters:
+	shared team name is required
+*/
 func (cmd addCommand) VerifyInput() error {
 	if err := enterprises.RequireEnterpriseName(cmd.endpoint.EnterpriseName); err != nil {
 		return err

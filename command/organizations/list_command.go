@@ -36,6 +36,12 @@ func newListCommand(_ *cli.Context) (command.Command, error) {
 	return cmd, nil
 }
 
+/*
+Endpoint:
+	none
+Parameters:
+	none
+*/
 func (cmd listCommand) VerifyInput() error {
 	return nil
 }

@@ -48,6 +48,14 @@ func newAddCommand(c *cli.Context) (command.Command, error) {
 	return cmd, nil
 }
 
+/*
+Endpoint:
+	organization name is required
+	app id is required
+	app platform is required
+Parameters:
+	shared team name is required
+*/
 func (cmd addCommand) VerifyInput() error {
 	if err := apps.RequireAppOwnerName(cmd.endpoint.OrganizationName); err != nil {
 		return err
