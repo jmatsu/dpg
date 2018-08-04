@@ -60,7 +60,7 @@ Under MIT License. See [LICENSE](./LICENSE)
 EOF
 }
 
-if [[ $(git log --merges --format='%s' -1|awk '$0=$NF') =~ ^update_doc_on_.* ]]; then
+if [[ $(git log --merges --format='%s' -1|awk '$0=$NF') == "jmatsu/update_doc" ]]; then
     echo "Merged from doc update branch."
     return 0
 fi
@@ -72,11 +72,11 @@ if [[ -z $(git diff) ]]; then
     return 0
 fi
 
-branch_name="update_doc_on_$(git rev-parse --short HEAD)"
+branch_name="update_doc"
 
 git config user.email "jmatsu.drm+github@gmail.com"
 git config user.name "CircleCI job"
 git checkout -b "$branch_name"
 git add .
-git commit -m "Updated docs based on the script"
+git commit -m "Updated docs ${CIRCLE_SHA1}"
 git push origin "$branch_name"
