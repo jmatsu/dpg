@@ -53,6 +53,31 @@ func TestAppMembersEndpoint_ToURL(t *testing.T) {
 	}
 }
 
+func TestAppDistributionsEndpoint_ToURL(t *testing.T) {
+	cases := []struct {
+		in       AppDistributionsEndpoint
+		expected string
+	}{
+		{
+			in: AppDistributionsEndpoint{
+				BaseURL:      "x",
+				AppOwnerName: "y",
+				AppPlatform:  "android",
+				AppId:        "package",
+			},
+			expected: "x/api/users/y/platforms/android/apps/package/distributions",
+		},
+	}
+
+	for i, c := range cases {
+		t.Logf("TestAppDistributionsEndpoint_ToURL at %d", i)
+
+		if c.in.ToURL() != c.expected {
+			t.Errorf("%s was expected but %s was found.", c.expected, c.in.ToURL())
+		}
+	}
+}
+
 func TestOrganizationAppTeamsEndpoint_ToURL(t *testing.T) {
 	cases := []struct {
 		in       OrganizationAppTeamsEndpoint
