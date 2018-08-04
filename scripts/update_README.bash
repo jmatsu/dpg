@@ -68,6 +68,10 @@ fi
 create_helps
 create_readme > README.md
 
+if [[ -z $(git diff) ]]; then
+    return 0
+fi
+
 branch_name="update_doc_on_$(git rev-parse --short HEAD)"
 
 git config user.email "jmatsu.drm+github@gmail.com"
