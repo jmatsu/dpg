@@ -33,6 +33,7 @@ func main() {
 	app.Name = "dpg"
 	app.Usage = "DeployGate API client CLI"
 	app.Version = "0.1"
+	app.EnableShellCompletion = true
 	app.Commands = []*cli.Command{
 		{
 			Name:  "app",
