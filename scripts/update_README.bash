@@ -24,14 +24,15 @@ cat<<'EOF'
 
 # dpg
 
-    dpg - Golang implementation of  DeployGate API Client CLI
-    DeployGate API reference is https://docs.deploygate.com/reference#deploygate-api
+dpg - Golang implementation of  DeployGate API Client CLI
+
+DeployGate API reference is https://docs.deploygate.com/reference#deploygate-api
 
 ## Usage
 
 The basic syntax is:
 
-   dpg command [command options] [arguments...]
+    dpg command [command options] [arguments...]
 
 If you'd like to see the version, then run `dpg version`.
 
@@ -43,7 +44,7 @@ If you'd like to see the version, then run `dpg version`.
 EOF
 
 while read COMMAND; do
-    echo "\t${COMMAND} [HELP](./"docs/$(split_by_space_and_get_tail ${COMMAND} | tr " " ".").md")"
+    echo -e "\t${COMMAND} [HELP](./"docs/$(split_by_space_and_get_tail ${COMMAND} | tr " " ".").md")"
 done < <($(dirname "$0")/list_all_command.bash)
 
 cat<<'EOF'
@@ -72,11 +73,14 @@ if [[ -z $(git diff) ]]; then
     return 0
 fi
 
+if [[ "${CI:-false}" == "true" ]]; then
+    git config user.email "jmatsu.drm+github@gmail.com"
+    git config user.name "CircleCI job"
+fi
+
 branch_name="update_doc"
 
-git config user.email "jmatsu.drm+github@gmail.com"
-git config user.name "CircleCI job"
 git checkout -b "$branch_name"
 git add .
-git commit -m "Updated docs ${CIRCLE_SHA1}"
+git commit -m "Updated docs ${CIRCLE_SHA1:-$(git rev-parse HEAD)}"
 git push origin "$branch_name"
