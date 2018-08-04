@@ -12,7 +12,7 @@ func ListCommand() *cli.Command {
 	return &cli.Command{
 		Name:   "list",
 		Usage:  "Show users who belong to the specified application (expect the apps owner)",
-		Action: command.AuthorizedCommandAction(newListCommand),
+		Action: command.AuthorizedCommandAction(NewListCommand),
 		Flags:  listFlags(),
 	}
 }
@@ -22,7 +22,7 @@ type listCommand struct {
 	requestParams *list.Request
 }
 
-func newListCommand(c *cli.Context) (command.Command, error) {
+func NewListCommand(c *cli.Context) (command.Command, error) {
 	platform, err := apps.GetAppPlatform(c)
 
 	if err != nil {

@@ -7,6 +7,7 @@ import (
 	"github.com/jmatsu/dpg/api/request/apps/distributions/destroy"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
+	"github.com/jmatsu/dpg/command/constant"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -14,7 +15,7 @@ func DestroyCommand() *cli.Command {
 	return &cli.Command{
 		Name:   "destroy",
 		Usage:  "Destroy the specified distribution",
-		Action: command.AuthorizedCommandAction(newDestroyCommand),
+		Action: command.AuthorizedCommandAction(NewDestroyCommand),
 		Flags:  destroyFlags(),
 	}
 }
@@ -24,7 +25,7 @@ type destroyCommand struct {
 	requestBody *destroy.Request
 }
 
-func newDestroyCommand(c *cli.Context) (command.Command, error) {
+func NewDestroyCommand(c *cli.Context) (command.Command, error) {
 	platform, err := apps.GetAppPlatform(c)
 
 	if err != nil {
@@ -72,7 +73,7 @@ func (cmd destroyCommand) VerifyInput() error {
 	}
 
 	if cmd.requestBody.DistributionName == "" {
-		return errors.New(fmt.Sprintf("--%s must not be empty if specified", DistributionName.name()))
+		return errors.New(fmt.Sprintf("--%s must not be empty if specified", constant.DistributionName))
 	}
 
 	return nil

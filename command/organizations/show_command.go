@@ -11,7 +11,7 @@ func ShowCommand() *cli.Command {
 	return &cli.Command{
 		Name:   "show",
 		Usage:  "Show the specified organization",
-		Action: command.AuthorizedCommandAction(newShowCommand),
+		Action: command.AuthorizedCommandAction(NewShowCommand),
 		Flags:  showFlags(),
 	}
 }
@@ -21,7 +21,7 @@ type showCommand struct {
 	requestParams *show.Request
 }
 
-func newShowCommand(c *cli.Context) (command.Command, error) {
+func NewShowCommand(c *cli.Context) (command.Command, error) {
 	cmd := showCommand{
 		endpoint: &api.OrganizationsEndpoint{
 			BaseURL:          api.EndpointURL,

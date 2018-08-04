@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
+	"github.com/jmatsu/dpg/command/constant"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -18,9 +19,9 @@ const (
 func (o packageOption) name() string {
 	switch o {
 	case teamName:
-		return "team-name"
+		return constant.TeamName
 	case userName:
-		return "username"
+		return constant.UserName
 	}
 
 	panic("Option name mapping is not found")

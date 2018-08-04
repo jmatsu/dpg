@@ -2,15 +2,17 @@ package apps
 
 import (
 	"github.com/jmatsu/dpg/command"
+	"github.com/jmatsu/dpg/command/constant"
 	"gopkg.in/guregu/null.v3"
 	"gopkg.in/urfave/cli.v2"
+	"os"
 )
 
 type packageOption int
 
 const (
 	appFilePath packageOption = iota
-	isPublic
+	public
 	enableNotification
 	shortMessage
 	distributionKey
@@ -18,14 +20,14 @@ const (
 	releaseNote
 )
 
-func uploadFlags() []cli.Flag {
+func UploadFlags() []cli.Flag {
 	return []cli.Flag{
 		command.ApiToken.Flag(),
 		AppOwnerName.Flag(),
 		Android.Flag(),
 		IOS.Flag(),
 		appFilePath.flag(),
-		isPublic.flag(),
+		public.flag(),
 		enableNotification.flag(),
 		shortMessage.flag(),
 		distributionKey.flag(),
@@ -37,19 +39,19 @@ func uploadFlags() []cli.Flag {
 func (o packageOption) name() string {
 	switch o {
 	case appFilePath:
-		return "app"
-	case isPublic:
-		return "public"
+		return constant.AppFilePath
+	case public:
+		return constant.IsPublic
 	case enableNotification:
-		return "enableNotification"
+		return constant.EnableNotification
 	case shortMessage:
-		return "message"
+		return constant.ShortMessage
 	case distributionKey:
-		return "distributionKey"
+		return constant.DistributionKey
 	case distributionName:
-		return "distributionName"
+		return constant.DistributionName
 	case releaseNote:
-		return "releaseNote"
+		return constant.ReleaseNote
 	}
 
 	panic("Option name mapping is not found")
@@ -62,7 +64,7 @@ func (o packageOption) flag() cli.Flag {
 			Name:  o.name(),
 			Usage: "[Required] The file path of the application to be uploaded",
 		}
-	case isPublic:
+	case public:
 		return &cli.BoolFlag{
 			Name:  o.name(),
 			Usage: "Specify true if an application to be uploaded should be public",
@@ -101,8 +103,8 @@ func getAppFilePath(c *cli.Context) string {
 	return c.String(appFilePath.name())
 }
 
-func isPublc(c *cli.Context) bool {
-	return c.Bool(isPublic.name())
+func isPublic(c *cli.Context) bool {
+	return c.Bool(public.name())
 }
 
 func isEnabledNotification(c *cli.Context) bool {
@@ -112,6 +114,8 @@ func isEnabledNotification(c *cli.Context) bool {
 func getShortMessage(c *cli.Context) null.String {
 	if x := c.String(shortMessage.name()); c.IsSet(shortMessage.name()) {
 		return null.StringFrom(x)
+	} else if x := os.Getenv("DEPLOYGATE_MESSAGE"); x != "" {
+		return null.StringFrom(x)
 	} else {
 		return null.StringFromPtr(nil)
 	}
@@ -119,6 +123,8 @@ func getShortMessage(c *cli.Context) null.String {
 
 func getDistributionKey(c *cli.Context) null.String {
 	if x := c.String(distributionKey.name()); c.IsSet(distributionKey.name()) {
+		return null.StringFrom(x)
+	} else if x := os.Getenv("DEPLOYGATE_DISTRIBUTION_KEY"); x != "" {
 		return null.StringFrom(x)
 	} else {
 		return null.StringFromPtr(nil)
@@ -135,6 +141,8 @@ func getDistributionName(c *cli.Context) null.String {
 
 func getReleaseNote(c *cli.Context) null.String {
 	if x := c.String(releaseNote.name()); c.IsSet(releaseNote.name()) {
+		return null.StringFrom(x)
+	} else if x := os.Getenv("DEPLOYGATE_RELEASE_NOTE"); x != "" {
 		return null.StringFrom(x)
 	} else {
 		return null.StringFromPtr(nil)

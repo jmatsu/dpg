@@ -16,8 +16,8 @@ func UploadCommand() *cli.Command {
 	return &cli.Command{
 		Name:   "upload",
 		Usage:  "Upload either android application or iOS application to the specified owner space",
-		Action: command.AuthorizedCommandAction(newUploadCommand),
-		Flags:  uploadFlags(),
+		Action: command.AuthorizedCommandAction(NewUploadCommand),
+		Flags:  UploadFlags(),
 	}
 }
 
@@ -26,7 +26,7 @@ type uploadCommand struct {
 	requestBody *upload.Request
 }
 
-func newUploadCommand(c *cli.Context) (command.Command, error) {
+func NewUploadCommand(c *cli.Context) (command.Command, error) {
 	appFilePath := getAppFilePath(c)
 
 	if platform, err := GetAppPlatform(c); err != nil {
@@ -48,7 +48,7 @@ func newUploadCommand(c *cli.Context) (command.Command, error) {
 		},
 		requestBody: &upload.Request{
 			AppFilePath:        appFilePath,
-			AppVisible:         isPublc(c),
+			AppVisible:         isPublic(c),
 			EnableNotification: isEnabledNotification(c),
 			ShortMessage:       getShortMessage(c),
 			DistributionKey:    getDistributionKey(c),

@@ -12,7 +12,7 @@ func AddCommand() *cli.Command {
 	return &cli.Command{
 		Name:   "add",
 		Usage:  "Add a team to the specified application",
-		Action: command.AuthorizedCommandAction(newAddCommand),
+		Action: command.AuthorizedCommandAction(NewAddCommand),
 		Flags:  addFlags(),
 	}
 }
@@ -22,7 +22,7 @@ type addCommand struct {
 	requestBody *add.Request
 }
 
-func newAddCommand(c *cli.Context) (command.Command, error) {
+func NewAddCommand(c *cli.Context) (command.Command, error) {
 	platform, err := apps.GetAppPlatform(c)
 
 	if err != nil {

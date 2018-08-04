@@ -20,6 +20,7 @@ import (
 	"github.com/jmatsu/dpg/command/organizations"
 	organizationMembers "github.com/jmatsu/dpg/command/organizations/members"
 	organizationTeamMembers "github.com/jmatsu/dpg/command/organizations/teams/members"
+	"github.com/jmatsu/dpg/command/procedure/app_manage"
 	"gopkg.in/urfave/cli.v2"
 	"strconv"
 )
@@ -168,6 +169,20 @@ SUPPORT:
 						enterpriseSharedTeams.AddCommand(),
 						enterpriseSharedTeams.RemoveCommand(),
 						enterpriseSharedTeams.ListCommand(),
+					},
+				},
+			},
+		},
+		{
+			Name:  "procedure",
+			Usage: "Procedures based on combined API calls",
+			Subcommands: []*cli.Command{
+				{
+					Name:  "app-manage",
+					Usage: "Procedures to manage applications especially on CI",
+					Subcommands: []*cli.Command{
+						app_manage.OnFeatureBranchCommand(),
+						app_manage.OnDeployBranchCommand(),
 					},
 				},
 			},

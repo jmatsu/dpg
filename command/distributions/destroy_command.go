@@ -13,7 +13,7 @@ func DestroyCommand() *cli.Command {
 	return &cli.Command{
 		Name:   "destroy",
 		Usage:  "Destroy the specified distribution",
-		Action: command.AuthorizedCommandAction(newDestroyCommand),
+		Action: command.AuthorizedCommandAction(NewDestroyCommand),
 		Flags:  removeFlags(),
 	}
 }
@@ -23,7 +23,7 @@ type destroyCommand struct {
 	requestBody *destroy.Request
 }
 
-func newDestroyCommand(c *cli.Context) (command.Command, error) {
+func NewDestroyCommand(c *cli.Context) (command.Command, error) {
 	cmd := destroyCommand{
 		endpoint: &api.DistributionsEndpoint{
 			BaseURL:         api.EndpointURL,
