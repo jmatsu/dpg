@@ -32,6 +32,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "dpg"
 	app.Usage = "DeployGate API client CLI"
+	app.Version = "0.1"
 	app.Commands = []cli.Command{
 		{
 			Name:  "app",
