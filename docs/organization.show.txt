@@ -7,4 +7,5 @@ USAGE:
 OPTIONS:
    --token value              [Required] API token
    --organization-name value  [Required] The name of the organization
+   --help, -h                 show help (default: false)
    

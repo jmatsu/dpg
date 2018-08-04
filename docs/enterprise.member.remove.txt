@@ -8,4 +8,5 @@ OPTIONS:
    --token value            [Required] API token
    --enterprise-name value  [Required] The name of the target enterprise.
    --username value         A name of a user
+   --help, -h               show help (default: false)
    

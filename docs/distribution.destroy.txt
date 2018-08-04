@@ -7,4 +7,5 @@ USAGE:
 OPTIONS:
    --token value             [Required] API token
    --distribution-key value  [Required] The key of the target distribution.
+   --help, -h                show help (default: false)
    

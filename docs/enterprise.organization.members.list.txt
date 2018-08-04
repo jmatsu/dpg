@@ -8,4 +8,5 @@ OPTIONS:
    --token value              [Required] API token
    --enterprise-name value    [Required] The name of the target enterprise.
    --organization-name value  The name of the target enterprise's organization
+   --help, -h                 show help (default: false)
    
