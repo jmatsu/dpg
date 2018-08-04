@@ -29,7 +29,17 @@ func main() {
 		logrus.SetLevel(logrus.DebugLevel)
 	}
 
-	app := (&cli.App{})
+	cli.InitCompletionFlag.Hidden = true
+
+	cli.AppHelpTemplate = fmt.Sprintf(`%s
+
+WEBSITE: https://github.com/jmatsu/dpg
+
+SUPPORT: https://github.com/jmatsu/dpg/issues
+
+`, cli.AppHelpTemplate)
+
+	app := &cli.App{}
 	app.Name = "dpg"
 	app.Usage = "DeployGate API client CLI"
 	app.Version = "0.1"
