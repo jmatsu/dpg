@@ -61,6 +61,16 @@ Under MIT License. See [LICENSE](./LICENSE)
 EOF
 }
 
+create_pr() {
+  local -r branch_name="$1"
+  local -r api_url="https://api.github.com/repos/jmatsu/dpg/pulls"
+
+  local body=("\"head\": \"$branch_name\"", "\"base\": \"master\"", "\"title\": \"Update Documents via CI\"")
+  local json_body="{${body[*]}}"
+
+  curl -s -H "Authorization: token ${GITHUB_ACCESS_TOKEN}" -H "Content-Type: application/json" -d "${json_body}" "${api_url}" || :
+}
+
 if [[ $(git log --merges --format='%s' -1|awk '$0=$NF') == "jmatsu/update_doc" ]]; then
     echo "Merged from doc update branch."
     return 0
@@ -84,3 +94,5 @@ git checkout -b "$branch_name"
 git add .
 git commit -m "Updated docs ${CIRCLE_SHA1:-$(git rev-parse HEAD)}"
 git push origin "$branch_name" -f
+
+create_pr "${branch_name}"
