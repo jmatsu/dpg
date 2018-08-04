@@ -16,8 +16,9 @@ jobs:
     <<: *default_env
     steps:
       - checkout
+      - run: go get -v -t -d ./...
       - run: |
-          go build
+          go build # make sure the version of the used binary
           PATH=$PWD:$PATH ./scripts/update_README.bash
 
 workflows:
