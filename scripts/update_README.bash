@@ -34,12 +34,16 @@ The basic syntax is:
 
     dpg command [command options] [arguments...]
 
-If you'd like to see the version, then run `dpg version`.
+## Installation
+
+```
+go get github.com/jmatsu/dpg
+```
 
 ### COMMANDS
 
-
 `help, h` option is avaiable for all commands.
+If you'd like to see the version, then run `dpg -v`.
 
 EOF
 
@@ -48,12 +52,6 @@ while read COMMAND; do
 done < <($(dirname "$0")/list_all_command.bash)
 
 cat<<'EOF'
-
-## Installation
-
-```
-go get github.com/jmatsu/dpg
-```
 
 ## LICENSE
 
