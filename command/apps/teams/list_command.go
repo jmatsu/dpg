@@ -46,10 +46,14 @@ func newListCommand(c *cli.Context) (command.Command, error) {
 	return cmd, nil
 }
 
-// endpoint:
-//   app owner's name is required
-//   app id is required
-// parameters: None
+/*
+Endpoint:
+	organization name is required
+	app id is required
+	app platform is required
+Parameters:
+	none
+*/
 func (cmd listCommand) VerifyInput() error {
 	if err := apps.RequireAppOwnerName(cmd.endpoint.OrganizationName); err != nil {
 		return err

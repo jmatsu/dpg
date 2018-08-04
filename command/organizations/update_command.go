@@ -47,6 +47,12 @@ func newUpdateCommand(c *cli.Context) (command.Command, error) {
 	return cmd, nil
 }
 
+/*
+Endpoint:
+	organization name is required
+Parameters:
+	description is required
+*/
 func (cmd updateCommand) VerifyInput() error {
 	if err := RequireOrganizationName(cmd.endpoint.OrganizationName); err != nil {
 		return err

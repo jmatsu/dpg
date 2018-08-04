@@ -37,6 +37,12 @@ func newDestroyCommand(c *cli.Context) (command.Command, error) {
 	return cmd, nil
 }
 
+/*
+Endpoint:
+	organization name is required
+Parameters:
+	none
+*/
 func (cmd destroyCommand) VerifyInput() error {
 	if err := RequireOrganizationName(cmd.endpoint.OrganizationName); err != nil {
 		return err

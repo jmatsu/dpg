@@ -39,6 +39,12 @@ func newCreateCommand(c *cli.Context) (command.Command, error) {
 	return cmd, nil
 }
 
+/*
+Endpoint:
+	none
+Parameters:
+	organization name is required
+*/
 func (cmd createCommand) VerifyInput() error {
 	if err := RequireOrganizationName(cmd.requestBody.OrganizationName); err != nil {
 		return err

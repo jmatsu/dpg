@@ -39,6 +39,13 @@ func newRemoveCommand(c *cli.Context) (command.Command, error) {
 	return cmd, nil
 }
 
+/*
+Endpoint:
+	enterprise name is required
+	user name is required
+Parameters:
+	none
+*/
 func (cmd removeCommand) VerifyInput() error {
 	if err := enterprises.RequireEnterpriseName(cmd.endpoint.EnterpriseName); err != nil {
 		return err

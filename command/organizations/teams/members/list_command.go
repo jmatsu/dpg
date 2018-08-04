@@ -39,6 +39,13 @@ func newListCommand(c *cli.Context) (command.Command, error) {
 	return cmd, nil
 }
 
+/*
+Endpoint:
+	organization name is required
+	team name is required
+Parameters:
+	none
+*/
 func (cmd listCommand) VerifyInput() error {
 	if err := organizations.RequireOrganizationName(cmd.endpoint.OrganizationName); err != nil {
 		return err
