@@ -69,6 +69,8 @@ dpg --init-completion zsh >> ~/.zshrc
 - `dpg enterprise shared-team add` [HELP](./docs/enterprise.shared-team.add.txt)
 - `dpg enterprise shared-team remove` [HELP](./docs/enterprise.shared-team.remove.txt)
 - `dpg enterprise shared-team list` [HELP](./docs/enterprise.shared-team.list.txt)
+- `dpg procedure app-manage on-feature-branch` [HELP](./docs/procedure.app-manage.on-feature-branch.txt)
+- `dpg procedure app-manage on-deploy` [HELP](./docs/procedure.app-manage.on-deploy.txt)
 
 ## LICENSE
 

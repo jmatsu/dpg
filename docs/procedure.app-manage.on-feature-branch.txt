@@ -1,8 +1,8 @@
 NAME:
-   dpg app upload - Upload either android application or iOS application to the specified owner space
+   dpg procedure app-manage on-feature-branch - Upload applications on updating feature branches and create distributions 
 
 USAGE:
-   dpg app upload [command options] [arguments...]
+   dpg procedure app-manage on-feature-branch [command options] [arguments...]
 
 OPTIONS:
    --token value              [Required] API token
@@ -10,11 +10,9 @@ OPTIONS:
    --android                  [Required] Specify this if the application is an android application (default: false)
    --ios                      [Required] Specify this if the application is an iOS application (default: false)
    --app value                [Required] The file path of the application to be uploaded
-   --public                   Specify true if an application to be uploaded should be public (default: false)
    --enable-notification      [iOS only] Specify true if iOS's notifications should be enabled (default: false)
    --message value            A short message to explain this update
-   --distribution-key value   A key of a distribution to be updated
-   --distribution-name value  A name of a distribution to be updated
+   --distribution-name value  A name of a distribution to be created or updated
    --release-note value       A release note for this revision
    --help, -h                 show help (default: false)
    
