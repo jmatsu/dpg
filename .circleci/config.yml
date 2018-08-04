@@ -16,7 +16,9 @@ jobs:
     <<: *default_env
     steps:
       - checkout
-      - run: ./scripts/update_README.bash
+      - run: |
+          go build
+          PATH=$PWD:$PATH ./scripts/update_README.bash
 
 workflows:
   version: 2
