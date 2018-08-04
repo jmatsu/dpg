@@ -44,7 +44,7 @@ If you'd like to see the version, then run `dpg version`.
 EOF
 
 while read COMMAND; do
-    echo -e "\t${COMMAND} [HELP](./"docs/$(split_by_space_and_get_tail ${COMMAND} | tr " " ".").md")"
+    echo  "\`${COMMAND}\` [HELP](./"docs/$(split_by_space_and_get_tail ${COMMAND} | tr " " ".").md")"
 done < <($(dirname "$0")/list_all_command.bash)
 
 cat<<'EOF'
@@ -83,4 +83,4 @@ branch_name="update_doc"
 git checkout -b "$branch_name"
 git add .
 git commit -m "Updated docs ${CIRCLE_SHA1:-$(git rev-parse HEAD)}"
-git push origin "$branch_name"
+git push origin "$branch_name" -f
