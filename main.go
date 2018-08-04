@@ -32,27 +32,31 @@ func main() {
 	cli.InitCompletionFlag.Hidden = true
 
 	cli.AppHelpTemplate = fmt.Sprintf(`%s
+COMPLETION:
+	dpg --init-completion <bash|zsh>
 
-WEBSITE: https://github.com/jmatsu/dpg
+WEBSITE:
+	https://github.com/jmatsu/dpg
 
-SUPPORT: https://github.com/jmatsu/dpg/issues
-
+SUPPORT:
+	https://github.com/jmatsu/dpg/issues
 `, cli.AppHelpTemplate)
 
 	app := &cli.App{}
 	app.Name = "dpg"
-	app.Usage = "DeployGate API client CLI"
+	app.Usage = "Unofficial DeployGate API Client CLI"
+	app.Description = "dpg is an unofficial command line tool to access DeployGate API."
 	app.Version = "0.1"
 	app.EnableShellCompletion = true
 	app.Commands = []*cli.Command{
 		{
 			Name:  "app",
-			Usage: "application-based Operation API",
+			Usage: "Application-based Operation API",
 			Subcommands: []*cli.Command{
 				apps.UploadCommand(),
 				{
 					Name:  "member",
-					Usage: "application-based Member API",
+					Usage: "Application-based Member API",
 					Subcommands: []*cli.Command{
 						members.AddCommand(),
 						members.ListCommand(),
@@ -61,7 +65,7 @@ SUPPORT: https://github.com/jmatsu/dpg/issues
 				},
 				{
 					Name:  "team",
-					Usage: "application-based Team API",
+					Usage: "Application-based Team API",
 					Subcommands: []*cli.Command{
 						teams.AddCommand(),
 						teams.RemoveCommand(),
@@ -70,7 +74,7 @@ SUPPORT: https://github.com/jmatsu/dpg/issues
 				},
 				{
 					Name:  "shared-team",
-					Usage: "application-based Shared Team API",
+					Usage: "Application-based Shared Team API",
 					Subcommands: []*cli.Command{
 						shared_teams.AddCommand(),
 						shared_teams.RemoveCommand(),
@@ -79,7 +83,7 @@ SUPPORT: https://github.com/jmatsu/dpg/issues
 				},
 				{
 					Name:  "distributions",
-					Usage: "application-based Distribution API",
+					Usage: "Application-based Distribution API",
 					Subcommands: []*cli.Command{
 						appDistributions.DestroyCommand(),
 					},
@@ -88,14 +92,15 @@ SUPPORT: https://github.com/jmatsu/dpg/issues
 		},
 		{
 			Name:  "distribution",
-			Usage: "distribution-based Operation API",
+			Usage: "Distribution-based Operation API",
 			Subcommands: []*cli.Command{
 				distributions.DestroyCommand(),
 			},
 		},
 		{
-			Name:  "organization",
-			Usage: "organization-based Operation API",
+			Name:    "organization",
+			Usage:   "Organization-based Operation API",
+			Aliases: []string{"group"},
 			Subcommands: []*cli.Command{
 				organizations.CreateCommand(),
 				organizations.DestroyCommand(),
@@ -104,7 +109,7 @@ SUPPORT: https://github.com/jmatsu/dpg/issues
 				organizations.UpdateCommand(),
 				{
 					Name:  "member",
-					Usage: "organization-based Member API",
+					Usage: "Organization-based Member API",
 					Subcommands: []*cli.Command{
 						organizationMembers.AddCommand(),
 						organizationMembers.RemoveCommand(),
@@ -113,7 +118,7 @@ SUPPORT: https://github.com/jmatsu/dpg/issues
 				},
 				{
 					Name:  "team",
-					Usage: "organization-based Team API",
+					Usage: "Organization-based Team API",
 					Subcommands: []*cli.Command{
 						{
 							Name:  "member",
@@ -130,11 +135,11 @@ SUPPORT: https://github.com/jmatsu/dpg/issues
 		},
 		{
 			Name:  "enterprise",
-			Usage: "enterprise-based Operation API",
+			Usage: "Enterprise-based Operation API",
 			Subcommands: []*cli.Command{
 				{
 					Name:  "member",
-					Usage: "enterprise-based Member API",
+					Usage: "Enterprise-based Member API",
 					Subcommands: []*cli.Command{
 						enterpriseMembers.AddCommand(),
 						enterpriseMembers.RemoveCommand(),
@@ -143,11 +148,11 @@ SUPPORT: https://github.com/jmatsu/dpg/issues
 				},
 				{
 					Name:  "organization",
-					Usage: "enterprise-based Organization API",
+					Usage: "Enterprise-based Organization API",
 					Subcommands: []*cli.Command{
 						{
 							Name:  "members",
-							Usage: "enterprise-based Organization Member API",
+							Usage: "Enterprise-based Organization Member API",
 							Subcommands: []*cli.Command{
 								enterpriseOrganizationMembers.AddCommand(),
 								enterpriseOrganizationMembers.RemoveCommand(),
@@ -158,7 +163,7 @@ SUPPORT: https://github.com/jmatsu/dpg/issues
 				},
 				{
 					Name:  "shared-team",
-					Usage: "enterprise-based Shared Team API",
+					Usage: "Enterprise-based Shared Team API",
 					Subcommands: []*cli.Command{
 						enterpriseSharedTeams.AddCommand(),
 						enterpriseSharedTeams.RemoveCommand(),
