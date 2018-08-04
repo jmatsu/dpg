@@ -9,12 +9,9 @@
 
 The basic syntax is:
 
-   dpg [global options] command [command options] [arguments...]
+   dpg command [command options] [arguments...]
 
-Global options:
-
-   --help, -h     show help
-   --version, -v  print the version
+If you'd like to see the version, then run `dpg version`.
 
 ### COMMANDS
 

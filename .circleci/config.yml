@@ -16,13 +16,7 @@ jobs:
     <<: *default_env
     steps:
       - checkout
-      - run: ./scripts/make_docs_of_all_command.bash
-      - run: |
-          branch_name="update_doc_on_${CIRCLE_SHA1}"
-          git checkout -b "$branch_name"
-          git add docs
-          git commit -m "Updated docs based on the script"
-          git push origin "$branch_name"
+      - run: ./scripts/update_README.bash
 
 workflows:
   version: 2

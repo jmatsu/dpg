@@ -1,14 +1,14 @@
 NAME:
-   dpg app shared-team remove - Remove the team from the specified application
+   dpg app shared-team remove - Removed a shared team from the specified application
 
 USAGE:
    dpg app shared-team remove [command options] [arguments...]
 
 OPTIONS:
    --token value      [Required] API token
-   --app-owner value  [Required] An owner of application(s). Only group is allowed.
-   --app-id value     [Required] An application id. e.g. com.deploygate
-   --android          [Required] Either of this or ios flag must be specified
-   --ios              [Required] Either of this or android flag must be specified
-   --team-name value  [Required] A team name to be operated
+   --app-owner value  [Required] The owner of the application
+   --app-id value     [Required] The application id. e.g. com.deploygate.sample
+   --android          [Required] Specify this if the application is an android application
+   --ios              [Required] Specify this if the application is an iOS application
+   --team-name value  [Required] A name of a target team
    

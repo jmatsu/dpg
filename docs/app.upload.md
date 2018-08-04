@@ -6,14 +6,14 @@ USAGE:
 
 OPTIONS:
    --token value             [Required] API token
-   --app-owner value         [Required] An owner of application(s)
-   --android                 [Required] Either of this or ios flag must be specified
-   --ios                     [Required] Either of this or android flag must be specified
-   --app value               [Required] A path of an application file to be uploaded
+   --app-owner value         [Required] The owner of the application
+   --android                 [Required] Specify this if the application is an android application
+   --ios                     [Required] Specify this if the application is an iOS application
+   --app value               [Required] The file path of the application to be uploaded
    --public                  Specify true if an application to be uploaded should be public
    --enableNotification      [iOS only] Specify true if iOS's notifications should be enabled
    --message value           A short message to explain this update
-   --distributionKey value   A key of a distribution which an application will be uploaded to
-   --distributionName value  A name of a distribution which an application will be uploaded to
+   --distributionKey value   A key of a distribution to be updated
+   --distributionName value  A name of a distribution to be updated
    --releaseNote value       A release note for this revision
    

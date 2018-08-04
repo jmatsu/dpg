@@ -32,10 +32,8 @@ _dfs() {
             _dfs "${command} ${new_command%,}"
         done
     else
-        dpg_help ${command} > "docs/$(echo ${command} | tr " " ".").md"
+        echo dpg ${command}
     fi
 }
-
-mkdir -p docs
 
 dfs

@@ -1,8 +1,8 @@
 NAME:
-   dpg app team add - Add a team to the specified application
+   dpg organization team member add - Invite users to the specified team
 
 USAGE:
-   dpg app team add [command options] [arguments...]
+   dpg organization team member add [command options] [arguments...]
 
 OPTIONS:
    --token value      [Required] API token
@@ -10,5 +10,6 @@ OPTIONS:
    --app-id value     [Required] The application id. e.g. com.deploygate.sample
    --android          [Required] Specify this if the application is an android application
    --ios              [Required] Specify this if the application is an iOS application
-   --team-name value  [Required] The name of the target team
+   --team-name value  [Required] A name of a team
+   --username value   [Required] A name of a user.
    

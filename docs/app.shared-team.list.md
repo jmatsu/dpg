@@ -1,13 +1,13 @@
 NAME:
-   dpg app shared-team list - Show teams which belong to the specified application
+   dpg app shared-team list - Show shared teams which belong to the specified application
 
 USAGE:
    dpg app shared-team list [command options] [arguments...]
 
 OPTIONS:
    --token value      [Required] API token
-   --app-owner value  [Required] An owner of application(s). Only group is allowed.
-   --app-id value     [Required] An application id. e.g. com.deploygate
-   --android          [Required] Either of this or ios flag must be specified
-   --ios              [Required] Either of this or android flag must be specified
+   --app-owner value  [Required] The owner of the application
+   --app-id value     [Required] The application id. e.g. com.deploygate.sample
+   --android          [Required] Specify this if the application is an android application
+   --ios              [Required] Specify this if the application is an iOS application
    
