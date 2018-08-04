@@ -1,6 +1,8 @@
 package request
 
 import (
+	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -15,11 +17,14 @@ func (p TestParams) StringMap() (*map[string]string, error) {
 
 var queryCases = []struct {
 	in       TestParams
-	expected string
+	expected []string
 }{
 	{
-		in:       TestParams{},
-		expected: "foo1=bar1&foo2=%26bar2",
+		in: TestParams{},
+		expected: []string{
+			"foo1=bar1",
+			"foo2=%26bar2",
+		},
 	},
 }
 
@@ -29,7 +34,7 @@ func TestToQuery(t *testing.T) {
 
 		if actual, err := ToQuery(c.in); err != nil {
 			t.Error(err.Error())
-		} else if actual != c.expected {
+		} else if !reflect.DeepEqual(strings.Split(actual, "&"), c.expected) {
 			t.Errorf("%s was expected but %s\n", c.expected, actual)
 		}
 	}
