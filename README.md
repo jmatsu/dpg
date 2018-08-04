@@ -2,14 +2,15 @@
 
 # dpg
 
-    dpg - Golang implementation of  DeployGate API Client CLI
-    DeployGate API reference is https://docs.deploygate.com/reference#deploygate-api
+dpg - Golang implementation of  DeployGate API Client CLI
+
+DeployGate API reference is https://docs.deploygate.com/reference#deploygate-api
 
 ## Usage
 
 The basic syntax is:
 
-   dpg command [command options] [arguments...]
+    dpg command [command options] [arguments...]
 
 If you'd like to see the version, then run `dpg version`.
 
