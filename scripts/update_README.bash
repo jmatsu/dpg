@@ -72,14 +72,14 @@ create_pr() {
 
 if [[ $(git log --merges --format='%s' -1|awk '$0=$NF') == "jmatsu/update_doc" ]]; then
     echo "Merged from doc update branch."
-    return 0
+    exit 0
 fi
 
 create_helps
 create_readme > README.md
 
 if [[ -z $(git diff) ]]; then
-    return 0
+    exit 0
 fi
 
 if [[ "${CI:-false}" == "true" ]]; then
