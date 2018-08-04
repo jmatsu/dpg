@@ -48,7 +48,7 @@ func NewUploadCommand(c *cli.Context) (command.Command, error) {
 		},
 		requestBody: &upload.Request{
 			AppFilePath:        appFilePath,
-			AppVisible:         isPublc(c),
+			AppVisible:         isPublic(c),
 			EnableNotification: isEnabledNotification(c),
 			ShortMessage:       getShortMessage(c),
 			DistributionKey:    getDistributionKey(c),

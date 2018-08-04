@@ -50,7 +50,7 @@ func load() (config Config, err error) {
 		return config, err
 	}
 
-	if bytes, err := ioutil.ReadFile(filepath.Dir(ex)); err != nil {
+	if bytes, err := ioutil.ReadFile(filepath.Join(filepath.Dir(ex), ".dpg", "config")); err != nil {
 		return config, err
 	} else if err := json.Unmarshal(bytes, config); err != nil {
 		return config, err

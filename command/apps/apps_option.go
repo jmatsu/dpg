@@ -6,6 +6,7 @@ import (
 	"github.com/jmatsu/dpg/command/constant"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/urfave/cli.v2"
+	"os"
 )
 
 type option int
@@ -60,7 +61,11 @@ func (o option) Flag() cli.Flag {
 }
 
 func GetAppOwnerName(c *cli.Context) string {
-	return c.String(AppOwnerName.name())
+	if c.IsSet(AppOwnerName.name()) {
+		return c.String(AppOwnerName.name())
+	} else {
+		return os.Getenv("DEPLOYGATE_USER_NAME")
+	}
 }
 
 func RequireAppOwnerName(appOwner string) error {

@@ -31,7 +31,7 @@ func onFeatureBranchFlags() []cli.Flag {
 	}
 }
 
-func onMergeFlags() []cli.Flag {
+func onDeployBranchFlags() []cli.Flag {
 	return []cli.Flag{
 		command.ApiToken.Flag(),
 		apps.AppOwnerName.Flag(),

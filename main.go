@@ -181,7 +181,6 @@ SUPPORT:
 					Name:  "app-manage",
 					Usage: "Procedures to manage applications especially on CI",
 					Subcommands: []*cli.Command{
-						app_manage.InitCommand(),
 						app_manage.OnFeatureBranchCommand(),
 						app_manage.OnDeployBranchCommand(),
 					},

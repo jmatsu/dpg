@@ -16,7 +16,7 @@ func OnDeployBranchCommand() *cli.Command {
 		Name:   "on-deploy",
 		Usage:  "Delete associated distributions on deploy branch",
 		Action: command.AuthorizedCommandAction(newOnDeployBranchCommand),
-		Flags:  onMergeFlags(),
+		Flags:  onDeployBranchFlags(),
 	}
 }
 
