@@ -44,13 +44,17 @@ func init() {
 }
 
 func load() (config Config, err error) {
-	ex, err := os.Executable()
+	wd, err := os.Getwd()
 
 	if err != nil {
 		return config, err
 	}
 
-	if bytes, err := ioutil.ReadFile(filepath.Join(filepath.Dir(ex), ".dpg", "config")); err != nil {
+	configFile := filepath.Join(wd, ".dpg", "config")
+
+	if _, err := os.Stat(configFile); os.IsNotExist(err) {
+		return config, err
+	} else if bytes, err := ioutil.ReadFile(configFile); err != nil {
 		return config, err
 	} else if err := json.Unmarshal(bytes, config); err != nil {
 		return config, err

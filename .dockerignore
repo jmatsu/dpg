@@ -1,0 +1,7 @@
+vendor/
+.idea/
+.circleci/
+dpg
+LICENSE
+README.md
+docs/
