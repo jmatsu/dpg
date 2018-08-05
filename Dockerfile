@@ -9,3 +9,4 @@ ADD . $GOPATH/src/github.com/jmatsu/dpg
 
 RUN go get -v -t -d ./...
 RUN go install .
+RUN rm -fr ./*
