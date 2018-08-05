@@ -29,7 +29,7 @@ func newOnDeployBranchCommand(c *cli.Context) (command.Command, error) {
 		logrus.Debugf("Use the specified distribution name { %s }", c.String(constant.DistributionName))
 	} else if name := os.Getenv("DPG_DISTRIBUTION_NAME"); name != "" {
 		c.Set(constant.DistributionName, name)
-	} else if branchRef, err := exec.Command("sh", "-c", `git log --format=%s --merges -1|sed 's/.*\/\([^/]*\)$/\1/'`).Output(); err == nil {
+	} else if branchRef, err := exec.Command("sh", "-c", `git log --format=%s --merges -1 | sed 's/^.* from [^\/]*\/\(.*\)$/\1/'`).Output(); err == nil {
 		c.Set(constant.DistributionName, string(branchRef))
 	} else {
 		return nil, err

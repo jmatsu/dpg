@@ -39,6 +39,10 @@ func FilterErrorResponse(resp http.Response) (bytes []byte, errorResponse *Error
 	errResp := errorResponseMock{}
 
 	if err := json.Unmarshal(bytes, &errResp); err != nil {
+		if _, ok := err.(*json.SyntaxError); ok {
+			logrus.Errorln("Got an error response but it's not a json")
+		}
+
 		failure = err
 		return
 	}
