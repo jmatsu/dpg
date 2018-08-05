@@ -33,7 +33,7 @@ func init() {
 	config, err := load()
 
 	if err != nil {
-		logrus.Errorln(err)
+		logrus.Debugln(err)
 
 		config = Config{
 			err: 1,
