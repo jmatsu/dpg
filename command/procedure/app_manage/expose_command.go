@@ -115,7 +115,7 @@ func inferDistributionName(c *cli.Context) null.String {
 	if c.Bool(constant.IsFeatureBranch) {
 		getCmd = `git rev-parse --abbrev-ref HEAD`
 	} else {
-		getCmd = `[ $(git log --format=%h --merges -1) = $(git log --format=%h -1) ] && git log --format=%s --merges -1 | sed 's/^.* from [^\/]*\/\(.*\)$/\1/'`
+		getCmd = `[ -n $(git show --merges HEAD -q) ] && git show HEAD -q --format=%s --merges | sed 's/^.* from [^\/]*\/\(.*\)$/\1/'`
 	}
 
 	if c.IsSet(constant.DistributionName) {
