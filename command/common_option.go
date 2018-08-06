@@ -2,9 +2,7 @@ package command
 
 import (
 	"github.com/jmatsu/dpg/command/constant"
-	"github.com/sirupsen/logrus"
 	"gopkg.in/urfave/cli.v2"
-	"os"
 )
 
 type option int
@@ -17,8 +15,9 @@ func (o option) Flag() cli.Flag {
 	switch o {
 	case ApiToken:
 		return &cli.StringFlag{
-			Name:  o.name(),
-			Usage: "[Required] API token",
+			Name:    o.name(),
+			Usage:   "[Required] API token",
+			EnvVars: []string{constant.ApiTokenEnv, constant.DeployGateApiTokenEnv},
 		}
 	}
 
@@ -36,15 +35,9 @@ func (o option) name() string {
 }
 
 func GetApiToken(c *cli.Context) string {
-	var token string
-
 	if c.IsSet(ApiToken.name()) {
-		token = c.String(ApiToken.name())
+		return c.String(ApiToken.name())
 	} else {
-		token = os.Getenv("DEPLOYGATE_API_TOKEN")
+		return ""
 	}
-
-	logrus.Debugf("Token %s\n", token)
-
-	return token
 }

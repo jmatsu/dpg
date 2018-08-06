@@ -1,19 +1,17 @@
 package app_manage
 
 import (
+	"errors"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/command"
 	distributionsCommand "github.com/jmatsu/dpg/command/apps/distributions"
 	"github.com/jmatsu/dpg/command/constant"
-	"github.com/sirupsen/logrus"
 	"gopkg.in/urfave/cli.v2"
-	"os"
-	"os/exec"
 )
 
 func OnDeployBranchCommand() *cli.Command {
 	return &cli.Command{
-		Name:   "on-deploy",
+		Name:   "on-deploy-branch",
 		Usage:  "Delete associated distributions on deploy branch",
 		Action: command.AuthorizedCommandAction(newOnDeployBranchCommand),
 		Flags:  onDeployBranchFlags(),
@@ -25,14 +23,15 @@ type onDeployBranchCommand struct {
 }
 
 func newOnDeployBranchCommand(c *cli.Context) (command.Command, error) {
-	if c.IsSet(constant.DistributionName) {
-		logrus.Debugf("Use the specified distribution name { %s }", c.String(constant.DistributionName))
-	} else if name := os.Getenv("DPG_DISTRIBUTION_NAME"); name != "" {
-		c.Set(constant.DistributionName, name)
-	} else if branchRef, err := exec.Command("sh", "-c", `git log --format=%s --merges -1 | sed 's/^.* from [^\/]*\/\(.*\)$/\1/'`).Output(); err == nil {
-		c.Set(constant.DistributionName, string(branchRef))
+	// Don't need to control IsFeatureBranch option
+	variableCatalog := newOnExposeCommandWithoutVerification(c)
+
+	if distributionName := variableCatalog.DistributionName; distributionName.Valid {
+		c.Set(constant.DistributionName, distributionName.String)
+	} else if distributionKey := variableCatalog.DistributionKey; distributionKey.Valid {
+		c.Set(constant.DistributionKey, distributionKey.String)
 	} else {
-		return nil, err
+		return nil, errors.New("either distribution name or key is required")
 	}
 
 	destroyDistributionCommand, err := distributionsCommand.NewDestroyCommand(c)

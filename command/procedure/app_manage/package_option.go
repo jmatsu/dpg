@@ -15,7 +15,24 @@ const (
 	shortMessage
 	distributionName
 	releaseNote
+
+	//
+
+	prefix
 )
+
+func exposeFlags() []cli.Flag {
+	return []cli.Flag{
+		command.ApiToken.Flag(),
+		apps.AppOwnerName.Flag(),
+		apps.Android.Flag(),
+		apps.IOS.Flag(),
+		appFilePath.flag(),
+		enableNotification.flag(),
+		distributionName.flag(),
+		prefix.flag(),
+	}
+}
 
 func onFeatureBranchFlags() []cli.Flag {
 	return []cli.Flag{
@@ -54,6 +71,8 @@ func (o packageOption) name() string {
 		return constant.ShortMessage
 	case releaseNote:
 		return constant.ReleaseNote
+	case prefix:
+		return constant.Prefix
 	}
 
 	panic("Option name mapping is not found")
@@ -62,14 +81,16 @@ func (o packageOption) name() string {
 func (o packageOption) flag() cli.Flag {
 	switch o {
 	case appFilePath:
-		return &cli.StringFlag{
-			Name:  o.name(),
-			Usage: "[Required] The file path of the application to be uploaded",
+		return &cli.PathFlag{
+			Name:    o.name(),
+			EnvVars: []string{constant.AppFilePathEnv},
+			Usage:   "[Required] The file path of the application to be uploaded",
 		}
 	case enableNotification:
 		return &cli.BoolFlag{
-			Name:  o.name(),
-			Usage: "[iOS only] Specify true if iOS's notifications should be enabled",
+			Name:    o.name(),
+			EnvVars: []string{constant.EnableNotificationEnv},
+			Usage:   "[iOS only] Specify true if iOS's notifications should be enabled",
 		}
 	case shortMessage:
 		return &cli.StringFlag{
@@ -78,13 +99,19 @@ func (o packageOption) flag() cli.Flag {
 		}
 	case distributionName:
 		return &cli.StringFlag{
-			Name:  o.name(),
-			Usage: "A name of a distribution to be created or updated",
+			Name:    o.name(),
+			EnvVars: []string{constant.DistributionNameEnv},
+			Usage:   "A name of a distribution to be created or updated",
 		}
 	case releaseNote:
 		return &cli.StringFlag{
 			Name:  o.name(),
 			Usage: "A release note for this revision",
+		}
+	case prefix:
+		return &cli.StringFlag{
+			Name:  o.name(),
+			Usage: "A prefix of each lines to be exported",
 		}
 	}
 
