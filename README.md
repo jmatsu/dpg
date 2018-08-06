@@ -40,12 +40,14 @@ Docker containers are also available at https://hub.docker.com/r/jmatsu/dpg
 
 ## Advanced
 
-`dpg` is providing some procedures to improve your deployment experience.
-They would be great help for you. You can see examples at [procedure.md](procedure.md).
+`dpg` is providing some procedures to improve your deployment experience.  
+They would be great help for you. You can see examples at [docs/procedure.md](docs/procedure.md).
 
 ## LICENSE
 
 Under MIT License. See [LICENSE](./LICENSE)
+
+---
 
 ### COMMANDS
 
