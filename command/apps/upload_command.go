@@ -7,6 +7,7 @@ import (
 	"github.com/jmatsu/dpg/api/request/apps/upload"
 	"github.com/jmatsu/dpg/command"
 	"github.com/sirupsen/logrus"
+	"gopkg.in/guregu/null.v3"
 	"gopkg.in/urfave/cli.v2"
 	"os"
 	"strings"
@@ -86,7 +87,7 @@ func (cmd uploadCommand) VerifyInput() error {
 	} else if err != nil {
 		return errors.New(fmt.Sprintf("seriously wrong when trying to open %s", cmd.requestBody.AppFilePath))
 	} else if f != nil && f.Size() == 0 {
-		return errors.New("an application file must not be an empty file")
+		return errors.New("an application file must not be an empty")
 	}
 
 	if cmd.requestBody.DistributionKey.Valid && cmd.requestBody.DistributionKey.String == "" {
@@ -94,6 +95,7 @@ func (cmd uploadCommand) VerifyInput() error {
 	}
 
 	if cmd.requestBody.DistributionKey.Valid && cmd.requestBody.DistributionName.String != "" {
+		cmd.requestBody.DistributionName = null.StringFromPtr(nil)
 		logrus.Warnf("--%s was specified so --%s wouldn't be used", distributionKey.name(), distributionName.name())
 	}
 

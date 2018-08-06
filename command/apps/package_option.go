@@ -5,7 +5,6 @@ import (
 	"github.com/jmatsu/dpg/command/constant"
 	"gopkg.in/guregu/null.v3"
 	"gopkg.in/urfave/cli.v2"
-	"os"
 )
 
 type packageOption int
@@ -60,9 +59,10 @@ func (o packageOption) name() string {
 func (o packageOption) flag() cli.Flag {
 	switch o {
 	case appFilePath:
-		return &cli.StringFlag{
-			Name:  o.name(),
-			Usage: "[Required] The file path of the application to be uploaded",
+		return &cli.PathFlag{
+			Name:    o.name(),
+			Usage:   "[Required] The file path of the application to be uploaded",
+			EnvVars: []string{constant.AppFilePathEnv},
 		}
 	case public:
 		return &cli.BoolFlag{
@@ -71,28 +71,33 @@ func (o packageOption) flag() cli.Flag {
 		}
 	case enableNotification:
 		return &cli.BoolFlag{
-			Name:  o.name(),
-			Usage: "[iOS only] Specify true if iOS's notifications should be enabled",
+			Name:    o.name(),
+			EnvVars: []string{constant.EnableNotificationEnv},
+			Usage:   "[iOS only] Specify true if iOS's notifications should be enabled",
 		}
 	case shortMessage:
 		return &cli.StringFlag{
-			Name:  o.name(),
-			Usage: "A short message to explain this update",
+			Name:    o.name(),
+			Usage:   "A short message to explain this update",
+			EnvVars: []string{constant.ShortMessageEnv, constant.DeployGateShortMessageEnv},
 		}
 	case distributionKey:
 		return &cli.StringFlag{
-			Name:  o.name(),
-			Usage: "A key of a distribution to be updated",
+			Name:    o.name(),
+			Usage:   "A key of a distribution to be updated",
+			EnvVars: []string{constant.DistributionKeyEnv, constant.DeployGateDistributionKeyEnv},
 		}
 	case distributionName:
 		return &cli.StringFlag{
-			Name:  o.name(),
-			Usage: "A name of a distribution to be updated",
+			Name:    o.name(),
+			Usage:   "A name of a distribution to be updated",
+			EnvVars: []string{constant.DistributionNameEnv},
 		}
 	case releaseNote:
 		return &cli.StringFlag{
-			Name:  o.name(),
-			Usage: "A release note for this revision",
+			Name:    o.name(),
+			Usage:   "A release note for this revision",
+			EnvVars: []string{constant.ReleaseNoteEnv, constant.DeployGateReleaseNoteEnv},
 		}
 	}
 
@@ -114,8 +119,6 @@ func isEnabledNotification(c *cli.Context) bool {
 func getShortMessage(c *cli.Context) null.String {
 	if x := c.String(shortMessage.name()); c.IsSet(shortMessage.name()) {
 		return null.StringFrom(x)
-	} else if x := os.Getenv("DEPLOYGATE_MESSAGE"); x != "" {
-		return null.StringFrom(x)
 	} else {
 		return null.StringFromPtr(nil)
 	}
@@ -123,8 +126,6 @@ func getShortMessage(c *cli.Context) null.String {
 
 func getDistributionKey(c *cli.Context) null.String {
 	if x := c.String(distributionKey.name()); c.IsSet(distributionKey.name()) {
-		return null.StringFrom(x)
-	} else if x := os.Getenv("DEPLOYGATE_DISTRIBUTION_KEY"); x != "" {
 		return null.StringFrom(x)
 	} else {
 		return null.StringFromPtr(nil)
@@ -141,8 +142,6 @@ func getDistributionName(c *cli.Context) null.String {
 
 func getReleaseNote(c *cli.Context) null.String {
 	if x := c.String(releaseNote.name()); c.IsSet(releaseNote.name()) {
-		return null.StringFrom(x)
-	} else if x := os.Getenv("DEPLOYGATE_RELEASE_NOTE"); x != "" {
 		return null.StringFrom(x)
 	} else {
 		return null.StringFromPtr(nil)

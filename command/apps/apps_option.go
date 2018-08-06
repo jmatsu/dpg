@@ -37,13 +37,15 @@ func (o option) Flag() cli.Flag {
 	switch o {
 	case AppOwnerName:
 		return &cli.StringFlag{
-			Name:  o.name(),
-			Usage: "[Required] The owner of the application",
+			Name:    o.name(),
+			Usage:   "[Required] The owner of the application",
+			EnvVars: []string{constant.AppOwnerNameEnv, constant.DeployGateUserNameEnv},
 		}
 	case AppId:
 		return &cli.StringFlag{
-			Name:  o.name(),
-			Usage: "[Required] The application id. e.g. com.deploygate.sample",
+			Name:    o.name(),
+			Usage:   "[Required] The application id. e.g. com.deploygate.sample",
+			EnvVars: []string{constant.AppIdEnv},
 		}
 	case Android:
 		return &cli.BoolFlag{
@@ -64,7 +66,7 @@ func GetAppOwnerName(c *cli.Context) string {
 	if c.IsSet(AppOwnerName.name()) {
 		return c.String(AppOwnerName.name())
 	} else {
-		return os.Getenv("DEPLOYGATE_USER_NAME")
+		return ""
 	}
 }
 
@@ -99,12 +101,18 @@ func GetAppPlatform(c *cli.Context) (string, error) {
 	}
 
 	if !isAndroid && !isIOS {
-		return "", errors.New(fmt.Sprintf("either of --%s or --%s is needed", Android.name(), IOS.name()))
+		platform := os.Getenv(constant.PlatformEnv)
+
+		if platform == "" {
+			return "", errors.New(fmt.Sprintf("either of --%s or --%s is needed", Android.name(), IOS.name()))
+		} else if platform != constant.Android && platform != constant.IOS {
+			return "", errors.New(fmt.Sprintf("%s is not allowed. Only %s or %s are allowed", platform, constant.Android, constant.IOS))
+		}
 	}
 
 	if isAndroid {
-		return "android", nil
+		return constant.Android, nil
 	} else {
-		return "ios", nil
+		return constant.IOS, nil
 	}
 }

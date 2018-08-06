@@ -25,8 +25,9 @@ func (o packageOption) flag() cli.Flag {
 	switch o {
 	case distributionName:
 		return &cli.StringFlag{
-			Name:  o.name(),
-			Usage: "[Required] The name of the target distribution.",
+			Name:    o.name(),
+			Usage:   "[Required] The name of the target distribution.",
+			EnvVars: []string{constant.DistributionNameEnv},
 		}
 	}
 

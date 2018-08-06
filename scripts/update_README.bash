@@ -11,7 +11,7 @@ split_by_space_and_get_tail() {
 }
 
 create_helps() {
-    rm -fr docs || :
+    rm -f docs/*.txt || :
     mkdir -p docs
 
     while read COMMAND; do
@@ -35,18 +35,12 @@ The basic syntax is:
 
     dpg command [command options] [arguments...]
 
-## Installation
-
-```
-go get github.com/jmatsu/dpg
-```
-
-### COMMANDS
+Command list is [here](#COMMANDS)
 
 `help, h` option is avaiable for all commands.
 If you'd like to see the version, then run `dpg -v`.
 
-*Bash/Zsh completion*
+### Bash/Zsh completion
 
 ```
 // For Bash
@@ -58,6 +52,24 @@ dpg --init-completion bash >> ~/.bashrc
 eval $(dpg --init-completion zsh)
 dpg --init-completion zsh >> ~/.zshrc
 
+## Installation
+
+```
+go get github.com/jmatsu/dpg
+```
+
+Docker containers are also available at https://hub.docker.com/r/jmatsu/dpg
+
+## Advanced
+
+`dpg` is providing some procedures to improve your deployment experience.
+They would be great help for you. You can see examples at [procedure.md](procedure.md).
+
+## LICENSE
+
+Under MIT License. See [LICENSE](./LICENSE)
+
+### COMMANDS
 ```
 
 EOF
@@ -65,13 +77,6 @@ EOF
 while read COMMAND; do
     echo  "- \`${COMMAND}\` [HELP](./"docs/$(split_by_space_and_get_tail ${COMMAND} | tr " " ".").txt")"
 done < <($(dirname "$0")/list_all_command.bash)
-
-cat<<'EOF'
-
-## LICENSE
-
-Under MIT License. See [LICENSE](./LICENSE)
-EOF
 }
 
 create_pr() {

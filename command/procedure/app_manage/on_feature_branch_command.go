@@ -2,14 +2,15 @@ package app_manage
 
 import (
 	"errors"
+	"fmt"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/command"
 	appsCommand "github.com/jmatsu/dpg/command/apps"
 	"github.com/jmatsu/dpg/command/constant"
-	"github.com/sirupsen/logrus"
+	"gopkg.in/guregu/null.v3"
 	"gopkg.in/urfave/cli.v2"
-	"os"
 	"os/exec"
+	"strings"
 )
 
 func OnFeatureBranchCommand() *cli.Command {
@@ -26,14 +27,25 @@ type onFeatureBranchCommand struct {
 }
 
 func newOnFeatureBranchCommand(c *cli.Context) (command.Command, error) {
-	if c.IsSet(constant.DistributionName) {
-		logrus.Debugf("Use the specified distribution name { %s }", c.String(constant.DistributionName))
-	} else if name := os.Getenv("DPG_DISTRIBUTION_NAME"); name != "" {
-		c.Set(constant.DistributionName, name)
-	} else if branchRef, err := exec.Command("sh", "-c", `git rev-parse --abbrev-ref HEAD`).Output(); err == nil {
-		c.Set(constant.DistributionName, string(branchRef))
+	if !c.IsSet(constant.IsFeatureBranch) {
+		c.Set(constant.IsFeatureBranch, fmt.Sprintf("%t", true))
+	}
+	variableCatalog := newOnExposeCommandWithoutVerification(c)
+
+	if distributionName := variableCatalog.DistributionName; distributionName.Valid {
+		c.Set(constant.DistributionName, distributionName.String)
+	} else if distributionKey := variableCatalog.DistributionKey; distributionKey.Valid {
+		c.Set(constant.DistributionKey, distributionKey.String)
 	} else {
-		return nil, errors.New("distribution name is not found")
+		return nil, errors.New("either distribution name or key is required")
+	}
+
+	if x := inferShortMessage(c); x.Valid {
+		c.Set(constant.ShortMessage, x.String)
+	}
+
+	if x := inferReleaseNote(c); x.Valid {
+		c.Set(constant.ReleaseNote, x.String)
 	}
 
 	uploadCommand, err := appsCommand.NewUploadCommand(c)
@@ -66,5 +78,25 @@ func (cmd onFeatureBranchCommand) Run(authorization *api.Authorization) (string,
 		return "", err
 	} else {
 		return str, nil
+	}
+}
+
+func inferShortMessage(c *cli.Context) null.String {
+	if c.IsSet(constant.ShortMessage) {
+		return null.StringFrom(c.String(constant.ShortMessage))
+	} else if x, err := exec.Command(`git`, `log`, `--format=%s`, `-1`).Output(); err == nil {
+		return null.StringFrom(strings.TrimRight(string(x), "\n"))
+	} else {
+		return null.StringFromPtr(nil)
+	}
+}
+
+func inferReleaseNote(c *cli.Context) null.String {
+	if c.IsSet(constant.ReleaseNote) {
+		return null.StringFrom(c.String(constant.ReleaseNote))
+	} else if x, err := exec.Command(`git`, `log`, `--format=%b`, `-1`).Output(); err == nil {
+		return null.StringFrom(strings.TrimRight(string(x), "\n"))
+	} else {
+		return null.StringFromPtr(nil)
 	}
 }

@@ -33,4 +33,7 @@ const (
 	UserEmail = "email"
 
 	Description = "description"
+
+	IsFeatureBranch = "feature-branch"
+	Prefix          = "prefix"
 )

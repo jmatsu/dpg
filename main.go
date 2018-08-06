@@ -179,8 +179,9 @@ SUPPORT:
 			Subcommands: []*cli.Command{
 				{
 					Name:  "app-manage",
-					Usage: "Procedures to manage applications especially on CI",
+					Usage: "Procedures to manage applications especially on CI (experimental)",
 					Subcommands: []*cli.Command{
+						app_manage.OnExposeCommand(),
 						app_manage.OnFeatureBranchCommand(),
 						app_manage.OnDeployBranchCommand(),
 					},
