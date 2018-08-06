@@ -51,6 +51,7 @@ dpg --init-completion bash >> ~/.bashrc
 // For Zsh
 eval $(dpg --init-completion zsh)
 dpg --init-completion zsh >> ~/.zshrc
+```
 
 ## Installation
 
@@ -70,7 +71,6 @@ They would be great help for you. You can see examples at [procedure.md](procedu
 Under MIT License. See [LICENSE](./LICENSE)
 
 ### COMMANDS
-```
 
 EOF
 
