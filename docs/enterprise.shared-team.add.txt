@@ -5,7 +5,7 @@ USAGE:
    dpg enterprise shared-team add [command options] [arguments...]
 
 OPTIONS:
-   --token value             [Required] API token
+   --token value             [Required] API token [$DPG_API_TOKEN, $DEPLOYGATE_API_TOKEN]
    --enterprise-name value   [Required] The name of the target enterprise.
    --shared-team-name value  The name of the target shared team
    --help, -h                show help (default: false)

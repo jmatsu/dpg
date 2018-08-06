@@ -12,18 +12,12 @@ The basic syntax is:
 
     dpg command [command options] [arguments...]
 
-## Installation
-
-```
-go get github.com/jmatsu/dpg
-```
-
-### COMMANDS
+Command list is [here](#COMMANDS)
 
 `help, h` option is avaiable for all commands.
 If you'd like to see the version, then run `dpg -v`.
 
-*Bash/Zsh completion*
+### Bash/Zsh completion
 
 ```
 // For Bash
@@ -34,8 +28,26 @@ dpg --init-completion bash >> ~/.bashrc
 // For Zsh
 eval $(dpg --init-completion zsh)
 dpg --init-completion zsh >> ~/.zshrc
+```
+
+## Installation
 
 ```
+go get github.com/jmatsu/dpg
+```
+
+Docker containers are also available at https://hub.docker.com/r/jmatsu/dpg
+
+## Advanced
+
+`dpg` is providing some procedures to improve your deployment experience.
+They would be great help for you. You can see examples at [procedure.md](procedure.md).
+
+## LICENSE
+
+Under MIT License. See [LICENSE](./LICENSE)
+
+### COMMANDS
 
 - `dpg app upload` [HELP](./docs/app.upload.txt)
 - `dpg app member add` [HELP](./docs/app.member.add.txt)
@@ -69,9 +81,6 @@ dpg --init-completion zsh >> ~/.zshrc
 - `dpg enterprise shared-team add` [HELP](./docs/enterprise.shared-team.add.txt)
 - `dpg enterprise shared-team remove` [HELP](./docs/enterprise.shared-team.remove.txt)
 - `dpg enterprise shared-team list` [HELP](./docs/enterprise.shared-team.list.txt)
+- `dpg procedure app-manage expose` [HELP](./docs/procedure.app-manage.expose.txt)
 - `dpg procedure app-manage on-feature-branch` [HELP](./docs/procedure.app-manage.on-feature-branch.txt)
-- `dpg procedure app-manage on-deploy` [HELP](./docs/procedure.app-manage.on-deploy.txt)
-
-## LICENSE
-
-Under MIT License. See [LICENSE](./LICENSE)
+- `dpg procedure app-manage on-deploy-branch` [HELP](./docs/procedure.app-manage.on-deploy-branch.txt)

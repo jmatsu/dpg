@@ -5,6 +5,6 @@ USAGE:
    dpg organization list [command options] [arguments...]
 
 OPTIONS:
-   --token value  [Required] API token
+   --token value  [Required] API token [$DPG_API_TOKEN, $DEPLOYGATE_API_TOKEN]
    --help, -h     show help (default: false)
    

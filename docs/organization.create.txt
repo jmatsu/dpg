@@ -5,7 +5,7 @@ USAGE:
    dpg organization create [command options] [arguments...]
 
 OPTIONS:
-   --token value                                  [Required] API token
+   --token value                                  [Required] API token [$DPG_API_TOKEN, $DEPLOYGATE_API_TOKEN]
    --organization-name value, --group-name value  [Required] The name of the organization
    --description value                            A description for an organization
    --help, -h                                     show help (default: false)

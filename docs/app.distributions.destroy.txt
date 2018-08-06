@@ -5,7 +5,7 @@ USAGE:
    dpg app distributions destroy [command options] [arguments...]
 
 OPTIONS:
-   --token value              [Required] API token
-   --distribution-name value  [Required] The name of the target distribution.
+   --token value              [Required] API token [$DPG_API_TOKEN, $DEPLOYGATE_API_TOKEN]
+   --distribution-name value  [Required] The name of the target distribution. [$DPG_DISTRIBUTION_NAME]
    --help, -h                 show help (default: false)
    
