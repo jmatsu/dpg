@@ -1,8 +1,8 @@
 NAME:
-   dpg app upload - Upload either android application or iOS application to the specified owner space
+   dpg procedure app-manage expose - Expose some variables to be used app-manage procedure
 
 USAGE:
-   dpg app upload [command options] [arguments...]
+   dpg procedure app-manage expose [command options] [arguments...]
 
 OPTIONS:
    --token value              [Required] API token [$DPG_API_TOKEN, $DEPLOYGATE_API_TOKEN]
@@ -10,11 +10,8 @@ OPTIONS:
    --android                  [Required] Specify this if the application is an android application (default: false)
    --ios                      [Required] Specify this if the application is an iOS application (default: false)
    --app value                [Required] The file path of the application to be uploaded [$DPG_APP_FILE_PATH]
-   --public                   Specify true if an application to be uploaded should be public (default: false)
    --enable-notification      [iOS only] Specify true if iOS's notifications should be enabled (default: false) [$DPG_ENABLE_NOTIFICATION]
-   --message value            A short message to explain this update [$DPG_SHORT_MESSAGE, $DEPLOYGATE_MESSAGE]
-   --distribution-key value   A key of a distribution to be updated [$DPG_DISTRIBUTION_KEY, $DEPLOYGATE_DISTRIBUTION_KEY]
-   --distribution-name value  A name of a distribution to be updated [$DPG_DISTRIBUTION_NAME]
-   --release-note value       A release note for this revision [$DPG_RELEASE_NOTE, $DEPLOYGATE_RELEASE_NOTE]
+   --distribution-name value  A name of a distribution to be created or updated [$DPG_DISTRIBUTION_NAME]
+   --prefix value             A prefix of each lines to be exported
    --help, -h                 show help (default: false)
    

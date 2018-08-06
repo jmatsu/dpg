@@ -5,9 +5,9 @@ USAGE:
    dpg app member remove [command options] [arguments...]
 
 OPTIONS:
-   --token value      [Required] API token
-   --app-owner value  [Required] The owner of the application
-   --app-id value     [Required] The application id. e.g. com.deploygate.sample
+   --token value      [Required] API token [$DPG_API_TOKEN, $DEPLOYGATE_API_TOKEN]
+   --app-owner value  [Required] The owner of the application [$DPG_APP_OWNER_NAME, $DEPLOYGATE_USER_NAME]
+   --app-id value     [Required] The application id. e.g. com.deploygate.sample [$DPG_APP_ID]
    --android          [Required] Specify this if the application is an android application (default: false)
    --ios              [Required] Specify this if the application is an iOS application (default: false)
    --removees value   [Required] Comma-separated names or e-mails of those who you want to remove

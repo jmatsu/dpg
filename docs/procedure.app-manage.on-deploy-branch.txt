@@ -1,18 +1,15 @@
 NAME:
-   dpg procedure app-manage on-feature-branch - Upload applications on updating feature branches and create distributions 
+   dpg procedure app-manage on-deploy-branch - Delete associated distributions on deploy branch
 
 USAGE:
-   dpg procedure app-manage on-feature-branch [command options] [arguments...]
+   dpg procedure app-manage on-deploy-branch [command options] [arguments...]
 
 OPTIONS:
    --token value              [Required] API token [$DPG_API_TOKEN, $DEPLOYGATE_API_TOKEN]
    --app-owner value          [Required] The owner of the application [$DPG_APP_OWNER_NAME, $DEPLOYGATE_USER_NAME]
+   --app-id value             [Required] The application id. e.g. com.deploygate.sample [$DPG_APP_ID]
    --android                  [Required] Specify this if the application is an android application (default: false)
    --ios                      [Required] Specify this if the application is an iOS application (default: false)
-   --app value                [Required] The file path of the application to be uploaded [$DPG_APP_FILE_PATH]
-   --enable-notification      [iOS only] Specify true if iOS's notifications should be enabled (default: false) [$DPG_ENABLE_NOTIFICATION]
-   --message value            A short message to explain this update
    --distribution-name value  A name of a distribution to be created or updated [$DPG_DISTRIBUTION_NAME]
-   --release-note value       A release note for this revision
    --help, -h                 show help (default: false)
    
