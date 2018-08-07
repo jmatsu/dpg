@@ -34,11 +34,16 @@ jobs:
     <<: android_env
     steps:
       - checkout
-      - run: ./gradlew assembleDebug
+      - run:
+          name: Assemble and save it
+          command: |
+            ./gradlew :app:assembleDebug
+            mkdir -p /tmp
+            cp app/build/outputs/apk/debug/app-debug.apk /tmp/app-debug.apk
       - persist_to_workspace:
-          root: /tmp/workspace
+          root: /tmp
           paths:
-            - app/build/outputs/apk/debug/app-debug.apk
+            - app-debug.apk
   on_feature_branch:
     docker:
       - image: jmatsu/dpg:{{ version or latest }}
@@ -46,13 +51,12 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: /tmp/workspace
+          at: /tmp
       - run:
           name: Upload an apk and create a distribution by app-manage procedure.
           command: |
-              cp /tmp/workspace/app/build/outputs/apk/debug/app-debug.apk app.apk
-              source <(dpg procedure app-manage expose --prefix "export " --token <your api token> --app-owner <your app's owner name>) 
-              dpg procedure app-manage on-feature-branch --app app.apk
+              source <(dpg procedure app-manage expose --prefix "export " --feature-branch --token <your api token> --app-owner <your app's owner name>) 
+              dpg procedure app-manage on-feature-branch --app /tmp/app-debug.apk
   on_deploy_branch:
     docker:
       - image: jmatsu/dpg:{{ version or latest }}
@@ -122,7 +126,7 @@ jobs:
       - run: |
           name: Upload an apk and create a distribution by app-manage procedure.
           command: |
-              docker run --rm $CIRCLE_BRANCH:{{ version or latest }} dpg procedure app-manage on-feature-branch --token <your api token> --app-owner <your app's owner name> --android --branch-name "$CIRCLE_BRANCH"
+              docker run --rm $CIRCLE_BRANCH:{{ version or latest }} dpg procedure app-manage on-feature-branch --token <your api token> --app-owner <your app's owner name> --android --distribution-name "$CIRCLE_BRANCH"
   on_deploy_branch:
     <<: *any_env
     steps:
