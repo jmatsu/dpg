@@ -2,7 +2,6 @@ package app_manage
 
 import (
 	"errors"
-	"flag"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/command"
 	appsCommand "github.com/jmatsu/dpg/command/apps"
@@ -27,14 +26,7 @@ type onFeatureBranchCommand struct {
 }
 
 func newOnFeatureBranchCommand(c *cli.Context) (command.Command, error) {
-	set := flag.NewFlagSet("hub", 0)
-	set.Bool(constant.IsFeatureBranch, true, "_")
-	set.String(constant.DistributionName, "", "_")
-	set.String(constant.DistributionKey, "", "_")
-	set.String(constant.ShortMessage, "", "_")
-	set.String(constant.ReleaseNote, "", "_")
-
-	nc := cli.NewContext(c.App, set, c)
+	nc := newContext(c)
 	nc.Set(constant.IsFeatureBranch, "true")
 
 	variableCatalog := newOnExposeCommandWithoutVerification(nc)

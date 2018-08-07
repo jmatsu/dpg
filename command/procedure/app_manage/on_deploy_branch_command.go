@@ -23,18 +23,19 @@ type onDeployBranchCommand struct {
 }
 
 func newOnDeployBranchCommand(c *cli.Context) (command.Command, error) {
+	nc := newContext(c)
 	// Don't need to control IsFeatureBranch option
-	variableCatalog := newOnExposeCommandWithoutVerification(c)
+	variableCatalog := newOnExposeCommandWithoutVerification(nc)
 
 	if distributionName := variableCatalog.DistributionName; distributionName.Valid {
-		c.Set(constant.DistributionName, distributionName.String)
+		nc.Set(constant.DistributionName, distributionName.String)
 	} else if distributionKey := variableCatalog.DistributionKey; distributionKey.Valid {
-		c.Set(constant.DistributionKey, distributionKey.String)
+		nc.Set(constant.DistributionKey, distributionKey.String)
 	} else {
 		return nil, errors.New("either distribution name or key is required")
 	}
 
-	destroyDistributionCommand, err := distributionsCommand.NewDestroyCommand(c)
+	destroyDistributionCommand, err := distributionsCommand.NewDestroyCommand(nc)
 
 	if err != nil {
 		return nil, err

@@ -2,6 +2,7 @@ package app_manage
 
 import (
 	"errors"
+	"flag"
 	"fmt"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/command"
@@ -40,6 +41,17 @@ func newOnExposeCommand(c *cli.Context) (command.Command, error) {
 	}
 
 	return cmd, nil
+}
+
+func newContext(c *cli.Context) *cli.Context {
+	set := flag.NewFlagSet("hub", 0)
+	set.Bool(constant.IsFeatureBranch, false, "_")
+	set.String(constant.DistributionName, "", "_")
+	set.String(constant.DistributionKey, "", "_")
+	set.String(constant.ShortMessage, "", "_")
+	set.String(constant.ReleaseNote, "", "_")
+
+	return cli.NewContext(c.App, set, c)
 }
 
 func newOnExposeCommandWithoutVerification(c *cli.Context) onExposeCommand {
@@ -122,7 +134,7 @@ func inferDistributionName(c *cli.Context) null.String {
 		return null.StringFrom(c.String(constant.DistributionName))
 	} else if branchRef, err := exec.Command("sh", "-c", getCmd).Output(); err == nil {
 		branchName := strings.TrimRight(string(branchRef), "\n")
-		
+
 		if branchName != "" {
 			return null.StringFrom(branchName)
 		}
