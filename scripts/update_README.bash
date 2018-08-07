@@ -91,7 +91,7 @@ create_pr() {
   curl -s -H "Authorization: token ${GITHUB_ACCESS_TOKEN}" -H "Content-Type: application/json" -d "${json_body}" "${api_url}" || :
 }
 
-if [[ $(git log --merges --format='%h' -1) == $(git log --format='%h' -1) ]] && [[ $(git log --merges --format='%s' -1 | awk '$0=$NF') == "jmatsu/update_doc" ]]; then
+if [[ $(git show --merges HEAD -q --format='%s' | awk '$0=$NF') == "jmatsu/update_doc" ]]; then
     echo "Merged from doc update branch."
     exit 0
 fi
