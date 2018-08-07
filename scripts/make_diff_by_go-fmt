@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -u
+set -ux
 
 gofiles="$(git diff --cached --name-only --diff-filter=ACM HEAD^ | grep '\.go$')"
 
