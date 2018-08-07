@@ -46,10 +46,22 @@ func newOnExposeCommand(c *cli.Context) (command.Command, error) {
 func newContext(c *cli.Context) *cli.Context {
 	set := flag.NewFlagSet("hub", 0)
 	set.Bool(constant.IsFeatureBranch, false, "_")
-	set.String(constant.DistributionName, "", "_")
-	set.String(constant.DistributionKey, "", "_")
-	set.String(constant.ShortMessage, "", "_")
-	set.String(constant.ReleaseNote, "", "_")
+
+	if !c.IsSet(constant.DistributionName) {
+		set.String(constant.DistributionName, "", "_")
+	}
+	
+	if !c.IsSet(constant.DistributionKey) {
+		set.String(constant.DistributionKey, "", "_")
+	}
+
+	if !c.IsSet(constant.ShortMessage) {
+		set.String(constant.ShortMessage, "", "_")
+	}
+
+	if !c.IsSet(constant.ReleaseNote) {
+		set.String(constant.ReleaseNote, "", "_")
+	}
 
 	return cli.NewContext(c.App, set, c)
 }
