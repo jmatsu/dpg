@@ -2,7 +2,6 @@ package app_manage
 
 import (
 	"errors"
-	"fmt"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/command"
 	appsCommand "github.com/jmatsu/dpg/command/apps"
@@ -27,28 +26,28 @@ type onFeatureBranchCommand struct {
 }
 
 func newOnFeatureBranchCommand(c *cli.Context) (command.Command, error) {
-	if !c.IsSet(constant.IsFeatureBranch) {
-		c.Set(constant.IsFeatureBranch, fmt.Sprintf("%t", true))
-	}
-	variableCatalog := newOnExposeCommandWithoutVerification(c)
+	nc := newContext(c)
+	nc.Set(constant.IsFeatureBranch, "true")
+
+	variableCatalog := newOnExposeCommandWithoutVerification(nc)
 
 	if distributionName := variableCatalog.DistributionName; distributionName.Valid {
-		c.Set(constant.DistributionName, distributionName.String)
+		nc.Set(constant.DistributionName, distributionName.String)
 	} else if distributionKey := variableCatalog.DistributionKey; distributionKey.Valid {
-		c.Set(constant.DistributionKey, distributionKey.String)
+		nc.Set(constant.DistributionKey, distributionKey.String)
 	} else {
 		return nil, errors.New("either distribution name or key is required")
 	}
 
 	if x := inferShortMessage(c); x.Valid {
-		c.Set(constant.ShortMessage, x.String)
+		nc.Set(constant.ShortMessage, x.String)
 	}
 
 	if x := inferReleaseNote(c); x.Valid {
-		c.Set(constant.ReleaseNote, x.String)
+		nc.Set(constant.ReleaseNote, x.String)
 	}
 
-	uploadCommand, err := appsCommand.NewUploadCommand(c)
+	uploadCommand, err := appsCommand.NewUploadCommand(nc)
 
 	if err != nil {
 		return nil, err
@@ -57,7 +56,6 @@ func newOnFeatureBranchCommand(c *cli.Context) (command.Command, error) {
 	cmd := onFeatureBranchCommand{
 		uploadCommand,
 	}
-
 	if err := cmd.VerifyInput(); err != nil {
 		return nil, err
 	}
