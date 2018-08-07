@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -ux
+set -u
 
 gofiles="$(git diff --cached --name-only --diff-filter=ACM HEAD^ | grep '\.go$')"
 
@@ -10,4 +10,8 @@ fi
 
 unformatted=$(gofmt -l $gofiles)
 
-[[ -z "$unformatted" ]]
+if [[ -n "$unformatted" ]]; then
+	echo "$unformatted" 1>&2
+	echo "Run go fmt $unformatted"
+	exit 1
+fi

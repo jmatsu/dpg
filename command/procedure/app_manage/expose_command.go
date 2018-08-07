@@ -50,7 +50,7 @@ func newContext(c *cli.Context) *cli.Context {
 	if !c.IsSet(constant.DistributionName) {
 		set.String(constant.DistributionName, "", "_")
 	}
-	
+
 	if !c.IsSet(constant.DistributionKey) {
 		set.String(constant.DistributionKey, "", "_")
 	}
