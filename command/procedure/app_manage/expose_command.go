@@ -121,10 +121,14 @@ func inferDistributionName(c *cli.Context) null.String {
 	if c.IsSet(constant.DistributionName) {
 		return null.StringFrom(c.String(constant.DistributionName))
 	} else if branchRef, err := exec.Command("sh", "-c", getCmd).Output(); err == nil {
-		return null.StringFrom(strings.TrimRight(string(branchRef), "\n"))
-	} else {
-		return null.StringFromPtr(nil)
+		branchName := strings.TrimRight(string(branchRef), "\n")
+		
+		if branchName != "" {
+			return null.StringFrom(branchName)
+		}
 	}
+
+	return null.StringFromPtr(nil)
 }
 
 func inferDistributionKey(c *cli.Context) null.String {
