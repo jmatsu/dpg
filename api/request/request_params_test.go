@@ -2,9 +2,9 @@ package request
 
 import (
 	"reflect"
+	"sort"
 	"strings"
 	"testing"
-	"sort"
 )
 
 type TestParams struct{}
