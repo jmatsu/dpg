@@ -28,7 +28,7 @@ These example are based on CircleCI.
 
 `.circleci/config.yml` is like below. 
 
-```.circleci/config.ylm
+```.circleci/config.yml
 jobs:
   build_apk:
     <<: android_env
@@ -41,8 +41,8 @@ jobs:
             - app/build/outputs/apk/debug/app-debug.apk
   on_feature_branch:
     docker:
-      - image: jmatsu/dpg:latest
-    working_directory: ~/{{ ORG_NAME }}/{{ REPO_NAME }}
+      - image: jmatsu/dpg:{{ version or latest }}
+    working_directory: ~/{{ anywhere you want }}
     steps:
       - checkout
       - attach_workspace:
@@ -55,8 +55,8 @@ jobs:
               dpg procedure app-manage on-feature-branch --app app.apk
   on_deploy_branch:
     docker:
-      - image: jmatsu/dpg:latest
-    working_directory: ~/{{ ORG_NAME }}/{{ REPO_NAME }}
+      - image: jmatsu/dpg:{{ version or latest }}
+    working_directory: ~/{{ anywhere you want }}
     steps:
       - checkout
       - run:
@@ -122,7 +122,7 @@ jobs:
       - run: |
           name: Upload an apk and create a distribution by app-manage procedure.
           command: |
-              docker run --rm $CIRCLE_BRANCH:dpg dpg procedure app-manage on-feature-branch --token <your api token> --app-owner <your app's owner name> --android --branch-name "$CIRCLE_BRANCH"
+              docker run --rm $CIRCLE_BRANCH:{{ version or latest }} dpg procedure app-manage on-feature-branch --token <your api token> --app-owner <your app's owner name> --android --branch-name "$CIRCLE_BRANCH"
   on_deploy_branch:
     <<: *any_env
     steps:
@@ -133,7 +133,7 @@ jobs:
           name: Destroy the associated distribution by app-manage procedure.
           command: |
               branch_name="$(git log --format=%s --merges -1 | sed 's/^.* from [^\/]*\/\(.*\)$/\1/')"
-              docker run $env_opts --rm jmatsu/dpg:latest dpg procedure app-manage on-deploy-branch --token <your api token> --app-owner <your app's owner name> --android --app-id <your app id> --distribution-name "$branch_name"
+              docker run $env_opts --rm jmatsu/dpg:{{ version or latest }} dpg procedure app-manage on-deploy-branch --token <your api token> --app-owner <your app's owner name> --android --app-id <your app id> --distribution-name "$branch_name"
   
 workflows:
   version: 2
