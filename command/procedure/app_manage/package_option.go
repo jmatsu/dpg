@@ -18,6 +18,8 @@ const (
 
 	//
 
+	featureBranch
+
 	prefix
 )
 
@@ -30,6 +32,7 @@ func exposeFlags() []cli.Flag {
 		appFilePath.flag(),
 		enableNotification.flag(),
 		distributionName.flag(),
+		featureBranch.flag(),
 		prefix.flag(),
 	}
 }
@@ -71,6 +74,8 @@ func (o packageOption) name() string {
 		return constant.ShortMessage
 	case releaseNote:
 		return constant.ReleaseNote
+	case featureBranch:
+		return constant.IsFeatureBranch
 	case prefix:
 		return constant.Prefix
 	}
@@ -107,6 +112,11 @@ func (o packageOption) flag() cli.Flag {
 		return &cli.StringFlag{
 			Name:  o.name(),
 			Usage: "A release note for this revision",
+		}
+	case featureBranch:
+		return &cli.BoolFlag{
+			Name:    o.name(),
+			Usage:   "expose variables for feature branch if specified",
 		}
 	case prefix:
 		return &cli.StringFlag{
