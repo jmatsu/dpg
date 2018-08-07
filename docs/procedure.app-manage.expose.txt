@@ -12,6 +12,7 @@ OPTIONS:
    --app value                [Required] The file path of the application to be uploaded [$DPG_APP_FILE_PATH]
    --enable-notification      [iOS only] Specify true if iOS's notifications should be enabled (default: false) [$DPG_ENABLE_NOTIFICATION]
    --distribution-name value  A name of a distribution to be created or updated [$DPG_DISTRIBUTION_NAME]
+   --feature-branch           expose variables for feature branch if specified (default: false)
    --prefix value             A prefix of each lines to be exported
    --help, -h                 show help (default: false)
    
