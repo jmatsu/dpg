@@ -85,3 +85,4 @@ fabric.properties
 vendor/
 
 dpg
+dist/

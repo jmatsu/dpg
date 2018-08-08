@@ -26,7 +26,7 @@ import (
 )
 
 var (
-	version = "0.2"
+	version = "unreleased"
 	commit  = "none"
 	date    = "unknown"
 )
@@ -48,6 +48,10 @@ WEBSITE:
 SUPPORT:
 	https://github.com/jmatsu/dpg/issues
 `, cli.AppHelpTemplate)
+
+	cli.VersionPrinter = func(c *cli.Context) {
+		fmt.Printf("Version=%s Revision=%s Date=%s\n", version, commit, date)
+	}
 
 	app := &cli.App{}
 	app.Name = "dpg"
