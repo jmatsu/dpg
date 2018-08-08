@@ -88,7 +88,7 @@ create_pr() {
   local body=("\"head\": \"$branch_name\"", "\"base\": \"master\"", "\"title\": \"Update Documents via CI\"")
   local json_body="{${body[*]}}"
 
-  curl -s -H "Authorization: token ${GITHUB_ACCESS_TOKEN}" -H "Content-Type: application/json" -d "${json_body}" "${api_url}" || :
+  curl -s -H "Authorization: token ${GITHUB_TOKEN}" -H "Content-Type: application/json" -d "${json_body}" "${api_url}" || :
 }
 
 if [[ $(git show --merges HEAD -q --format='%s' | awk '$0=$NF') == "jmatsu/update_doc" ]]; then
