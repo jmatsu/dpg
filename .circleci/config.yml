@@ -27,10 +27,8 @@ jobs:
     <<: *default_env
     steps:
       - checkout
-      - run:
-      - run: curl -sL https://git.io/goreleaser | bash
       - run: go get -v -t -d ./...
-      - run: goreleaser
+      - run: curl -sL https://git.io/goreleaser | bash
 
 workflows:
   version: 2

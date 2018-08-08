@@ -25,6 +25,12 @@ import (
 	"strconv"
 )
 
+var (
+	version = "0.2"
+	commit  = "none"
+	date    = "unknown"
+)
+
 func main() {
 	if b, err := strconv.ParseBool(os.Getenv("DPG_DEBUG")); err != nil && b {
 		logrus.SetLevel(logrus.DebugLevel)
@@ -47,7 +53,7 @@ SUPPORT:
 	app.Name = "dpg"
 	app.Usage = "Unofficial DeployGate API Client CLI"
 	app.Description = "dpg is an unofficial command line tool to access DeployGate API."
-	app.Version = "0.2"
+	app.Version = version
 	app.EnableShellCompletion = true
 	app.Commands = []*cli.Command{
 		{
