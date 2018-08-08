@@ -13,7 +13,9 @@ builds:
     - windows
   goarch:
     - "386"
+    - arm
     - arm64
+    - amd64
   env:
     - CGO_ENABLED=0
 archive:
