@@ -23,6 +23,12 @@ jobs:
       - run: |
           go build # make sure the version of the used binary
           PATH=$PWD:$PATH ./scripts/update_README.bash
+  release:
+    <<: *default_env
+    steps:
+      - checkout
+      - run: go get -v -t -d ./...
+      - run: curl -sL https://git.io/goreleaser | bash
 
 workflows:
   version: 2
@@ -35,3 +41,11 @@ workflows:
           filters:
             branches:
               only: /master/
+  release_binary:
+    jobs:
+      - release:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
