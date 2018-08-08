@@ -59,6 +59,20 @@ dpg --init-completion zsh >> ~/.zshrc
 go get github.com/jmatsu/dpg
 ```
 
+Or download the binary
+
+```
+curl -sL "https://raw.githubusercontent.com/jmatsu/dpg/master/install.bash" | bash
+curl -sL "https://raw.githubusercontent.com/jmatsu/dpg/master/install.bash" | VERSION=<0.2.1 or greater> bash
+```
+
+Or build on your local
+
+```
+go get -v -t -d ./...
+go build
+```
+
 Docker containers are also available at https://hub.docker.com/r/jmatsu/dpg
 
 ## Advanced
