@@ -3,9 +3,19 @@
 git:
   short_hash: true
 builds:
+- goos:
+  - linux
+  - darwin
+  - windows
+  goarch:
+  - "386"
+  - arm64
 - env:
   - CGO_ENABLED=0
 archive:
+  format_overrides:
+    - goos: windows
+      format: zip
   replacements:
     darwin: Darwin
     linux: Linux
@@ -13,9 +23,9 @@ archive:
     386: i386
     amd64: x86_64
 checksum:
-  name_template: 'checksums.txt'
+  name_template: '{{ .ProjectName }}_{{ .Version }}_checksums.txt'
 snapshot:
-  name_template: "{{ .Tag }}-next"
+  name_template: "SNAPSHOT-{{ .Commit }}"
 changelog:
   sort: asc
   filters:
