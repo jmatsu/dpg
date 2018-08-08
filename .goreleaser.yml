@@ -4,6 +4,8 @@ before:
   hooks:
   - go get -v -t -d ./...
 builds:
+- ldflags:
+  - -s -w -X github.com/jmatsu/dpg/version.Version={{.Version}} -X github.com/jmatsu/dpg/version.commit={{.Commit}} -X github.com/jmatsu/dpg/version.date={{.Date}}
 - goos:
   - linux
   - darwin

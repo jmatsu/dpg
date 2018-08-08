@@ -21,14 +21,9 @@ import (
 	organizationMembers "github.com/jmatsu/dpg/command/organizations/members"
 	organizationTeamMembers "github.com/jmatsu/dpg/command/organizations/teams/members"
 	"github.com/jmatsu/dpg/command/procedure/app_manage"
+	"github.com/jmatsu/dpg/version"
 	"gopkg.in/urfave/cli.v2"
 	"strconv"
-)
-
-var (
-	version = "unreleased"
-	commit  = "none"
-	date    = "unknown"
 )
 
 func main() {
@@ -50,14 +45,14 @@ SUPPORT:
 `, cli.AppHelpTemplate)
 
 	cli.VersionPrinter = func(c *cli.Context) {
-		fmt.Printf("Version=%s Revision=%s Date=%s\n", version, commit, date)
+		fmt.Println(version.Template())
 	}
 
 	app := &cli.App{}
 	app.Name = "dpg"
 	app.Usage = "Unofficial DeployGate API Client CLI"
 	app.Description = "dpg is an unofficial command line tool to access DeployGate API."
-	app.Version = version
+	app.Version = version.Version
 	app.EnableShellCompletion = true
 	app.Commands = []*cli.Command{
 		{

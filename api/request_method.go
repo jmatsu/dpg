@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/jmatsu/dpg/api/request"
 	"github.com/jmatsu/dpg/api/response"
+	"github.com/jmatsu/dpg/version"
 	"github.com/sirupsen/logrus"
 	"net/http"
 )
@@ -54,6 +55,7 @@ func deleteRequest(e Endpoint, authorization *Authorization, requestBody request
 	}
 
 	req, err := http.NewRequest(http.MethodDelete, e.ToURL(), &data)
+	req.Header.Set("User-Agent", version.UserAgent())
 	authorization.doAuthorize(req)
 
 	if err != nil {
