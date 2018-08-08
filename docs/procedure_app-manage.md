@@ -32,21 +32,27 @@ This destroys a distribution which has been associated with a branch is recently
 
 ## CI example
 
-These example are based on CircleCI.
+These example are based on CircleCI. 
 
-## Download the single binary
+### Upload and create distributions for each branches
+
+They will create distributions even on master branch.
+
+#### Download the single binary
+
+You can download the `dpg` binary by running `curl -sL "https://raw.githubusercontent.com/jmatsu/dpg/master/install.bash" | [VERSION=<version>] bash`
 
 ```.circleci/config.yml
 
 jobs:
-  build_apk:
+  on_every_branch:
     <<: android_env
     steps:
       - checkout
       - run:
           name: Enable dpg command in this job
           command: |
-            curl -sL "https://raw.githubusercontent.com/jmatsu/dpg/master/install.bash" | bash
+            curl -sL "https://raw.githubusercontent.com/jmatsu/dpg/master/install.bash" | [VERSION=<version>] bash
             echo "export PATH=$PWD:$PATH" >> $BASH_ENV
       - run:
           name: Assemble and deploy
@@ -60,7 +66,14 @@ jobs:
 
             dpg procedure app-manage on-feature-branch --app app/build/outputs/apk/debug/app-debug.apk --token <your api token> --app-owner <your app's owner name>
 
-## Without Remote Docker
+workflows:
+  version: 2
+  every_branch:
+    jobs:
+      - on_every_branch
+```
+
+#### Separate upload job
 
 `.circleci/config.yml` is like below. 
 
@@ -80,9 +93,9 @@ jobs:
           root: /tmp
           paths:
             - app-debug.apk
-  on_feature_branch:
+  on_after_build_apk:
     docker:
-      - image: jmatsu/dpg:{{ version or latest }}
+      - image: jmatsu/dpg:{{ version }}
     working_directory: ~/{{ anywhere you want }}
     steps:
       - checkout
@@ -97,37 +110,18 @@ jobs:
               # Or
 
               dpg procedure app-manage on-feature-branch --app /tmp/app-debug.apk --token <your api token> --app-owner <your app's owner name>
-  on_deploy_branch:
-    docker:
-      - image: jmatsu/dpg:{{ version or latest }}
-    working_directory: ~/{{ anywhere you want }}
-    steps:
-      - checkout
-      - run:
-          name: Destroy the associated distribution by app-manage procedure.
-          command: |
-              source <(dpg procedure app-manage expose --prefix "export " --token <your api token> --app-owner <your app's owner name> --android --app-id <your app id>)
-              dpg procedure app-manage on-deploy-branch
-
-              # Or
-
-              dpg procedure app-manage on-deploy-branch --token <your api token> --app-owner <your app's owner name> --android --app-id <your app id>
 
 workflows:
   version: 2
   every_branch:
     jobs:
       - build_apk
-      - on_feature_branch:
+      - on_after_build_apk:
           requires:
             - build_apk
-      - on_deploy_branch:
-          filters:
-            branches:
-              only: /(master|develop)/
 ```
 
-## With Remote Docker
+#### If you want to use Remote Docker by any reason
 
 In this case, you cannot use `expose` command. Some of exposed values are not usable because it will see the environment in the docker container.  
 The following commands would be your help. 
@@ -138,4 +132,35 @@ env_opts=$(dpg procedure app-manage expose --feature-branch --prefix "-e " | xar
 
 dpg procedure app-manage expose > .env
 env_opts=$(dpg procedure app-manage expose --prefix "-e " | xargs)
+```
+
+### Destroy distributions which associate with merged branches
+
+This job would take around 10 sec so you can use separated job.
+
+```
+on_deploy_branch:
+  docker:
+    - image: jmatsu/dpg:{{ version }}
+  working_directory: ~/{{ anywhere you want }}
+  steps:
+    - checkout
+    - run:
+        name: Destroy the associated distribution by app-manage procedure.
+        command: |
+            source <(dpg procedure app-manage expose --prefix "export " --token <your api token> --app-owner <your app's owner name> --android --app-id <your app id>)
+            dpg procedure app-manage on-deploy-branch
+
+            # Or
+
+            dpg procedure app-manage on-deploy-branch --token <your api token> --app-owner <your app's owner name> --android --app-id <your app id>
+
+workflows:
+  version: 2
+  every_branch:
+    jobs:
+      - on_deploy_branch:
+          filters:
+            branches:
+              only: /(master|develop)/
 ```
