@@ -2,7 +2,7 @@
 
 # Based on https://github.com/goreleaser/get
 
-set -eux
+set -eu
 
 readonly RELEASE_URL="https://github.com/jmatsu/dpg/releases"
 
@@ -59,6 +59,6 @@ else
     tar -xf "$TEMP_FILE" -C "$TEMP_DIR"
 fi
 
-cp /tmp/dpg .
+cp "$TEMP_DIR/dpg" .
 
 rm -fr "$TEMP_DIR"
