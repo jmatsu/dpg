@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/jmatsu/dpg/api/request"
 	"github.com/jmatsu/dpg/api/response"
+	"github.com/jmatsu/dpg/version"
 	"github.com/sirupsen/logrus"
 	"net/http"
 )
@@ -19,6 +20,7 @@ func getRequest(e Endpoint, authorization *Authorization, requestParams request.
 	logrus.Debugf("query = %s\n", query)
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s?%s", e.ToURL(), query), nil)
+	req.Header.Set("User-Agent", version.UserAgent())
 	authorization.doAuthorize(req)
 
 	if err != nil {
@@ -54,6 +56,7 @@ func deleteRequest(e Endpoint, authorization *Authorization, requestBody request
 	}
 
 	req, err := http.NewRequest(http.MethodDelete, e.ToURL(), &data)
+	req.Header.Set("User-Agent", version.UserAgent())
 	authorization.doAuthorize(req)
 
 	if err != nil {
@@ -91,6 +94,7 @@ func multiPartFormRequest(e Endpoint, authorization *Authorization, requestBody 
 	}
 
 	req, err := http.NewRequest(http.MethodPost, e.ToURL(), &data)
+	req.Header.Set("User-Agent", version.UserAgent())
 	authorization.doAuthorize(req)
 
 	if err != nil {
@@ -128,6 +132,7 @@ func patchRequest(e Endpoint, authorization *Authorization, requestBody request.
 	}
 
 	req, err := http.NewRequest(http.MethodPatch, e.ToURL(), &data)
+	req.Header.Set("User-Agent", version.UserAgent())
 	authorization.doAuthorize(req)
 
 	if err != nil {

@@ -4,15 +4,18 @@ before:
   hooks:
   - go get -v -t -d ./...
 builds:
-- goos:
-  - linux
-  - darwin
-  - windows
+-
+  ldflags:
+    - -s -w -X github.com/jmatsu/dpg/version.Version={{.Version}} -X github.com/jmatsu/dpg/version.commit={{.Commit}} -X github.com/jmatsu/dpg/version.date={{.Date}}
+  goos:
+    - linux
+    - darwin
+    - windows
   goarch:
-  - "386"
-  - arm64
-- env:
-  - CGO_ENABLED=0
+    - "386"
+    - arm64
+  env:
+    - CGO_ENABLED=0
 archive:
   name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
   format_overrides:
