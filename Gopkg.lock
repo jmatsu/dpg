@@ -2,41 +2,55 @@
 
 
 [[projects]]
+  digest = "1:9e9193aa51197513b3abcb108970d831fbcf40ef96aa845c4f03276e1fa316d2"
   name = "github.com/sirupsen/logrus"
   packages = ["."]
+  pruneopts = "UT"
   revision = "c155da19408a8799da419ed3eeb0cb5db0ad5dbc"
   version = "v1.0.5"
 
 [[projects]]
   branch = "master"
+  digest = "1:3f3a05ae0b95893d90b9b3b5afdb79a9b3d96e4e36e099d841ae602e4aca0da8"
   name = "golang.org/x/crypto"
   packages = ["ssh/terminal"]
+  pruneopts = "UT"
   revision = "a49355c7e3f8fe157a85be2f77e6e269a0f89602"
 
 [[projects]]
   branch = "master"
+  digest = "1:56316ade0990ab33f21769b12ebc69d0b81875615c3a4e23c487e68d499f3e96"
   name = "golang.org/x/sys"
   packages = [
     "unix",
-    "windows"
+    "windows",
   ]
+  pruneopts = "UT"
   revision = "3c6ecd8f22c6f40fbeec94c000a069d7d87c7624"
 
 [[projects]]
+  digest = "1:168a5950229664ee3c0a8aac3f524ec6954bf3f4e23ca6a2e33b549b8ee16a57"
   name = "gopkg.in/guregu/null.v3"
   packages = ["."]
+  pruneopts = "UT"
   revision = "e81d6d8d57747b34d7c5fe0d20ebf57692f04ea9"
   version = "v3.3.0"
 
 [[projects]]
   branch = "v2"
+  digest = "1:927bc5076aef9916f1920f2a07e3723e9da1dcd52baa84d29893a3f417c867b4"
   name = "gopkg.in/urfave/cli.v2"
   packages = ["."]
+  pruneopts = "UT"
   revision = "d3ae77c26ac8db90639677e4831a728d33c36111"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "0b563b417b7e9f958cf5ecaf2ab51040c17f8a263c5ecacc780a84a8ac63eb32"
+  input-imports = [
+    "github.com/sirupsen/logrus",
+    "gopkg.in/guregu/null.v3",
+    "gopkg.in/urfave/cli.v2",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1
