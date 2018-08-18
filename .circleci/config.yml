@@ -2,6 +2,8 @@ default_env: &default_env
   docker:
     - image: circleci/golang:1.10.3
   working_directory: /go/src/github.com/jmatsu/dpg
+  environments:
+    DEP_RELEASE_TAG: v0.5.0
 
 version: 2
 jobs:
@@ -9,21 +11,26 @@ jobs:
     <<: *default_env
     steps:
       - checkout
-      - run: &download_dependencies
+      - run: &download_dep
           name: Download dependencies
           command: |
-            if ! type 'dpg' >/dev/null 2>&1; then
-              curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+            if type dep >/dev/null 2>&1; then
+              rm $(which dep)
             fi
 
-            dep ensure
+            (curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh)
+
+            echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
+            /go/bin/dep version
+      - run: dep ensure
       - run: go test -v ./...
       - run: ./scripts/make_diff_by_go-fmt
   update_docs:
     <<: *default_env
     steps:
       - checkout
-      - run: *download_dependencies
+      - run: *download_dep
+      - run: dep ensure
       - add_ssh_keys:
           fingerprints:
             - "d4:0c:e7:da:b8:f8:c3:93:53:99:24:9b:fa:71:42:d9"
@@ -34,12 +41,7 @@ jobs:
     <<: *default_env
     steps:
       - checkout
-      - run:
-          name: Ensure dep
-          command: |
-            if ! type 'dpg' >/dev/null 2>&1; then
-              curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-            fi
+      - run: *download_dep
       - run: curl -sL https://git.io/goreleaser | bash
 
 workflows:
