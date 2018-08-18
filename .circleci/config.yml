@@ -18,7 +18,8 @@ jobs:
               rm $(which dep)
             fi
 
-            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+            (curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh)
+
             dep version
       - run: dep ensure
       - run: go test -v ./...
