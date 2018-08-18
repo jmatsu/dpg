@@ -3,7 +3,7 @@ default_env: &default_env
     - image: circleci/golang:1.10.3
   working_directory: /go/src/github.com/jmatsu/dpg
   environments:
-    DEP_RELEASE_TAG: v0.4.1
+    DEP_RELEASE_TAG: v0.5.0
 
 version: 2
 jobs:
@@ -20,7 +20,8 @@ jobs:
 
             (curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh)
 
-            dep version
+            echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
+            /go/bin/dep version
       - run: dep ensure
       - run: go test -v ./...
       - run: ./scripts/make_diff_by_go-fmt
