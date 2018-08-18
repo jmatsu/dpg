@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/command/apps"
 	"github.com/jmatsu/dpg/command/constant"
 	"github.com/jmatsu/dpg/command/organizations"
 	"gopkg.in/urfave/cli.v2"
@@ -54,6 +53,23 @@ func addFlags() []cli.Flag {
 	}
 }
 
+func listFlags() []cli.Flag {
+	return []cli.Flag{
+		command.ApiToken.Flag(),
+		organizations.OrganizationName.Flag(),
+		teamName.flag(),
+	}
+}
+
+func removeFlags() []cli.Flag {
+	return []cli.Flag{
+		command.ApiToken.Flag(),
+		organizations.OrganizationName.Flag(),
+		teamName.flag(),
+		userName.flag(),
+	}
+}
+
 func getTeamName(c *cli.Context) string {
 	return c.String(teamName.name())
 }
@@ -76,27 +92,4 @@ func requireUserName(name string) error {
 	}
 
 	return errors.New(fmt.Sprintf("--%s must not be empty", userName.name()))
-}
-
-func listFlags() []cli.Flag {
-	return []cli.Flag{
-		command.ApiToken.Flag(),
-		apps.AppOwnerName.Flag(),
-		apps.AppId.Flag(),
-		apps.Android.Flag(),
-		apps.IOS.Flag(),
-		teamName.flag(),
-	}
-}
-
-func removeFlags() []cli.Flag {
-	return []cli.Flag{
-		command.ApiToken.Flag(),
-		apps.AppOwnerName.Flag(),
-		apps.AppId.Flag(),
-		apps.Android.Flag(),
-		apps.IOS.Flag(),
-		teamName.flag(),
-		userName.flag(),
-	}
 }
