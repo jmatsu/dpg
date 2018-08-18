@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/command/apps"
 	"github.com/jmatsu/dpg/command/constant"
 	"github.com/jmatsu/dpg/command/organizations"
 	"gopkg.in/guregu/null.v3"
@@ -56,6 +55,22 @@ func addFlags() []cli.Flag {
 	}
 }
 
+func listFlags() []cli.Flag {
+	return []cli.Flag{
+		command.ApiToken.Flag(),
+		organizations.OrganizationName.Flag(),
+	}
+}
+
+func removeFlags() []cli.Flag {
+	return []cli.Flag{
+		command.ApiToken.Flag(),
+		organizations.OrganizationName.Flag(),
+		userName.flag(),
+		userEmail.flag(),
+	}
+}
+
 func getUserName(c *cli.Context) null.String {
 	return null.NewString(c.String(userName.name()), c.IsSet(userName.name()))
 }
@@ -72,26 +87,4 @@ func requireUserNameOrUserEmail(name, email null.String) error {
 	}
 
 	return nil
-}
-
-func listFlags() []cli.Flag {
-	return []cli.Flag{
-		command.ApiToken.Flag(),
-		apps.AppOwnerName.Flag(),
-		apps.AppId.Flag(),
-		apps.Android.Flag(),
-		apps.IOS.Flag(),
-	}
-}
-
-func removeFlags() []cli.Flag {
-	return []cli.Flag{
-		command.ApiToken.Flag(),
-		apps.AppOwnerName.Flag(),
-		apps.AppId.Flag(),
-		apps.Android.Flag(),
-		apps.IOS.Flag(),
-		userName.flag(),
-		userEmail.flag(),
-	}
 }
