@@ -6,6 +6,7 @@ import (
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
 	"github.com/jmatsu/dpg/command/constant"
+	"github.com/jmatsu/dpg/command/organizations"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -47,10 +48,7 @@ func (o packageOption) flag() cli.Flag {
 func addFlags() []cli.Flag {
 	return []cli.Flag{
 		command.ApiToken.Flag(),
-		apps.AppOwnerName.Flag(),
-		apps.AppId.Flag(),
-		apps.Android.Flag(),
-		apps.IOS.Flag(),
+		organizations.OrganizationName.Flag(),
 		teamName.flag(),
 		userName.flag(),
 	}
