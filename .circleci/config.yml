@@ -3,7 +3,7 @@ default_env: &default_env
     - image: circleci/golang:1.10.3
   working_directory: /go/src/github.com/jmatsu/dpg
   environments:
-    DEP_VERSION: v0.4.1
+    DEP_RELEASE_TAG: v0.4.1
 
 version: 2
 jobs:
@@ -14,7 +14,9 @@ jobs:
       - run: &download_dep
           name: Download dependencies
           command: |
-            if [[ "$(dep version | grep "version" | awk '$0=$NF' | head -1)" != "$DEP_VERSION" ]]; then
+            which dep || :
+
+            if [[ "$(dep version | grep "version" | awk '$0=$NF' | head -1)" != "DEP_RELEASE_TAG" ]]; then
               curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
             fi
 
