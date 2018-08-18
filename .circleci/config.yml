@@ -14,12 +14,11 @@ jobs:
       - run: &download_dep
           name: Download dependencies
           command: |
-            which dep || :
-
-            if [[ "$(dep version | grep "version" | awk '$0=$NF' | head -1)" != "DEP_RELEASE_TAG" ]]; then
-              curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+            if type dep >/dev/null 2>&1; then
+              rm $(which dep)
             fi
 
+            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
             dep version
       - run: dep ensure
       - run: go test -v ./...
