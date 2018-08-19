@@ -79,7 +79,7 @@ func getUserEmail(c *cli.Context) null.String {
 }
 
 func requireUserNameOrUserEmail(name, email null.String) error {
-	if name.String != "" && email.String == "" {
+	if name.String != "" && email.String != "" {
 		return errors.New(fmt.Sprintf("only one of --%s or --%s is allowed", userName.name(), userEmail.name()))
 	} else if name.String == "" && email.String == "" {
 		return errors.New(fmt.Sprintf("either of --%s or --%s must be specified", userName.name(), userEmail.name()))
