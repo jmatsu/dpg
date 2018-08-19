@@ -25,7 +25,7 @@ func (o option) name() string {
 func (o option) Flag() cli.Flag {
 	switch o {
 	case OrganizationName:
-		return &cli.StringSliceFlag{
+		return &cli.StringFlag{
 			Name:    o.name(),
 			Aliases: []string{constant.OrganizationNameAlias},
 			Usage:   "The name of the target enterprise's organization",
