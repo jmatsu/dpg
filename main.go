@@ -27,7 +27,7 @@ import (
 )
 
 func main() {
-	if b, err := strconv.ParseBool(os.Getenv("DPG_DEBUG")); err != nil && b {
+	if b, err := strconv.ParseBool(os.Getenv("DPG_DEBUG")); err == nil && b {
 		logrus.SetLevel(logrus.DebugLevel)
 	}
 
