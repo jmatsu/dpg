@@ -1,11 +1,9 @@
 package shared_teams
 
 import (
-	"errors"
-	"fmt"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
-	"github.com/jmatsu/dpg/command/constant"
+	"github.com/jmatsu/dpg/command/enterprises/shared_teams"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -16,7 +14,7 @@ func addFlags() []cli.Flag {
 		apps.AppId.Flag(),
 		apps.Android.Flag(),
 		apps.IOS.Flag(),
-		sharedTeamName.flag(),
+		shared_teams.SharedTeamName.Flag(),
 	}
 }
 
@@ -37,6 +35,6 @@ func removeFlags() []cli.Flag {
 		apps.AppId.Flag(),
 		apps.Android.Flag(),
 		apps.IOS.Flag(),
-		sharedTeamName.flag(),
+		shared_teams.SharedTeamName.Flag(),
 	}
 }

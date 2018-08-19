@@ -5,6 +5,7 @@ import (
 	"github.com/jmatsu/dpg/api/request/apps/shared_teams/add"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
+	"github.com/jmatsu/dpg/command/enterprises/shared_teams"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -37,7 +38,7 @@ func NewAddCommand(c *cli.Context) (command.Command, error) {
 			AppPlatform:      platform,
 		},
 		requestBody: &add.Request{
-			SharedTeamName: getSharedTeamName(c),
+			SharedTeamName: shared_teams.GetSharedTeamName(c),
 		},
 	}
 
@@ -65,7 +66,7 @@ func (cmd addCommand) VerifyInput() error {
 		return err
 	}
 
-	if err := requireSharedTeamName(cmd.requestBody.SharedTeamName); err != nil {
+	if err := shared_teams.RequireSharedTeamName(cmd.requestBody.SharedTeamName); err != nil {
 		return err
 	}
 

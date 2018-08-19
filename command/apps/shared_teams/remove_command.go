@@ -5,6 +5,7 @@ import (
 	"github.com/jmatsu/dpg/api/request/apps/shared_teams/remove"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
+	"github.com/jmatsu/dpg/command/enterprises/shared_teams"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -35,7 +36,7 @@ func NewRemoveCommand(c *cli.Context) (command.Command, error) {
 			OrganizationName: apps.GetAppOwnerName(c),
 			AppId:            apps.GetAppId(c),
 			AppPlatform:      platform,
-			SharedTeamName:   getSharedTeamName(c),
+			SharedTeamName:   shared_teams.GetSharedTeamName(c),
 		},
 		requestBody: &remove.Request{},
 	}
@@ -65,7 +66,7 @@ func (cmd removeCommand) VerifyInput() error {
 		return err
 	}
 
-	if err := requireSharedTeamName(cmd.endpoint.SharedTeamName); err != nil {
+	if err := shared_teams.RequireSharedTeamName(cmd.endpoint.SharedTeamName); err != nil {
 		return err
 	}
 
