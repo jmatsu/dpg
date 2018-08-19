@@ -1,6 +1,7 @@
 package organizations
 
 import (
+	"encoding/json"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/api/request/organizations/destroy"
 	"github.com/jmatsu/dpg/command"
@@ -53,6 +54,11 @@ func (cmd destroyCommand) VerifyInput() error {
 
 func (cmd destroyCommand) Run(authorization *api.Authorization) (string, error) {
 	if bytes, err := cmd.endpoint.DeleteRequest(*authorization, *cmd.requestBody); err != nil {
+		if _, ok := err.(*json.SyntaxError); ok {
+			// no-content
+			return "", nil
+		}
+
 		return "", err
 	} else {
 		return string(bytes), nil
