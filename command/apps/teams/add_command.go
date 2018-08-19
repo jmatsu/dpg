@@ -5,6 +5,7 @@ import (
 	"github.com/jmatsu/dpg/api/request/apps/teams/add"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
+	"github.com/jmatsu/dpg/command/organizations/teams"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -37,7 +38,7 @@ func NewAddCommand(c *cli.Context) (command.Command, error) {
 			AppPlatform:      platform,
 		},
 		requestBody: &add.Request{
-			TeamName: getTeamName(c),
+			TeamName: teams.GetTeamName(c),
 		},
 	}
 
@@ -65,7 +66,7 @@ func (cmd addCommand) VerifyInput() error {
 		return err
 	}
 
-	if err := requireTeamName(cmd.requestBody.TeamName); err != nil {
+	if err := teams.RequireTeamName(cmd.requestBody.TeamName); err != nil {
 		return err
 	}
 
