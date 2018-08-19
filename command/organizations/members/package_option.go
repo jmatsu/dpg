@@ -37,9 +37,8 @@ func (o packageOption) flag() cli.Flag {
 		}
 	case userEmail:
 		return &cli.BoolFlag{
-			Name:   o.name(),
-			Usage:  "[Either of this or username is required] An email of a user",
-			Hidden: true,
+			Name:  o.name(),
+			Usage: "[Either of this or username is required] An email of a user",
 		}
 	}
 
