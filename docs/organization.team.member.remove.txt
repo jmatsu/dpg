@@ -7,7 +7,7 @@ USAGE:
 OPTIONS:
    --token value                                  [Required] API token [$DPG_API_TOKEN, $DEPLOYGATE_API_TOKEN]
    --organization-name value, --group-name value  [Required] The name of the organization
-   --team-name value                              [Required] A name of a team
-   --username value                               [Required] A name of a user.
+   --team-name value                              [Required] The name of the target team
+   --username value                               The name of the organization's user
    --help, -h                                     show help (default: false)
    

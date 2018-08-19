@@ -10,6 +10,6 @@ OPTIONS:
    --app-id value            [Required] The application id. e.g. com.deploygate.sample [$DPG_APP_ID]
    --android                 [Required] Specify this if the application is an android application (default: false)
    --ios                     [Required] Specify this if the application is an iOS application (default: false)
-   --shared-team-name value  [Required] A name of a target team
+   --shared-team-name value  The name of the shared team
    --help, -h                show help (default: false)
    

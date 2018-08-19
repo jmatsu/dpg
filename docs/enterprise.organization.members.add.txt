@@ -8,6 +8,6 @@ OPTIONS:
    --token value                                  [Required] API token [$DPG_API_TOKEN, $DEPLOYGATE_API_TOKEN]
    --enterprise-name value                        [Required] The name of the target enterprise.
    --organization-name value, --group-name value  The name of the target enterprise's organization
-   --username value                               A name of a user
+   --username value                               The name of the user
    --help, -h                                     show help (default: false)
    
