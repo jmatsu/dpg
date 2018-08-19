@@ -28,9 +28,9 @@ func (o packageOption) name() string {
 func (o packageOption) flag() cli.Flag {
 	switch o {
 	case userName:
-		return &cli.StringSliceFlag{
+		return &cli.StringFlag{
 			Name:  o.name(),
-			Usage: "A name of a user",
+			Usage: "The name of the user",
 		}
 	}
 
