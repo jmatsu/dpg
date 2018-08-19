@@ -25,6 +25,12 @@ jobs:
       - run: dep ensure
       - run: go test -v ./...
       - run: ./scripts/make_diff_by_go-fmt
+      - run:
+          name: Run all commands
+          command: |
+            while read command_statement; do
+                ${command_statement} -h
+            done < <(scripts/list_all_command.bash)
   update_docs:
     <<: *default_env
     steps:
