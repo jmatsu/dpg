@@ -1,52 +1,11 @@
 package shared_teams
 
 import (
-	"errors"
-	"fmt"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
-	"github.com/jmatsu/dpg/command/constant"
+	"github.com/jmatsu/dpg/command/enterprises/shared_teams"
 	"gopkg.in/urfave/cli.v2"
 )
-
-type packageOption int
-
-const (
-	sharedTeamName packageOption = iota
-)
-
-func (o packageOption) name() string {
-	switch o {
-	case sharedTeamName:
-		return constant.SharedTeamName
-	}
-
-	panic("Option name mapping is not found")
-}
-
-func (o packageOption) flag() cli.Flag {
-	switch o {
-	case sharedTeamName:
-		return &cli.StringFlag{
-			Name:  o.name(),
-			Usage: "[Required] A name of a target team",
-		}
-	}
-
-	panic("Option name mapping is not found")
-}
-
-func getSharedTeamName(c *cli.Context) string {
-	return c.String(sharedTeamName.name())
-}
-
-func requireSharedTeamName(name string) error {
-	if name != "" {
-		return nil
-	}
-
-	return errors.New(fmt.Sprintf("--%s must not be empty", sharedTeamName.name()))
-}
 
 func addFlags() []cli.Flag {
 	return []cli.Flag{
@@ -55,7 +14,7 @@ func addFlags() []cli.Flag {
 		apps.AppId.Flag(),
 		apps.Android.Flag(),
 		apps.IOS.Flag(),
-		sharedTeamName.flag(),
+		shared_teams.SharedTeamName.Flag(),
 	}
 }
 
@@ -76,6 +35,6 @@ func removeFlags() []cli.Flag {
 		apps.AppId.Flag(),
 		apps.Android.Flag(),
 		apps.IOS.Flag(),
-		sharedTeamName.flag(),
+		shared_teams.SharedTeamName.Flag(),
 	}
 }

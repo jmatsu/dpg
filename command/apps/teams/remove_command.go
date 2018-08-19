@@ -5,6 +5,7 @@ import (
 	"github.com/jmatsu/dpg/api/request/apps/teams/remove"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
+	"github.com/jmatsu/dpg/command/organizations/teams"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -35,7 +36,7 @@ func NewRemoveCommand(c *cli.Context) (command.Command, error) {
 			OrganizationName: apps.GetAppOwnerName(c),
 			AppId:            apps.GetAppId(c),
 			AppPlatform:      platform,
-			TeamName:         getTeamName(c),
+			TeamName:         teams.GetTeamName(c),
 		},
 		requestBody: &remove.Request{},
 	}
@@ -65,7 +66,7 @@ func (cmd removeCommand) VerifyInput() error {
 		return err
 	}
 
-	if err := requireTeamName(cmd.endpoint.TeamName); err != nil {
+	if err := teams.RequireTeamName(cmd.endpoint.TeamName); err != nil {
 		return err
 	}
 

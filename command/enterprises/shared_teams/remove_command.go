@@ -27,7 +27,7 @@ func NewRemoveCommand(c *cli.Context) (command.Command, error) {
 		endpoint: &api.EnterpriseSharedTeamsEndpoint{
 			BaseURL:        api.EndpointURL,
 			EnterpriseName: enterprises.GetEnterpriseName(c),
-			SharedTeamName: getSharedTeamName(c),
+			SharedTeamName: GetSharedTeamName(c),
 		},
 		requestBody: &remove.Request{},
 	}
@@ -51,7 +51,7 @@ func (cmd removeCommand) VerifyInput() error {
 		return err
 	}
 
-	if err := requireSharedTeamName(cmd.endpoint.SharedTeamName); err != nil {
+	if err := RequireSharedTeamName(cmd.endpoint.SharedTeamName); err != nil {
 		return err
 	}
 
