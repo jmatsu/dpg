@@ -27,7 +27,7 @@ func (o packageOption) flag() cli.Flag {
 	case description:
 		return &cli.StringFlag{
 			Name:  o.name(),
-			Usage: "A description for an organization",
+			Usage: "A description for the organization",
 		}
 	}
 
