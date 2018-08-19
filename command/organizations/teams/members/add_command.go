@@ -5,6 +5,7 @@ import (
 	"github.com/jmatsu/dpg/api/request/organizations/teams/members/add"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/organizations"
+	"github.com/jmatsu/dpg/command/organizations/teams"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -27,7 +28,7 @@ func NewAddCommand(c *cli.Context) (command.Command, error) {
 		endpoint: &api.OrganizationTeamsMembersEndpoint{
 			BaseURL:          api.EndpointURL,
 			OrganizationName: organizations.GetOrganizationName(c),
-			TeamName:         getTeamName(c),
+			TeamName:         teams.GetTeamName(c),
 		},
 		requestBody: &add.Request{
 			UserName: getUserName(c),
@@ -53,7 +54,7 @@ func (cmd addCommand) VerifyInput() error {
 		return err
 	}
 
-	if err := requireTeamName(cmd.endpoint.TeamName); err != nil {
+	if err := teams.RequireTeamName(cmd.endpoint.TeamName); err != nil {
 		return err
 	}
 
