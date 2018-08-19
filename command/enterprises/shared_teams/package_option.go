@@ -13,12 +13,15 @@ type packageOption int
 
 const (
 	sharedTeamName packageOption = iota
+	description
 )
 
 func (o packageOption) name() string {
 	switch o {
 	case sharedTeamName:
 		return constant.SharedTeamName
+	case description:
+		return constant.Description
 	}
 
 	panic("Option name mapping is not found")
@@ -27,9 +30,13 @@ func (o packageOption) name() string {
 func (o packageOption) flag() cli.Flag {
 	switch o {
 	case sharedTeamName:
-		return &cli.StringSliceFlag{
+		return &cli.StringFlag{
 			Name:  o.name(),
-			Usage: "The name of the target shared team",
+			Usage: "The name of the shared team",
+		}
+		return &cli.StringFlag{
+			Name:  o.name(),
+			Usage: "The description of the shared team",
 		}
 	}
 
@@ -53,6 +60,7 @@ func addFlags() []cli.Flag {
 		command.ApiToken.Flag(),
 		enterprises.EnterpriseName.Flag(),
 		sharedTeamName.flag(),
+		description.flag(),
 	}
 }
 
