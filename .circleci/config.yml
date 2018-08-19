@@ -29,6 +29,8 @@ jobs:
       - run:
           name: Run all commands
           command: |
+            export PATH="$PWD:$PATH"
+
             while read command_statement; do
                 ${command_statement} -h
             done < <(scripts/list_all_command.bash)
