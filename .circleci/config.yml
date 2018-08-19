@@ -23,6 +23,7 @@ jobs:
             echo 'export PATH=$GOPATH/bin:$PATH' >> $BASH_ENV
             /go/bin/dep version
       - run: dep ensure
+      - run: go build .
       - run: go test -v ./...
       - run: ./scripts/make_diff_by_go-fmt
       - run:
@@ -41,7 +42,7 @@ jobs:
           fingerprints:
             - "d4:0c:e7:da:b8:f8:c3:93:53:99:24:9b:fa:71:42:d9"
       - run: |
-          go build # make sure the version of the used binary
+          go build .
           PATH=$PWD:$PATH ./scripts/update_README.bash
   release:
     <<: *default_env

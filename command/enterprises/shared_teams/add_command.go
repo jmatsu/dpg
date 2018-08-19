@@ -29,7 +29,7 @@ func NewAddCommand(c *cli.Context) (command.Command, error) {
 			EnterpriseName: enterprises.GetEnterpriseName(c),
 		},
 		requestBody: &add.Request{
-			SharedTeamName: getSharedTeamName(c),
+			SharedTeamName: GetSharedTeamName(c),
 		},
 	}
 
@@ -51,7 +51,7 @@ func (cmd addCommand) VerifyInput() error {
 		return err
 	}
 
-	if err := requireSharedTeamName(cmd.requestBody.SharedTeamName); err != nil {
+	if err := RequireSharedTeamName(cmd.requestBody.SharedTeamName); err != nil {
 		return err
 	}
 
