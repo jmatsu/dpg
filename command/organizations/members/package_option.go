@@ -31,14 +31,14 @@ func (o packageOption) name() string {
 func (o packageOption) flag() cli.Flag {
 	switch o {
 	case userName:
-		return &cli.StringSliceFlag{
+		return &cli.StringFlag{
 			Name:  o.name(),
-			Usage: "[Either of this or email is required] A name of a user. ",
+			Usage: "The name of the registered user",
 		}
 	case userEmail:
-		return &cli.BoolFlag{
+		return &cli.StringFlag{
 			Name:  o.name(),
-			Usage: "[Either of this or username is required] An email of a user",
+			Usage: "The email address of the user. If the user is not registered when using add command, the invitation e-mail will be sent",
 		}
 	}
 
