@@ -6,20 +6,18 @@ import (
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/constant"
 	"github.com/jmatsu/dpg/command/organizations"
+	"github.com/jmatsu/dpg/command/organizations/teams"
 	"gopkg.in/urfave/cli.v2"
 )
 
 type packageOption int
 
 const (
-	teamName packageOption = iota
-	userName
+	userName packageOption = iota
 )
 
 func (o packageOption) name() string {
 	switch o {
-	case teamName:
-		return constant.TeamName
 	case userName:
 		return constant.UserName
 	}
@@ -29,15 +27,10 @@ func (o packageOption) name() string {
 
 func (o packageOption) flag() cli.Flag {
 	switch o {
-	case teamName:
-		return &cli.StringSliceFlag{
-			Name:  o.name(),
-			Usage: "[Required] A name of a team",
-		}
 	case userName:
-		return &cli.StringSliceFlag{
+		return &cli.StringFlag{
 			Name:  o.name(),
-			Usage: "[Required] A name of a user. ",
+			Usage: "The name of the organization's user",
 		}
 	}
 
@@ -48,7 +41,7 @@ func addFlags() []cli.Flag {
 	return []cli.Flag{
 		command.ApiToken.Flag(),
 		organizations.OrganizationName.Flag(),
-		teamName.flag(),
+		teams.TeamName.Flag(),
 		userName.flag(),
 	}
 }
@@ -57,7 +50,7 @@ func listFlags() []cli.Flag {
 	return []cli.Flag{
 		command.ApiToken.Flag(),
 		organizations.OrganizationName.Flag(),
-		teamName.flag(),
+		teams.TeamName.Flag(),
 	}
 }
 
@@ -65,21 +58,9 @@ func removeFlags() []cli.Flag {
 	return []cli.Flag{
 		command.ApiToken.Flag(),
 		organizations.OrganizationName.Flag(),
-		teamName.flag(),
+		teams.TeamName.Flag(),
 		userName.flag(),
 	}
-}
-
-func getTeamName(c *cli.Context) string {
-	return c.String(teamName.name())
-}
-
-func requireTeamName(name string) error {
-	if name != "" {
-		return nil
-	}
-
-	return errors.New(fmt.Sprintf("--%s must not be empty", teamName.name()))
 }
 
 func getUserName(c *cli.Context) string {

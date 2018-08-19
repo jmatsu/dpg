@@ -5,6 +5,7 @@ import (
 	"github.com/jmatsu/dpg/api/request/organizations/teams/members/list"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/organizations"
+	"github.com/jmatsu/dpg/command/organizations/teams"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -27,7 +28,7 @@ func NewListCommand(c *cli.Context) (command.Command, error) {
 		endpoint: &api.OrganizationTeamsMembersEndpoint{
 			BaseURL:          api.EndpointURL,
 			OrganizationName: organizations.GetOrganizationName(c),
-			TeamName:         getTeamName(c),
+			TeamName:         teams.GetTeamName(c),
 		},
 		requestParams: &list.Request{},
 	}
@@ -51,7 +52,7 @@ func (cmd listCommand) VerifyInput() error {
 		return err
 	}
 
-	if err := requireTeamName(cmd.endpoint.TeamName); err != nil {
+	if err := teams.RequireTeamName(cmd.endpoint.TeamName); err != nil {
 		return err
 	}
 
