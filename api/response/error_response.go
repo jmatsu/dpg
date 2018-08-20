@@ -40,7 +40,14 @@ func FilterErrorResponse(resp http.Response) (bytes []byte, errorResponse *Error
 
 	if err := json.Unmarshal(bytes, &errResp); err != nil {
 		if _, ok := err.(*json.SyntaxError); ok {
-			logrus.Errorln("Got an error response but it's not a json")
+			response := string(bytes)
+
+			if response == "" {
+				logrus.Errorln("The response is no content. This seems not to be expected.")
+				logrus.Errorln("Please create an issue to https://github.com/jmatsu/dpg/issues if possible. Thanks.")
+			} else {
+				logrus.Errorln(response)
+			}
 		}
 
 		failure = err
