@@ -308,14 +308,14 @@ type OrganizationTeamsMembersEndpoint struct {
 	BaseURL          string
 	OrganizationName string
 	TeamName         string
-	UserName         string
+	UserName         null.String
 }
 
 func (e OrganizationTeamsMembersEndpoint) ToURL() string {
 	url := fmt.Sprintf("%s/api/organizations/%s/teams/%s/users", e.BaseURL, e.OrganizationName, e.TeamName)
 
-	if e.UserName != "" {
-		url = fmt.Sprintf("%s/%s", url, e.UserName)
+	if e.UserName.Valid {
+		url = fmt.Sprintf("%s/%s", url, e.UserName.String)
 	}
 
 	logrus.Debugln(url)

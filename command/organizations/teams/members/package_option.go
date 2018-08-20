@@ -7,6 +7,7 @@ import (
 	"github.com/jmatsu/dpg/command/constant"
 	"github.com/jmatsu/dpg/command/organizations"
 	"github.com/jmatsu/dpg/command/organizations/teams"
+	"gopkg.in/guregu/null.v3"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -63,14 +64,28 @@ func removeFlags() []cli.Flag {
 	}
 }
 
-func getUserName(c *cli.Context) string {
-	return c.String(userName.name())
+func getUserName(c *cli.Context) null.String {
+	return null.NewString(c.String(userName.name()), c.IsSet(userName.name()))
 }
 
-func requireUserName(name string) error {
-	if name != "" {
-		return nil
+func getUserEmail(c *cli.Context) null.String {
+	return null.NewString(c.String(userEmail.name()), c.IsSet(userEmail.name()))
+}
+
+func requireUserName(name null.String) error {
+	if name.String != "" {
+		return errors.New(fmt.Sprintf("--%s is required", userName.name()))
 	}
 
-	return errors.New(fmt.Sprintf("--%s must not be empty", userName.name()))
+	return nil
+}
+
+func requireUserNameOrUserEmail(name, email null.String) error {
+	if name.String != "" && email.String != "" {
+		return errors.New(fmt.Sprintf("only one of --%s or --%s is allowed", userName.name(), userEmail.name()))
+	} else if name.String == "" && email.String == "" {
+		return errors.New(fmt.Sprintf("either of --%s or --%s must be specified", userName.name(), userEmail.name()))
+	}
+
+	return nil
 }

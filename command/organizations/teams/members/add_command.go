@@ -31,7 +31,8 @@ func NewAddCommand(c *cli.Context) (command.Command, error) {
 			TeamName:         teams.GetTeamName(c),
 		},
 		requestBody: &add.Request{
-			UserName: getUserName(c),
+			UserName:  getUserName(c),
+			UserEmail: getUserEmail(c),
 		},
 	}
 
@@ -58,7 +59,7 @@ func (cmd addCommand) VerifyInput() error {
 		return err
 	}
 
-	if err := requireUserName(cmd.requestBody.UserName); err != nil {
+	if err := requireUserNameOrUserEmail(cmd.requestBody.UserName, cmd.requestBody.UserEmail); err != nil {
 		return err
 	}
 

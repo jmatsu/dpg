@@ -2,23 +2,33 @@ package add
 
 import (
 	"github.com/jmatsu/dpg/util"
+	"gopkg.in/guregu/null.v3"
 	"io"
 	"strings"
 )
 
 type Request struct {
-	UserName string
+	UserName  null.String
+	UserEmail null.String
 }
 
 type Key string
 
 const (
-	keyUserName Key = "user"
+	keyUser Key = "user"
 )
 
 func (req Request) IoReaderMap() (*map[string]io.Reader, error) {
+	var userKey string
+
+	if req.UserName.Valid {
+		userKey = req.UserName.String
+	} else {
+		userKey = req.UserEmail.String
+	}
+
 	parts := map[Key]io.Reader{
-		keyUserName: strings.NewReader(req.UserName),
+		keyUser: strings.NewReader(userKey),
 	}
 
 	out, err := util.StringifyKeysOfReaderMap(parts)
