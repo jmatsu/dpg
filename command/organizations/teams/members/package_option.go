@@ -14,15 +14,12 @@ type packageOption int
 
 const (
 	userName packageOption = iota
-	userEmail
 )
 
 func (o packageOption) name() string {
 	switch o {
 	case userName:
 		return constant.UserName
-	case userEmail:
-		return constant.UserEmail
 	}
 
 	panic("Option name mapping is not found")
@@ -35,11 +32,6 @@ func (o packageOption) flag() cli.Flag {
 			Name:  o.name(),
 			Usage: "The name of the organization's user",
 		}
-	case userEmail:
-		return &cli.StringFlag{
-			Name:  o.name(),
-			Usage: "The email address of the organization's user",
-		}
 	}
 
 	panic("Option name mapping is not found")
@@ -51,7 +43,6 @@ func addFlags() []cli.Flag {
 		organizations.OrganizationName.Flag(),
 		teams.TeamName.Flag(),
 		userName.flag(),
-		userEmail.flag(),
 	}
 }
 
