@@ -9,5 +9,6 @@ OPTIONS:
    --organization-name value, --group-name value  [Required] The name of the organization
    --team-name value                              [Required] The name of the target team
    --username value                               The name of the organization's user
+   --email value                                  The email address of the organization's user
    --help, -h                                     show help (default: false)
    
