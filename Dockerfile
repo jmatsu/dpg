@@ -1,8 +1,9 @@
-FROM circleci/golang:1.10.3
+FROM golang:1.13-stretch
 
-MAINTAINER Jumpei Matsuda <jmatsu.drm@gmail.com>
+LABEL maintainer="jmatsu.drm@gmail.com"
 
 RUN mkdir -p $GOPATH/src/github.com/jmatsu/dpg
+
 WORKDIR $GOPATH/src/github.com/jmatsu/dpg
 
 ADD . $GOPATH/src/github.com/jmatsu/dpg
