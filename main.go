@@ -29,6 +29,8 @@ import (
 func main() {
 	if b, err := strconv.ParseBool(os.Getenv("DPG_DEBUG")); err == nil && b {
 		logrus.SetLevel(logrus.DebugLevel)
+	} else {
+		logrus.SetLevel(logrus.ErrorLevel)
 	}
 
 	cli.InitCompletionFlag.Hidden = true
@@ -198,7 +200,7 @@ SUPPORT:
 	err := app.Run(os.Args)
 
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err.Error())
+		logrus.Warnln(err.Error())
 		os.Exit(1)
 	}
 }
