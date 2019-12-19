@@ -23,157 +23,157 @@ func existingFilePath(fileNameExtension string) string {
 }
 
 func createRequestCases(fileNameExtension string) []RequestCase {
-    existingFilePath := existingFilePath(fileNameExtension)
-    return []RequestCase {
-	{
-		command: uploadCommand{
-			endpoint: &api.AppsEndpoint{
-				BaseURL: "xxxx",
+	existingFilePath := existingFilePath(fileNameExtension)
+	return []RequestCase{
+		{
+			command: uploadCommand{
+				endpoint: &api.AppsEndpoint{
+					BaseURL: "xxxx",
+				},
+				requestBody: &requestAppUpload.Request{
+					AppFilePath:        existingFilePath,
+					AppVisible:         false,
+					EnableNotification: true,
+					ShortMessage:       null.StringFrom("xxxxxx"),
+					DistributionKey:    null.StringFrom("xxxxxx"),
+					DistributionName:   null.StringFrom("xxxxxx"),
+					ReleaseNote:        null.StringFrom("xxxxxx"),
+				},
 			},
-			requestBody: &requestAppUpload.Request{
-				AppFilePath:        existingFilePath,
-				AppVisible:         false,
-				EnableNotification: true,
-				ShortMessage:       null.StringFrom("xxxxxx"),
-				DistributionKey:    null.StringFrom("xxxxxx"),
-				DistributionName:   null.StringFrom("xxxxxx"),
-				ReleaseNote:        null.StringFrom("xxxxxx"),
-			},
+			expectError: true,
 		},
-		expectError: true,
-	},
-	{
-		command: uploadCommand{
-			endpoint: &api.AppsEndpoint{
-				BaseURL:      "xxxx",
-				AppOwnerName: "xx",
+		{
+			command: uploadCommand{
+				endpoint: &api.AppsEndpoint{
+					BaseURL:      "xxxx",
+					AppOwnerName: "xx",
+				},
+				requestBody: &requestAppUpload.Request{
+					AppVisible:         false,
+					EnableNotification: true,
+					ShortMessage:       null.StringFrom("xxxxxx"),
+					DistributionKey:    null.StringFrom("xxxxxx"),
+					DistributionName:   null.StringFrom("xxxxxx"),
+					ReleaseNote:        null.StringFrom("xxxxxx"),
+				},
 			},
-			requestBody: &requestAppUpload.Request{
-				AppVisible:         false,
-				EnableNotification: true,
-				ShortMessage:       null.StringFrom("xxxxxx"),
-				DistributionKey:    null.StringFrom("xxxxxx"),
-				DistributionName:   null.StringFrom("xxxxxx"),
-				ReleaseNote:        null.StringFrom("xxxxxx"),
-			},
+			expectError: true,
 		},
-		expectError: true,
-	},
-	{
-		command: uploadCommand{
-			endpoint: &api.AppsEndpoint{
-				BaseURL:      "xxxx",
-				AppOwnerName: "xx",
+		{
+			command: uploadCommand{
+				endpoint: &api.AppsEndpoint{
+					BaseURL:      "xxxx",
+					AppOwnerName: "xx",
+				},
+				requestBody: &requestAppUpload.Request{
+					AppFilePath:        "not exists",
+					AppVisible:         false,
+					EnableNotification: true,
+					ShortMessage:       null.StringFrom("xxxxxx"),
+					DistributionKey:    null.StringFrom("xxxxxx"),
+					DistributionName:   null.StringFrom("xxxxxx"),
+					ReleaseNote:        null.StringFrom("xxxxxx"),
+				},
 			},
-			requestBody: &requestAppUpload.Request{
-				AppFilePath:        "not exists",
-				AppVisible:         false,
-				EnableNotification: true,
-				ShortMessage:       null.StringFrom("xxxxxx"),
-				DistributionKey:    null.StringFrom("xxxxxx"),
-				DistributionName:   null.StringFrom("xxxxxx"),
-				ReleaseNote:        null.StringFrom("xxxxxx"),
-			},
+			expectError: true,
 		},
-		expectError: true,
-	},
-	{
-		command: uploadCommand{
-			endpoint: &api.AppsEndpoint{
-				BaseURL:      "xxxx",
-				AppOwnerName: "xx",
+		{
+			command: uploadCommand{
+				endpoint: &api.AppsEndpoint{
+					BaseURL:      "xxxx",
+					AppOwnerName: "xx",
+				},
+				requestBody: &requestAppUpload.Request{
+					AppFilePath:        existingFilePath,
+					AppVisible:         false,
+					EnableNotification: true,
+					ShortMessage:       null.StringFrom("xxxxxx"),
+					DistributionKey:    null.StringFrom(""),
+					DistributionName:   null.StringFrom("xxxxxx"),
+					ReleaseNote:        null.StringFrom("xxxxxx"),
+				},
 			},
-			requestBody: &requestAppUpload.Request{
-				AppFilePath:        existingFilePath,
-				AppVisible:         false,
-				EnableNotification: true,
-				ShortMessage:       null.StringFrom("xxxxxx"),
-				DistributionKey:    null.StringFrom(""),
-				DistributionName:   null.StringFrom("xxxxxx"),
-				ReleaseNote:        null.StringFrom("xxxxxx"),
-			},
+			expectError: true,
 		},
-		expectError: true,
-	},
-	{
-		command: uploadCommand{
-			endpoint: &api.AppsEndpoint{
-				BaseURL:      "xxxx",
-				AppOwnerName: "xx",
+		{
+			command: uploadCommand{
+				endpoint: &api.AppsEndpoint{
+					BaseURL:      "xxxx",
+					AppOwnerName: "xx",
+				},
+				requestBody: &requestAppUpload.Request{
+					AppFilePath:        existingFilePath,
+					EnableNotification: true,
+					ShortMessage:       null.StringFrom("xxxxxx"),
+					DistributionKey:    null.StringFrom("xxxxxx"),
+					DistributionName:   null.StringFrom("xxxxxx"),
+					ReleaseNote:        null.StringFrom("xxxxxx"),
+				},
 			},
-			requestBody: &requestAppUpload.Request{
-				AppFilePath:        existingFilePath,
-				EnableNotification: true,
-				ShortMessage:       null.StringFrom("xxxxxx"),
-				DistributionKey:    null.StringFrom("xxxxxx"),
-				DistributionName:   null.StringFrom("xxxxxx"),
-				ReleaseNote:        null.StringFrom("xxxxxx"),
-			},
+			expectedResponse: true,
 		},
-		expectedResponse: true,
-	},
-	{
-		command: uploadCommand{
-			endpoint: &api.AppsEndpoint{
-				BaseURL:      "xxxx",
-				AppOwnerName: "xx",
+		{
+			command: uploadCommand{
+				endpoint: &api.AppsEndpoint{
+					BaseURL:      "xxxx",
+					AppOwnerName: "xx",
+				},
+				requestBody: &requestAppUpload.Request{
+					AppFilePath:        existingFilePath,
+					AppVisible:         false,
+					EnableNotification: true,
+					ShortMessage:       null.StringFrom("xxxxxx"),
+					DistributionKey:    null.StringFrom("xxxxxx"),
+					DistributionName:   null.StringFrom(""),
+					ReleaseNote:        null.StringFrom("xxxxxx"),
+				},
 			},
-			requestBody: &requestAppUpload.Request{
-				AppFilePath:        existingFilePath,
-				AppVisible:         false,
-				EnableNotification: true,
-				ShortMessage:       null.StringFrom("xxxxxx"),
-				DistributionKey:    null.StringFrom("xxxxxx"),
-				DistributionName:   null.StringFrom(""),
-				ReleaseNote:        null.StringFrom("xxxxxx"),
-			},
+			expectedResponse: true,
 		},
-		expectedResponse: true,
-	},
-	{
-		command: uploadCommand{
-			endpoint: &api.AppsEndpoint{
-				BaseURL:      "xxxx",
-				AppOwnerName: "xx",
+		{
+			command: uploadCommand{
+				endpoint: &api.AppsEndpoint{
+					BaseURL:      "xxxx",
+					AppOwnerName: "xx",
+				},
+				requestBody: &requestAppUpload.Request{
+					AppFilePath:        existingFilePath,
+					AppVisible:         true,
+					EnableNotification: true,
+					ShortMessage:       null.StringFrom("xxxxxx"),
+					DistributionKey:    null.StringFrom("xxxxxx"),
+					DistributionName:   null.StringFrom("xxxxxx"),
+					ReleaseNote:        null.StringFrom("xxxxxx"),
+				},
 			},
-			requestBody: &requestAppUpload.Request{
-				AppFilePath:        existingFilePath,
-				AppVisible:         true,
-				EnableNotification: true,
-				ShortMessage:       null.StringFrom("xxxxxx"),
-				DistributionKey:    null.StringFrom("xxxxxx"),
-				DistributionName:   null.StringFrom("xxxxxx"),
-				ReleaseNote:        null.StringFrom("xxxxxx"),
-			},
+			expectedResponse: true,
 		},
-		expectedResponse: true,
-	},
-	{
-		command: uploadCommand{
-			endpoint: &api.AppsEndpoint{
-				BaseURL:      "xxxx",
-				AppOwnerName: "xx",
+		{
+			command: uploadCommand{
+				endpoint: &api.AppsEndpoint{
+					BaseURL:      "xxxx",
+					AppOwnerName: "xx",
+				},
+				requestBody: &requestAppUpload.Request{
+					AppFilePath:        existingFilePath,
+					AppVisible:         false,
+					EnableNotification: true,
+					ShortMessage:       null.StringFrom("xxxxxx"),
+					DistributionKey:    null.StringFrom("xxxxxx"),
+					DistributionName:   null.StringFrom("xxxxxx"),
+					ReleaseNote:        null.StringFrom("xxxxxx"),
+				},
 			},
-			requestBody: &requestAppUpload.Request{
-				AppFilePath:        existingFilePath,
-				AppVisible:         false,
-				EnableNotification: true,
-				ShortMessage:       null.StringFrom("xxxxxx"),
-				DistributionKey:    null.StringFrom("xxxxxx"),
-				DistributionName:   null.StringFrom("xxxxxx"),
-				ReleaseNote:        null.StringFrom("xxxxxx"),
-			},
+			expectedResponse: true,
 		},
-		expectedResponse: true,
-	},
-    }
+	}
 }
 
 func TestVerifyInput(t *testing.T) {
-    requestTestCases := append(
-        createRequestCases("apk"),
-        createRequestCases("aab")...
-    )
+	requestTestCases := append(
+		createRequestCases("apk"),
+		createRequestCases("aab")...,
+	)
 	for i, c := range requestTestCases {
 		t.Logf("TestVerifyInput at %d", i)
 
@@ -184,10 +184,10 @@ func TestVerifyInput(t *testing.T) {
 }
 
 func TestRun(t *testing.T) {
-    requestTestCases := append(
-        createRequestCases("apk"),
-        createRequestCases("aab")...
-    )
+	requestTestCases := append(
+		createRequestCases("apk"),
+		createRequestCases("aab")...,
+	)
 	for i, c := range requestTestCases {
 		t.Logf("TestRun at %d", i)
 
