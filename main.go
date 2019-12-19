@@ -53,7 +53,7 @@ SUPPORT:
 	app.Usage = "Unofficial DeployGate API Client CLI"
 	app.Description = "dpg is an unofficial command line tool to access DeployGate API."
 	app.Version = version.Version
-	app.EnableShellCompletion = true
+	app.EnableBashCompletion = true
 	app.Commands = []*cli.Command{
 		{
 			Name:  "app",
