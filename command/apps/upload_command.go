@@ -33,8 +33,8 @@ func NewUploadCommand(c *cli.Context) (command.Command, error) {
 	if platform, err := GetAppPlatform(c); err != nil {
 		return nil, err
 	} else if platform == "android" {
-		if !strings.HasSuffix(appFilePath, ".apk") {
-			return nil, errors.New("an application file must be an apk file")
+		if !strings.HasSuffix(appFilePath, ".apk") && !strings.HasSuffix(appFilePath, ".aab") {
+			return nil, errors.New("an application file must be an apk file or an aab file")
 		}
 	} else {
 		if !strings.HasSuffix(appFilePath, ".ipa") {
