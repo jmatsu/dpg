@@ -33,8 +33,6 @@ func main() {
 		logrus.SetLevel(logrus.ErrorLevel)
 	}
 
-	cli.InitCompletionFlag.Hidden = true
-
 	cli.AppHelpTemplate = fmt.Sprintf(`%s
 COMPLETION:
 	dpg --init-completion <bash|zsh>
