@@ -20,8 +20,7 @@ builds:
     - CGO_ENABLED=0
 archives:
   -
-    builds:
-    - default
+    id: basic
     name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
     format_overrides:
       - goos: windows
@@ -32,8 +31,6 @@ archives:
       windows: Windows
       386: i386
       amd64: x86_64
-checksum:
-  name_template: '{{ .ProjectName }}_{{ .Version }}_checksums.txt'
 snapshot:
   name_template: "SNAPSHOT-{{ .Commit }}"
 changelog:
