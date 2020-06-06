@@ -1,6 +1,7 @@
 package add
 
 import (
+	"fmt"
 	"github.com/jmatsu/dpg/util"
 	"io"
 	"strings"
@@ -36,4 +37,12 @@ func (req Request) IoReaderMap() (*map[string]io.Reader, error) {
 	}
 
 	return out, nil
+}
+
+func (req Request) Verify() error {
+	if len(req.UserNamesOrEmails) == 0 {
+		return fmt.Errorf("the number of invitees must be greater than 0")
+	}
+
+	return nil
 }

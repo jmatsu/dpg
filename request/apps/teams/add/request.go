@@ -1,6 +1,7 @@
 package add
 
 import (
+	"fmt"
 	"github.com/jmatsu/dpg/util"
 	"io"
 	"strings"
@@ -28,4 +29,13 @@ func (req Request) IoReaderMap() (*map[string]io.Reader, error) {
 	}
 
 	return out, nil
+}
+
+func (req Request) Verify() error {
+
+	if req.TeamName == "" {
+		return fmt.Errorf("team name must not be empty")
+	}
+
+	return nil
 }

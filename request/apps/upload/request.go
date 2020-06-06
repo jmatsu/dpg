@@ -1,7 +1,9 @@
 package upload
 
 import (
+	"fmt"
 	"github.com/jmatsu/dpg/util"
+	"github.com/sirupsen/logrus"
 	"gopkg.in/guregu/null.v3"
 	"io"
 	"os"
@@ -75,4 +77,27 @@ func (req Request) IoReaderMap() (*map[string]io.Reader, error) {
 	}
 
 	return out, nil
+}
+
+func (req Request) Verify() error {
+	if req.AppFilePath == "" {
+		return fmt.Errorf("app file path must be present")
+	}
+
+	if f, err := os.Stat(req.AppFilePath); err != nil {
+		return err
+	} else if f.Size() == 0 {
+		return fmt.Errorf("%s must not be an empty", req.AppFilePath)
+	}
+
+	if req.DistributionKey.Valid && req.DistributionKey.String == "" {
+		return fmt.Errorf("distribution key must not be empty if specified")
+	}
+
+	if req.DistributionKey.Valid && req.DistributionName.String != "" {
+		req.DistributionName = null.StringFromPtr(nil)
+		logrus.Warnf("ignored the name of the distribution because the both of name and key were present")
+	}
+
+	return nil
 }

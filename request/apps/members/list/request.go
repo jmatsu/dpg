@@ -20,3 +20,7 @@ func (req Request) StringMap() (*map[string]string, error) {
 
 	return out, nil
 }
+
+func (req Request) Verify() error {
+	return nil
+}

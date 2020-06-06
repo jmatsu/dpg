@@ -20,3 +20,7 @@ func (req Request) IoReaderMap() (*map[string]io.Reader, error) {
 
 	return out, nil
 }
+
+func (req Request) Verify() error {
+	return nil
+}
