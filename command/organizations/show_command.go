@@ -2,8 +2,8 @@ package organizations
 
 import (
 	"github.com/jmatsu/dpg/api"
-	"github.com/jmatsu/dpg/api/request/organizations/show"
 	"github.com/jmatsu/dpg/command"
+	"github.com/jmatsu/dpg/request/organizations/show"
 	"gopkg.in/urfave/cli.v2"
 )
 

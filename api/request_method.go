@@ -3,8 +3,8 @@ package api
 import (
 	"errors"
 	"fmt"
-	"github.com/jmatsu/dpg/api/request"
 	"github.com/jmatsu/dpg/api/response"
+	"github.com/jmatsu/dpg/request"
 	"github.com/jmatsu/dpg/version"
 	"github.com/sirupsen/logrus"
 	"net/http"

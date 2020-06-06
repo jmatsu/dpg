@@ -2,10 +2,10 @@ package teams
 
 import (
 	"github.com/jmatsu/dpg/api"
-	"github.com/jmatsu/dpg/api/request/apps/teams/add"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
 	"github.com/jmatsu/dpg/command/organizations/teams"
+	"github.com/jmatsu/dpg/request/apps/teams/add"
 	"gopkg.in/urfave/cli.v2"
 )
 

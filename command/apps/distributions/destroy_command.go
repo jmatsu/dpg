@@ -4,10 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"github.com/jmatsu/dpg/api"
-	"github.com/jmatsu/dpg/api/request/apps/distributions/destroy"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
 	"github.com/jmatsu/dpg/command/constant"
+	"github.com/jmatsu/dpg/request/apps/distributions/destroy"
 	"gopkg.in/urfave/cli.v2"
 )
 

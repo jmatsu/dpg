@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/jmatsu/dpg/api"
-	"github.com/jmatsu/dpg/api/request/distributions/destroy"
 	"github.com/jmatsu/dpg/command"
+	"github.com/jmatsu/dpg/request/distributions/destroy"
 	"gopkg.in/urfave/cli.v2"
 )
 

@@ -3,7 +3,7 @@ package apps
 import (
 	"fmt"
 	"github.com/jmatsu/dpg/api"
-	requestAppUpload "github.com/jmatsu/dpg/api/request/apps/upload"
+	requestAppUpload "github.com/jmatsu/dpg/request/apps/upload"
 	"gopkg.in/guregu/null.v3"
 	"net/http"
 	"net/http/httptest"

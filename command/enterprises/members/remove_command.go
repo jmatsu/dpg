@@ -2,9 +2,9 @@ package members
 
 import (
 	"github.com/jmatsu/dpg/api"
-	"github.com/jmatsu/dpg/api/request/enterprises/members/remove"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/enterprises"
+	"github.com/jmatsu/dpg/request/enterprises/members/remove"
 	"gopkg.in/urfave/cli.v2"
 )
 

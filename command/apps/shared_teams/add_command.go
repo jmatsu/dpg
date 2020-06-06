@@ -2,10 +2,10 @@ package shared_teams
 
 import (
 	"github.com/jmatsu/dpg/api"
-	"github.com/jmatsu/dpg/api/request/apps/shared_teams/add"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/apps"
 	"github.com/jmatsu/dpg/command/enterprises/shared_teams"
+	"github.com/jmatsu/dpg/request/apps/shared_teams/add"
 	"gopkg.in/urfave/cli.v2"
 )
 

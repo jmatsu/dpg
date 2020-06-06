@@ -2,10 +2,10 @@ package members
 
 import (
 	"github.com/jmatsu/dpg/api"
-	"github.com/jmatsu/dpg/api/request/organizations/teams/members/list"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/organizations"
 	"github.com/jmatsu/dpg/command/organizations/teams"
+	"github.com/jmatsu/dpg/request/organizations/teams/members/list"
 	"gopkg.in/urfave/cli.v2"
 )
 
