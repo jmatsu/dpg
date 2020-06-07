@@ -3,9 +3,7 @@ package shared_teams
 import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/command/apps"
-	"github.com/jmatsu/dpg/command/enterprises/shared_teams"
-	"github.com/jmatsu/dpg/request/apps/shared_teams/add"
+	"github.com/jmatsu/dpg/request/apps/shared_teams"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -19,64 +17,33 @@ func AddCommand() *cli.Command {
 }
 
 type addCommand struct {
-	endpoint    *api.EnterpriseOrganizationAppSharedTeamsEndpoint
-	requestBody *add.Request
+	app         api.OrganizationApp
+	requestBody shared_teams.AddRequest
 }
 
 func NewAddCommand(c *cli.Context) (command.Command, error) {
-	platform, err := apps.GetAppPlatform(c)
+	app, err := command.RequireOrganizationApp(c)
+
+	if err != nil {
+		return nil, err
+	}
+
+	sharedTeamName, err := command.RequireSharedTeamName(c)
 
 	if err != nil {
 		return nil, err
 	}
 
 	cmd := addCommand{
-		endpoint: &api.EnterpriseOrganizationAppSharedTeamsEndpoint{
-			BaseURL:          api.EndpointURL,
-			OrganizationName: apps.GetAppOwnerName(c),
-			AppId:            apps.GetAppId(c),
-			AppPlatform:      platform,
+		app: *app,
+		requestBody: shared_teams.AddRequest{
+			SharedTeamName: sharedTeamName,
 		},
-		requestBody: &add.Request{
-			SharedTeamName: shared_teams.GetSharedTeamName(c),
-		},
-	}
-
-	if err := cmd.VerifyInput(); err != nil {
-		return nil, err
 	}
 
 	return cmd, nil
 }
 
-/*
-Endpoint:
-	organization name is required
-	app id is required
-	app platform is required
-Parameters:
-	shared team name is required
-*/
-func (cmd addCommand) VerifyInput() error {
-	if err := apps.RequireAppOwnerName(cmd.endpoint.OrganizationName); err != nil {
-		return err
-	}
-
-	if err := apps.RequireAppId(cmd.endpoint.AppId); err != nil {
-		return err
-	}
-
-	if err := shared_teams.RequireSharedTeamName(cmd.requestBody.SharedTeamName); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (cmd addCommand) Run(authorization *api.Authorization) (string, error) {
-	if bytes, err := cmd.endpoint.MultiPartFormRequest(*authorization, *cmd.requestBody); err != nil {
-		return "", err
-	} else {
-		return string(bytes), nil
-	}
+	return api.NewClient(*authorization).AddSharedTeam(cmd.app, cmd.requestBody)
 }

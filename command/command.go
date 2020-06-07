@@ -1,13 +1,11 @@
 package command
 
 import (
-	"errors"
 	"github.com/jmatsu/dpg/api"
 	"gopkg.in/urfave/cli.v2"
 )
 
 type Command interface {
-	VerifyInput() error
 	Run(authorization *api.Authorization) (string, error)
 }
 
@@ -27,12 +25,14 @@ func CommandAction(fun generateCommandFunc) func(ctx *cli.Context) error {
 
 func AuthorizedCommandAction(fun generateCommandFunc) func(ctx *cli.Context) error {
 	return func(c *cli.Context) error {
-		authorization := &api.Authorization{
-			Token: GetApiToken(c),
+		apiToken, err := RequireApiToken(c)
+
+		if err != nil {
+			return err
 		}
 
-		if authorization.Token == "" {
-			return errors.New("api token must be specified")
+		authorization := &api.Authorization{
+			Token: apiToken,
 		}
 
 		if cmd, err := fun(c); err != nil {

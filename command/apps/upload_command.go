@@ -2,14 +2,13 @@ package apps
 
 import (
 	"errors"
-	"fmt"
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/request/apps/upload"
+	"github.com/jmatsu/dpg/command/constant"
+	"github.com/jmatsu/dpg/request/apps"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/guregu/null.v3"
 	"gopkg.in/urfave/cli.v2"
-	"os"
 	"strings"
 )
 
@@ -23,89 +22,82 @@ func UploadCommand() *cli.Command {
 }
 
 type uploadCommand struct {
-	endpoint    *api.AppsEndpoint
-	requestBody *upload.Request
+	appOwnerName string
+	requestBody  apps.UploadRequest
 }
 
 func NewUploadCommand(c *cli.Context) (command.Command, error) {
-	appFilePath := getAppFilePath(c)
+	appOwnerName, err := command.RequireAppOwnerName(c)
 
-	if platform, err := GetAppPlatform(c); err != nil {
+	if err != nil {
 		return nil, err
-	} else if platform == "android" {
-		if !strings.HasSuffix(appFilePath, ".apk") && !strings.HasSuffix(appFilePath, ".aab") {
-			return nil, errors.New("an application file must be an apk file or an aab file")
+	}
+
+	appFilePath, err := command.RequireAppFilePath(c)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if platform, err := command.GetAppPlatform(c); err != nil {
+		return nil, err
+	} else if platform.Valid {
+		if platform.String == constant.Android {
+			if !strings.HasSuffix(appFilePath, ".apk") && !strings.HasSuffix(appFilePath, ".aab") {
+				return nil, errors.New("an application file must be an apk file or an aab file")
+			}
+		} else if platform.String == constant.IOS {
+			if !strings.HasSuffix(appFilePath, ".ipa") {
+				return nil, errors.New("an application file must be an ipa file")
+			}
 		}
-	} else {
-		if !strings.HasSuffix(appFilePath, ".ipa") {
-			return nil, errors.New("an application file must be an ipa file")
-		}
+	}
+
+	distributionKey, err := command.GetDistributionKey(c)
+
+	if err != nil {
+		return nil, err
+	}
+
+	distributionName, err := command.GetDistributionName(c)
+
+	if err != nil {
+		return nil, err
+	}
+
+	shortMessage, err := command.GetShortMessage(c)
+
+	if err != nil {
+		return nil, err
+	}
+
+	releaseNote, err := command.GetReleaseNote(c)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if distributionKey.Valid && distributionName.Valid {
+		distributionName = null.StringFromPtr(nil)
+		logrus.Warnf("distribution name was ignored because distribution key was also specified\n")
 	}
 
 	cmd := uploadCommand{
-		endpoint: &api.AppsEndpoint{
-			BaseURL:      api.EndpointURL,
-			AppOwnerName: GetAppOwnerName(c),
-		},
-		requestBody: &upload.Request{
+		appOwnerName: appOwnerName,
+		requestBody: apps.UploadRequest{
 			AppFilePath:        appFilePath,
-			AppVisible:         isPublic(c),
-			EnableNotification: isEnabledNotification(c),
-			ShortMessage:       getShortMessage(c),
-			DistributionKey:    getDistributionKey(c),
-			DistributionName:   getDistributionName(c),
-			ReleaseNote:        getReleaseNote(c),
+			AppVisible:         command.IsPublic(c),
+			EnableNotification: command.IsEnabledNotification(c),
+			ShortMessage:       shortMessage,
+			DistributionKey:    distributionKey,
+			DistributionName:   distributionName,
+			ReleaseNote:        releaseNote,
 		},
-	}
-
-	if err := cmd.VerifyInput(); err != nil {
-		return nil, err
 	}
 
 	return cmd, nil
 }
 
-/*
-Endpoint:
-	app owner's name is required
-Parameters:
-	the specified file must exist
-	the specified distribution key must not be empty
-	the specified distribution name is not used if a distribution key is also specified
-*/
-func (cmd uploadCommand) VerifyInput() error {
-	if err := RequireAppOwnerName(cmd.endpoint.AppOwnerName); err != nil {
-		return err
-	}
-
-	if cmd.requestBody.AppFilePath == "" {
-		return errors.New(fmt.Sprintf("--%s must not be empty", appFilePath.name()))
-	}
-
-	if f, err := os.Stat(cmd.requestBody.AppFilePath); os.IsNotExist(err) {
-		return errors.New(fmt.Sprintf("%s is not found", cmd.requestBody.AppFilePath))
-	} else if err != nil {
-		return errors.New(fmt.Sprintf("seriously wrong when trying to open %s", cmd.requestBody.AppFilePath))
-	} else if f != nil && f.Size() == 0 {
-		return errors.New("an application file must not be an empty")
-	}
-
-	if cmd.requestBody.DistributionKey.Valid && cmd.requestBody.DistributionKey.String == "" {
-		return errors.New(fmt.Sprintf("--%s must not be empty if specified", distributionKey.name()))
-	}
-
-	if cmd.requestBody.DistributionKey.Valid && cmd.requestBody.DistributionName.String != "" {
-		cmd.requestBody.DistributionName = null.StringFromPtr(nil)
-		logrus.Warnf("--%s was specified so --%s wouldn't be used", distributionKey.name(), distributionName.name())
-	}
-
-	return nil
-}
-
 func (cmd uploadCommand) Run(authorization *api.Authorization) (string, error) {
-	if bytes, err := cmd.endpoint.MultiPartFormRequest(*authorization, *cmd.requestBody); err != nil {
-		return "", err
-	} else {
-		return string(bytes), nil
-	}
+	return api.NewClient(*authorization).UploadApp(cmd.appOwnerName, cmd.requestBody)
 }

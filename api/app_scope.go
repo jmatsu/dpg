@@ -2,10 +2,10 @@ package api
 
 import (
 	"fmt"
-	"github.com/jmatsu/dpg/request/apps/distributions/destroy"
+	"github.com/jmatsu/dpg/request/apps/distributions"
 )
 
-func (c Client) DestroyDistributionByName(app App, request destroy.Request) (string, error) {
+func (c Client) DestroyDistributionByName(app App, request distributions.DestroyRequest) (string, error) {
 	if err := app.verify(); err != nil {
 		return "", err
 	}

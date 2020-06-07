@@ -1,0 +1,21 @@
+package organization_members
+
+import (
+	"github.com/jmatsu/dpg/util"
+	"io"
+)
+
+type RemoveRequest struct {
+}
+
+func (req Request) IoReaderMap() (*map[string]io.Reader, error) {
+	parts := map[string]io.Reader{}
+
+	out, err := util.StringifyKeysOfReaderMap(parts)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return out, nil
+}

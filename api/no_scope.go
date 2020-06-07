@@ -2,11 +2,11 @@ package api
 
 import (
 	"fmt"
-	"github.com/jmatsu/dpg/request/apps/upload"
+	"github.com/jmatsu/dpg/request/apps"
 	"github.com/jmatsu/dpg/request/distributions/destroy"
 )
 
-func (c Client) UploadApp(appOwnerName string, request upload.Request) (string, error) {
+func (c Client) UploadApp(appOwnerName string, request apps.UploadRequest) (string, error) {
 	endpoint := AppsEndpoint{
 		BaseURL:      c.baseURL,
 		AppOwnerName: appOwnerName,

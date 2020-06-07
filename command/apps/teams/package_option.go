@@ -2,39 +2,34 @@ package teams
 
 import (
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/command/apps"
-	"github.com/jmatsu/dpg/command/organizations/teams"
 	"gopkg.in/urfave/cli.v2"
 )
 
 func addFlags() []cli.Flag {
-	return []cli.Flag{
-		command.ApiToken.Flag(),
-		apps.AppOwnerName.Flag(),
-		apps.AppId.Flag(),
-		apps.Android.Flag(),
-		apps.IOS.Flag(),
-		teams.TeamName.Flag(),
-	}
+	options := append(
+		command.OrganizationAppOptions(),
+		command.ApiToken,
+		command.TeamName,
+	)
+
+	return command.ToFlags(options)
 }
 
 func listFlags() []cli.Flag {
-	return []cli.Flag{
-		command.ApiToken.Flag(),
-		apps.AppOwnerName.Flag(),
-		apps.AppId.Flag(),
-		apps.Android.Flag(),
-		apps.IOS.Flag(),
-	}
+	options := append(
+		command.OrganizationAppOptions(),
+		command.ApiToken,
+	)
+
+	return command.ToFlags(options)
 }
 
 func removeFlags() []cli.Flag {
-	return []cli.Flag{
-		command.ApiToken.Flag(),
-		apps.AppOwnerName.Flag(),
-		apps.AppId.Flag(),
-		apps.Android.Flag(),
-		apps.IOS.Flag(),
-		teams.TeamName.Flag(),
-	}
+	options := append(
+		command.OrganizationAppOptions(),
+		command.ApiToken,
+		command.TeamName,
+	)
+
+	return command.ToFlags(options)
 }

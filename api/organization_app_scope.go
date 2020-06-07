@@ -2,15 +2,11 @@ package api
 
 import (
 	"fmt"
-	add2 "github.com/jmatsu/dpg/request/apps/shared_teams/add"
-	list2 "github.com/jmatsu/dpg/request/apps/shared_teams/list"
-	remove2 "github.com/jmatsu/dpg/request/apps/shared_teams/remove"
-	"github.com/jmatsu/dpg/request/apps/teams/add"
-	"github.com/jmatsu/dpg/request/apps/teams/list"
-	"github.com/jmatsu/dpg/request/apps/teams/remove"
+	"github.com/jmatsu/dpg/request/apps/shared_teams"
+	"github.com/jmatsu/dpg/request/apps/teams"
 )
 
-func (c Client) AddTeam(app OrganizationApp, request add.Request) (string, error) {
+func (c Client) AddTeam(app OrganizationApp, request teams.AddRequest) (string, error) {
 	if err := app.verify(); err != nil {
 		return "", err
 	}
@@ -33,7 +29,7 @@ func (c Client) AddTeam(app OrganizationApp, request add.Request) (string, error
 	}
 }
 
-func (c Client) ListTeams(app UserApp, request list.Request) (string, error) {
+func (c Client) ListTeams(app OrganizationApp, request teams.ListRequest) (string, error) {
 	if err := app.verify(); err != nil {
 		return "", err
 	}
@@ -56,7 +52,7 @@ func (c Client) ListTeams(app UserApp, request list.Request) (string, error) {
 	}
 }
 
-func (c Client) RemoveTeam(app UserApp, teamName string, request remove.Request) (string, error) {
+func (c Client) RemoveTeam(app OrganizationApp, teamName string, request teams.RemoveRequest) (string, error) {
 	if err := app.verify(); err != nil {
 		return "", err
 	}
@@ -84,7 +80,7 @@ func (c Client) RemoveTeam(app UserApp, teamName string, request remove.Request)
 	}
 }
 
-func (c Client) AddSharedTeam(app OrganizationApp, request add2.Request) (string, error) {
+func (c Client) AddSharedTeam(app OrganizationApp, request shared_teams.AddRequest) (string, error) {
 	if err := app.verify(); err != nil {
 		return "", err
 	}
@@ -107,7 +103,7 @@ func (c Client) AddSharedTeam(app OrganizationApp, request add2.Request) (string
 	}
 }
 
-func (c Client) ListSharedTeams(app UserApp, request list2.Request) (string, error) {
+func (c Client) ListSharedTeams(app OrganizationApp, request shared_teams.ListRequest) (string, error) {
 	if err := app.verify(); err != nil {
 		return "", err
 	}
@@ -130,7 +126,7 @@ func (c Client) ListSharedTeams(app UserApp, request list2.Request) (string, err
 	}
 }
 
-func (c Client) RemoveSharedTeam(app UserApp, teamName string, request remove2.Request) (string, error) {
+func (c Client) RemoveSharedTeam(app OrganizationApp, teamName string, request shared_teams.RemoveRequest) (string, error) {
 	if err := app.verify(); err != nil {
 		return "", err
 	}

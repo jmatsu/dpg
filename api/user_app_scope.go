@@ -1,12 +1,10 @@
 package api
 
 import (
-	"github.com/jmatsu/dpg/request/apps/members/add"
-	"github.com/jmatsu/dpg/request/apps/members/list"
-	"github.com/jmatsu/dpg/request/apps/members/remove"
+	"github.com/jmatsu/dpg/request/apps/members"
 )
 
-func (c Client) AddNewMember(app UserApp, request add.Request) (string, error) {
+func (c Client) AddMember(app UserApp, request members.AddRequest) (string, error) {
 	if err := app.verify(); err != nil {
 		return "", err
 	}
@@ -29,7 +27,7 @@ func (c Client) AddNewMember(app UserApp, request add.Request) (string, error) {
 	}
 }
 
-func (c Client) ListMembers(app UserApp, request list.Request) (string, error) {
+func (c Client) ListMembers(app UserApp, request members.ListRequest) (string, error) {
 	if err := app.verify(); err != nil {
 		return "", err
 	}
@@ -52,7 +50,7 @@ func (c Client) ListMembers(app UserApp, request list.Request) (string, error) {
 	}
 }
 
-func (c Client) RemoveMember(app UserApp, request remove.Request) (string, error) {
+func (c Client) RemoveMember(app UserApp, request members.RemoveRequest) (string, error) {
 	if err := app.verify(); err != nil {
 		return "", err
 	}
