@@ -3,8 +3,7 @@ package members
 import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/command/enterprises"
-	"github.com/jmatsu/dpg/request/enterprises/members/remove"
+	"github.com/jmatsu/dpg/request/enterprises/members"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -18,50 +17,33 @@ func RemoveCommand() *cli.Command {
 }
 
 type removeCommand struct {
-	endpoint    *api.EnterpriseMembersEndpoint
-	requestBody *remove.Request
+	enterprise  api.Enterprise
+	userName    string
+	requestBody members.RemoveRequest
 }
 
 func NewRemoveCommand(c *cli.Context) (command.Command, error) {
-	cmd := removeCommand{
-		endpoint: &api.EnterpriseMembersEndpoint{
-			BaseURL:        api.EndpointURL,
-			EnterpriseName: enterprises.GetEnterpriseName(c),
-			UserName:       getUserName(c),
-		},
-		requestBody: &remove.Request{},
+	enterprise, err := command.RequireEnterprise(c)
+
+	if err != nil {
+		return nil, err
 	}
 
-	if err := cmd.VerifyInput(); err != nil {
+	userName, err := command.RequireUserName(c)
+
+	if err != nil {
 		return nil, err
+	}
+
+	cmd := removeCommand{
+		enterprise:  *enterprise,
+		userName:    userName,
+		requestBody: members.RemoveRequest{},
 	}
 
 	return cmd, nil
 }
 
-/*
-Endpoint:
-	enterprise name is required
-	user name is required
-Parameters:
-	none
-*/
-func (cmd removeCommand) VerifyInput() error {
-	if err := enterprises.RequireEnterpriseName(cmd.endpoint.EnterpriseName); err != nil {
-		return err
-	}
-
-	if err := requireUserName(cmd.endpoint.UserName); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (cmd removeCommand) Run(authorization *api.Authorization) (string, error) {
-	if bytes, err := cmd.endpoint.DeleteRequest(*authorization, *cmd.requestBody); err != nil {
-		return "", err
-	} else {
-		return string(bytes), nil
-	}
+	return api.NewClient(*authorization).RemoveEnterpriseMember(cmd.enterprise, cmd.userName, cmd.requestBody)
 }

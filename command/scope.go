@@ -5,12 +5,6 @@ import (
 	"gopkg.in/urfave/cli.v2"
 )
 
-func AuthorizationOptions() []Option {
-	return []Option{
-		ApiToken,
-	}
-}
-
 func UserAppOptions() []Option {
 	return []Option{
 		AppOwnerName,
@@ -26,6 +20,12 @@ func OrganizationAppOptions() []Option {
 		AppId,
 		Android,
 		IOS,
+	}
+}
+
+func EnterpriseOptions() []Option {
+	return []Option{
+		EnterpriseName,
 	}
 }
 
@@ -79,4 +79,16 @@ func RequireOrganizationApp(c *cli.Context) (*api.OrganizationApp, error) {
 		Id:        appId,
 		Platform:  platform,
 	}, err
+}
+
+func RequireEnterprise(c *cli.Context) (*api.Enterprise, error) {
+	name, err := RequireEnterpriseName(c)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &api.Enterprise{
+		Name: name,
+	}, nil
 }

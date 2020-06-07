@@ -7,9 +7,8 @@ import (
 
 func addFlags() []cli.Flag {
 	options := append(
-		[]command.Option{},
+		command.EnterpriseOptions(),
 		command.ApiToken,
-		command.EnterpriseName,
 		command.UserName,
 	)
 
@@ -18,9 +17,8 @@ func addFlags() []cli.Flag {
 
 func listFlags() []cli.Flag {
 	options := append(
-		[]command.Option{},
+		command.EnterpriseOptions(),
 		command.ApiToken,
-		command.EnterpriseName,
 	)
 
 	return command.ToFlags(options)
@@ -28,9 +26,8 @@ func listFlags() []cli.Flag {
 
 func removeFlags() []cli.Flag {
 	options := append(
-		[]command.Option{},
+		command.EnterpriseOptions(),
 		command.ApiToken,
-		command.EnterpriseName,
 		command.UserName,
 	)
 
