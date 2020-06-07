@@ -61,3 +61,15 @@ func (a OrganizationApp) verify() error {
 
 	return nil
 }
+
+type Enterprise struct {
+	Name string
+}
+
+func (a Enterprise) verify() error {
+	if a.Name == "" {
+		return fmt.Errorf("enterprise name must be present")
+	}
+
+	return nil
+}

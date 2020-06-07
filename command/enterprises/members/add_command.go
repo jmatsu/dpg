@@ -4,7 +4,7 @@ import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/enterprises"
-	"github.com/jmatsu/dpg/request/enterprises/members/add"
+	"github.com/jmatsu/dpg/request/enterprises/members"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -18,50 +18,33 @@ func AddCommand() *cli.Command {
 }
 
 type addCommand struct {
-	endpoint    *api.EnterpriseMembersEndpoint
-	requestBody *add.Request
+	enterpriseName string
+	requestBody    members.AddRequest
 }
 
 func NewAddCommand(c *cli.Context) (command.Command, error) {
-	cmd := addCommand{
-		endpoint: &api.EnterpriseMembersEndpoint{
-			BaseURL:        api.EndpointURL,
-			EnterpriseName: enterprises.GetEnterpriseName(c),
-		},
-		requestBody: &add.Request{
-			UserName: getUserName(c),
-		},
+	enterpriseName, err := command.RequireEnterpriseName(c)
+
+	if err != nil {
+		return nil, err
 	}
 
-	if err := cmd.VerifyInput(); err != nil {
+	userName, err := command.RequireUserName(c)
+
+	if err != nil {
 		return nil, err
+	}
+
+	cmd := addCommand{
+		enterpriseName: enterpriseName,
+		requestBody: members.AddRequest{
+			UserName: userName,
+		},
 	}
 
 	return cmd, nil
 }
 
-/*
-Endpoint:
-	enterprise name is required
-Parameters:
-	user name is required
-*/
-func (cmd addCommand) VerifyInput() error {
-	if err := enterprises.RequireEnterpriseName(cmd.endpoint.EnterpriseName); err != nil {
-		return err
-	}
-
-	if err := requireUserName(cmd.requestBody.UserName); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (cmd addCommand) Run(authorization *api.Authorization) (string, error) {
-	if bytes, err := cmd.endpoint.MultiPartFormRequest(*authorization, *cmd.requestBody); err != nil {
-		return "", err
-	} else {
-		return string(bytes), nil
-	}
+	return api.NewClient(*authorization).AddTeam()
 }

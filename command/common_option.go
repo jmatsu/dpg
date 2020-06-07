@@ -29,6 +29,8 @@ const (
 	Removees
 	SharedTeamName
 	TeamName
+	UserName
+	EnterpriseName
 )
 
 func ToFlags(options []Option) []cli.Flag {
@@ -138,6 +140,16 @@ func (o Option) Flag() cli.Flag {
 			Name:  o.name(),
 			Usage: "[Required] The name of the target team",
 		}
+	case UserName:
+		return &cli.StringFlag{
+			Name:  o.name(),
+			Usage: "The name of the user",
+		}
+	case EnterpriseName:
+		return &cli.StringFlag{
+			Name:  o.name(),
+			Usage: "[Required] The name of the target enterprise.",
+		}
 	}
 
 	panic("Option name mapping is not found")
@@ -179,6 +191,10 @@ func (o Option) name() string {
 		return constant.SharedTeamName
 	case TeamName:
 		return constant.TeamName
+	case UserName:
+		return constant.UserName
+	case EnterpriseName:
+		return constant.EnterpriseName
 	}
 
 	panic("Option name mapping is not found")
@@ -356,9 +372,25 @@ func RequireSharedTeamName(c *cli.Context) (string, error) {
 }
 
 func GetTeamName(c *cli.Context) (null.String, error) {
-	return getString(c, SharedTeamName)
+	return getString(c, TeamName)
 }
 
 func RequireTeamName(c *cli.Context) (string, error) {
-	return requireString(c, SharedTeamName)
+	return requireString(c, TeamName)
+}
+
+func GetUserName(c *cli.Context) (null.String, error) {
+	return getString(c, UserName)
+}
+
+func RequireUserName(c *cli.Context) (string, error) {
+	return requireString(c, UserName)
+}
+
+func GetEnterpriseName(c *cli.Context) (null.String, error) {
+	return getString(c, EnterpriseName)
+}
+
+func RequireEnterpriseName(c *cli.Context) (string, error) {
+	return requireString(c, EnterpriseName)
 }

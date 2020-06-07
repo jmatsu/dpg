@@ -8,7 +8,7 @@ import (
 type RemoveRequest struct {
 }
 
-func (req Request) IoReaderMap() (*map[string]io.Reader, error) {
+func (req RemoveRequest) IoReaderMap() (*map[string]io.Reader, error) {
 	parts := map[string]io.Reader{}
 
 	out, err := util.StringifyKeysOfReaderMap(parts)

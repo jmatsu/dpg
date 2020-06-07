@@ -5,6 +5,12 @@ import (
 	"gopkg.in/urfave/cli.v2"
 )
 
+func AuthorizationOptions() []Option {
+	return []Option{
+		ApiToken,
+	}
+}
+
 func UserAppOptions() []Option {
 	return []Option{
 		AppOwnerName,

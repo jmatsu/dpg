@@ -6,8 +6,11 @@ import (
 )
 
 func removeFlags() []cli.Flag {
-	return []cli.Flag{
-		command.ApiToken.Flag(),
-		DistributionKey.Flag(),
-	}
+	options := append(
+		[]command.Option{},
+		command.ApiToken,
+		command.DistributionKey,
+	)
+
+	return command.ToFlags(options)
 }

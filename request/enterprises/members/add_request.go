@@ -1,6 +1,7 @@
 package members
 
 import (
+	"fmt"
 	"github.com/jmatsu/dpg/util"
 	"io"
 	"strings"
@@ -22,4 +23,12 @@ func (req AddRequest) IoReaderMap() (*map[string]io.Reader, error) {
 	}
 
 	return out, nil
+}
+
+func (req AddRequest) Verify() error {
+	if req.UserName == "" {
+		return fmt.Errorf("user name must be present")
+	}
+
+	return nil
 }
