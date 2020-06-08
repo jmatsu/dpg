@@ -3,8 +3,7 @@ package shared_teams
 import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/command/enterprises"
-	"github.com/jmatsu/dpg/request/enterprises/shared_teams/remove"
+	"github.com/jmatsu/dpg/request/enterprises/shared_teams"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -18,50 +17,33 @@ func RemoveCommand() *cli.Command {
 }
 
 type removeCommand struct {
-	endpoint    *api.EnterpriseSharedTeamsEndpoint
-	requestBody *remove.Request
+	enterprise     api.Enterprise
+	sharedTeamName string
+	requestBody    shared_teams.RemoveRequest
 }
 
 func NewRemoveCommand(c *cli.Context) (command.Command, error) {
-	cmd := removeCommand{
-		endpoint: &api.EnterpriseSharedTeamsEndpoint{
-			BaseURL:        api.EndpointURL,
-			EnterpriseName: enterprises.GetEnterpriseName(c),
-			SharedTeamName: GetSharedTeamName(c),
-		},
-		requestBody: &remove.Request{},
+	enterprise, err := command.RequireEnterprise(c)
+
+	if err != nil {
+		return nil, err
 	}
 
-	if err := cmd.VerifyInput(); err != nil {
+	sharedTeamName, err := command.RequireSharedTeamName(c)
+
+	if err != nil {
 		return nil, err
+	}
+
+	cmd := removeCommand{
+		enterprise:     *enterprise,
+		sharedTeamName: sharedTeamName,
+		requestBody:    shared_teams.RemoveRequest{},
 	}
 
 	return cmd, nil
 }
 
-/*
-Endpoint:
-	enterprise name is required
-	shared team name is required
-Parameters:
-	none
-*/
-func (cmd removeCommand) VerifyInput() error {
-	if err := enterprises.RequireEnterpriseName(cmd.endpoint.EnterpriseName); err != nil {
-		return err
-	}
-
-	if err := RequireSharedTeamName(cmd.endpoint.SharedTeamName); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (cmd removeCommand) Run(authorization *api.Authorization) (string, error) {
-	if bytes, err := cmd.endpoint.DeleteRequest(*authorization, *cmd.requestBody); err != nil {
-		return "", err
-	} else {
-		return string(bytes), nil
-	}
+	return api.NewClient(*authorization).RemoveSharedTeam2(cmd.enterprise, cmd.sharedTeamName, cmd.requestBody)
 }

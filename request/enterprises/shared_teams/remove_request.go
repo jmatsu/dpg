@@ -18,3 +18,7 @@ func (req RemoveRequest) IoReaderMap() (*map[string]io.Reader, error) {
 
 	return out, nil
 }
+
+func (req RemoveRequest) Verify() error {
+	return nil
+}

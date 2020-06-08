@@ -3,8 +3,7 @@ package shared_teams
 import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/command/enterprises"
-	"github.com/jmatsu/dpg/request/enterprises/shared_teams/add"
+	"github.com/jmatsu/dpg/request/enterprises/shared_teams"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -18,50 +17,40 @@ func AddCommand() *cli.Command {
 }
 
 type addCommand struct {
-	endpoint    *api.EnterpriseSharedTeamsEndpoint
-	requestBody *add.Request
+	enterprise  api.Enterprise
+	requestBody shared_teams.AddRequest
 }
 
 func NewAddCommand(c *cli.Context) (command.Command, error) {
-	cmd := addCommand{
-		endpoint: &api.EnterpriseSharedTeamsEndpoint{
-			BaseURL:        api.EndpointURL,
-			EnterpriseName: enterprises.GetEnterpriseName(c),
-		},
-		requestBody: &add.Request{
-			SharedTeamName: GetSharedTeamName(c),
-		},
+	enterprise, err := command.RequireEnterprise(c)
+
+	if err != nil {
+		return nil, err
 	}
 
-	if err := cmd.VerifyInput(); err != nil {
+	sharedTeamName, err := command.RequireSharedTeamName(c)
+
+	if err != nil {
 		return nil, err
+	}
+
+	description, err := command.GetSharedTeamDescription(c)
+
+	if err != nil {
+		return nil, err
+	}
+
+	cmd := addCommand{
+		enterprise: *enterprise,
+		requestBody: shared_teams.AddRequest{
+			SharedTeamName: sharedTeamName,
+			Description:    description.String,
+		},
 	}
 
 	return cmd, nil
 }
 
-/*
-Endpoint:
-	enterprise name is required
-Parameters:
-	shared team name is required
-*/
-func (cmd addCommand) VerifyInput() error {
-	if err := enterprises.RequireEnterpriseName(cmd.endpoint.EnterpriseName); err != nil {
-		return err
-	}
-
-	if err := RequireSharedTeamName(cmd.requestBody.SharedTeamName); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (cmd addCommand) Run(authorization *api.Authorization) (string, error) {
-	if bytes, err := cmd.endpoint.MultiPartFormRequest(*authorization, *cmd.requestBody); err != nil {
-		return "", err
-	} else {
-		return string(bytes), nil
-	}
+	return api.NewClient(*authorization).AddSharedTeam2(cmd.enterprise, cmd.requestBody)
 }

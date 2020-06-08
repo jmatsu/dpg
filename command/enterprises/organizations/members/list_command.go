@@ -3,9 +3,7 @@ package members
 import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/command/enterprises"
-	"github.com/jmatsu/dpg/command/enterprises/organizations"
-	"github.com/jmatsu/dpg/request/enterprises/organizations/members/list"
+	"github.com/jmatsu/dpg/request/enterprises/organization_members"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -19,50 +17,33 @@ func ListCommand() *cli.Command {
 }
 
 type listCommand struct {
-	endpoint      *api.EnterpriseOrganizationsMembersEndpoint
-	requestParams *list.Request
+	enterprise       api.Enterprise
+	organizationName string
+	requestParams    organization_members.ListRequest
 }
 
 func NewListCommand(c *cli.Context) (command.Command, error) {
-	cmd := listCommand{
-		endpoint: &api.EnterpriseOrganizationsMembersEndpoint{
-			BaseURL:          api.EndpointURL,
-			EnterpriseName:   enterprises.GetEnterpriseName(c),
-			OrganizationName: organizations.GetOrganizationName(c),
-		},
-		requestParams: &list.Request{},
+	enterprise, err := command.RequireEnterprise(c)
+
+	if err != nil {
+		return nil, err
 	}
 
-	if err := cmd.VerifyInput(); err != nil {
+	organizationName, err := command.RequireOrganizationName(c)
+
+	if err != nil {
 		return nil, err
+	}
+
+	cmd := listCommand{
+		enterprise:       *enterprise,
+		organizationName: organizationName,
+		requestParams:    organization_members.ListRequest{},
 	}
 
 	return cmd, nil
 }
 
-/*
-Endpoint:
-	enterprise name is required
-	organization name is required
-Parameters:
-	none
-*/
-func (cmd listCommand) VerifyInput() error {
-	if err := enterprises.RequireEnterpriseName(cmd.endpoint.EnterpriseName); err != nil {
-		return err
-	}
-
-	if err := organizations.RequireOrganizationName(cmd.endpoint.OrganizationName); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (cmd listCommand) Run(authorization *api.Authorization) (string, error) {
-	if bytes, err := cmd.endpoint.GetListRequest(*authorization, *cmd.requestParams); err != nil {
-		return "", err
-	} else {
-		return string(bytes), nil
-	}
+	return api.NewClient(*authorization).ListEnterpriseOrganizationMembers(cmd.enterprise, cmd.organizationName, cmd.requestParams)
 }

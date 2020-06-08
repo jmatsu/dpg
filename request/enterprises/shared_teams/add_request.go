@@ -1,6 +1,7 @@
 package shared_teams
 
 import (
+	"fmt"
 	"github.com/jmatsu/dpg/util"
 	"io"
 	"strings"
@@ -24,4 +25,12 @@ func (req AddRequest) IoReaderMap() (*map[string]io.Reader, error) {
 	}
 
 	return out, nil
+}
+
+func (req AddRequest) Verify() error {
+	if req.SharedTeamName == "" {
+		return fmt.Errorf("shared team name must be present")
+	}
+
+	return nil
 }

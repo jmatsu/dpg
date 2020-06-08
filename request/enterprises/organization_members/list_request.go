@@ -18,3 +18,7 @@ func (req ListRequest) StringMap() (*map[string]string, error) {
 
 	return out, nil
 }
+
+func (req ListRequest) Verify() error {
+	return nil
+}
