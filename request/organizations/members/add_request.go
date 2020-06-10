@@ -1,6 +1,7 @@
 package members
 
 import (
+	"fmt"
 	"github.com/jmatsu/dpg/util"
 	"gopkg.in/guregu/null.v3"
 	"io"
@@ -28,4 +29,16 @@ func (req AddRequest) IoReaderMap() (*map[string]io.Reader, error) {
 	}
 
 	return out, nil
+}
+
+func (req AddRequest) Verify() error {
+	if req.UserEmail.Valid && req.UserName.Valid {
+		return fmt.Errorf("user email and name cannot be specified at once")
+	}
+
+	if !req.UserName.Valid {
+		return fmt.Errorf("one of user email or name is required")
+	}
+
+	return nil
 }

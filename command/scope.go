@@ -29,6 +29,12 @@ func EnterpriseOptions() []Option {
 	}
 }
 
+func OrganizationOptions() []Option {
+	return []Option{
+		OrganizationName,
+	}
+}
+
 func RequireUserApp(c *cli.Context) (*api.UserApp, error) {
 	appOwnerName, err := RequireAppOwnerName(c)
 
@@ -89,6 +95,19 @@ func RequireEnterprise(c *cli.Context) (*api.Enterprise, error) {
 	}
 
 	return &api.Enterprise{
+		Name: name,
+	}, nil
+}
+
+
+func RequireOrganization(c *cli.Context) (*api.Organization, error) {
+	name, err := RequireOrganizationName(c)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &api.Organization{
 		Name: name,
 	}, nil
 }

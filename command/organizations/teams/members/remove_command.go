@@ -3,9 +3,7 @@ package members
 import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/command/organizations"
-	"github.com/jmatsu/dpg/command/organizations/teams"
-	"github.com/jmatsu/dpg/request/organizations/teams/members/remove"
+	"github.com/jmatsu/dpg/request/organizations/team_members"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -19,56 +17,41 @@ func RemoveCommand() *cli.Command {
 }
 
 type removeCommand struct {
-	endpoint    *api.OrganizationTeamsMembersEndpoint
-	requestBody *remove.Request
+	organization api.Organization
+	teamName string
+	userName string
+	requestBody team_members.RemoveRequest
 }
 
 func NewRemoveCommand(c *cli.Context) (command.Command, error) {
-	cmd := removeCommand{
-		endpoint: &api.OrganizationTeamsMembersEndpoint{
-			BaseURL:          api.EndpointURL,
-			OrganizationName: organizations.GetOrganizationName(c),
-			TeamName:         teams.GetTeamName(c),
-			UserName:         getUserName(c),
-		},
-		requestBody: &remove.Request{},
+	organization, err := command.RequireOrganization(c)
+
+	if err != nil {
+		return nil, err
 	}
 
-	if err := cmd.VerifyInput(); err != nil {
+	teamName, err := command.RequireTeamName(c)
+
+	if err != nil {
 		return nil, err
+	}
+
+	userName, err := command.RequireUserName(c)
+
+	if err != nil {
+		return nil, err
+	}
+
+	cmd := removeCommand{
+		organization: *organization,
+		teamName:teamName,
+		userName:userName,
+		requestBody: team_members.RemoveRequest{},
 	}
 
 	return cmd, nil
 }
 
-/*
-Endpoint:
-	organization name is required
-	team name is required
-	user name is required
-Parameters:
-	none
-*/
-func (cmd removeCommand) VerifyInput() error {
-	if err := organizations.RequireOrganizationName(cmd.endpoint.OrganizationName); err != nil {
-		return err
-	}
-
-	if err := teams.RequireTeamName(cmd.endpoint.TeamName); err != nil {
-		return err
-	}
-
-	if err := requireUserName(cmd.endpoint.UserName); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (cmd removeCommand) Run(authorization *api.Authorization) (string, error) {
-	if bytes, err := cmd.endpoint.DeleteRequest(*authorization, *cmd.requestBody); err != nil {
-		return "", err
-	} else {
-		return string(bytes), nil
-	}
+	return api.NewClient(*authorization).RemoveTeamMember(cmd.organization, cmd.teamName, cmd.userName, cmd.requestBody)
 }

@@ -30,9 +30,11 @@ const (
 	SharedTeamName
 	TeamName
 	UserName
+	UserEmail
 	EnterpriseName
 	OrganizationName
 	SharedTeamDescription
+	OrganizationDescription
 )
 
 func ToFlags(options []Option) []cli.Flag {
@@ -147,6 +149,11 @@ func (o Option) Flag() cli.Flag {
 			Name:  o.name(),
 			Usage: "The name of the user",
 		}
+	case UserEmail:
+		return &cli.StringFlag{
+			Name:  o.name(),
+			Usage: "The email address of the user. If the user is not registered when using add command, the invitation e-mail will be sent",
+		}
 	case EnterpriseName:
 		return &cli.StringFlag{
 			Name:  o.name(),
@@ -162,6 +169,11 @@ func (o Option) Flag() cli.Flag {
 		return &cli.StringFlag{
 			Name:  o.name(),
 			Usage: "The description of the shared team",
+		}
+	case OrganizationDescription:
+		return &cli.StringFlag{
+			Name:  o.name(),
+			Usage: "The description of the organization",
 		}
 	}
 
@@ -206,11 +218,15 @@ func (o Option) name() string {
 		return constant.TeamName
 	case UserName:
 		return constant.UserName
+	case UserEmail:
+		return constant.UserEmail
 	case EnterpriseName:
 		return constant.EnterpriseName
 	case OrganizationName:
 		return constant.OrganizationName
 	case SharedTeamDescription:
+		return constant.Description
+	case OrganizationDescription:
 		return constant.Description
 	}
 
@@ -404,6 +420,14 @@ func RequireUserName(c *cli.Context) (string, error) {
 	return requireString(c, UserName)
 }
 
+func GetUserEmail(c *cli.Context) (null.String, error) {
+	return getString(c, UserEmail)
+}
+
+func RequireUserEmail(c *cli.Context) (string, error) {
+	return requireString(c, UserEmail)
+}
+
 func GetEnterpriseName(c *cli.Context) (null.String, error) {
 	return getString(c, EnterpriseName)
 }
@@ -426,4 +450,12 @@ func GetSharedTeamDescription(c *cli.Context) (null.String, error) {
 
 func RequireSharedTeamDescription(c *cli.Context) (string, error) {
 	return requireString(c, SharedTeamDescription)
+}
+
+func GetOrganizationDescription(c *cli.Context) (null.String, error) {
+	return getString(c, OrganizationDescription)
+}
+
+func RequireOrganizationDescription(c *cli.Context) (string, error) {
+	return requireString(c, OrganizationDescription)
 }

@@ -3,7 +3,8 @@ package api
 import (
 	"fmt"
 	"github.com/jmatsu/dpg/request/apps"
-	"github.com/jmatsu/dpg/request/distributions/destroy"
+	"github.com/jmatsu/dpg/request/distributions"
+	"github.com/jmatsu/dpg/request/organizations"
 )
 
 func (c Client) UploadApp(appOwnerName string, request apps.UploadRequest) (string, error) {
@@ -27,16 +28,37 @@ func (c Client) UploadApp(appOwnerName string, request apps.UploadRequest) (stri
 	}
 }
 
-func (c Client) DestroyDistributionByKey(distributionKey string, request destroy.Request) (string, error) {
+func (c Client) DestroyDistributionByKey(distributionKey string, request distributions.DestroyRequest) (string, error) {
 	if distributionKey == "" {
 		return "", fmt.Errorf("distribution name must be present")
 	}
+
+	if err:= request.Verify(); err != nil {
+		return "", err
+	}
+
 	endpoint := DistributionsEndpoint{
 		BaseURL:         c.baseURL,
 		DistributionKey: distributionKey,
 	}
 
 	if bytes, err := endpoint.DeleteRequest(c.authorization, request); err != nil {
+		return "", err
+	} else {
+		return string(bytes), nil
+	}
+}
+
+func (c Client) CreateOrganization(request organizations.CreateRequest) (string, error) {
+	if err:= request.Verify(); err != nil {
+		return "", err
+	}
+
+	endpoint := OrganizationsEndpoint{
+		BaseURL:c.baseURL,
+	}
+
+	if bytes, err := endpoint.MultiPartFormRequest(c.authorization, request); err != nil {
 		return "", err
 	} else {
 		return string(bytes), nil

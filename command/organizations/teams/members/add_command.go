@@ -3,9 +3,7 @@ package members
 import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/command/organizations"
-	"github.com/jmatsu/dpg/command/organizations/teams"
-	"github.com/jmatsu/dpg/request/organizations/teams/members/add"
+	"github.com/jmatsu/dpg/request/organizations/team_members"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -19,56 +17,41 @@ func AddCommand() *cli.Command {
 }
 
 type addCommand struct {
-	endpoint    *api.OrganizationTeamsMembersEndpoint
-	requestBody *add.Request
+	organization api.Organization
+	teamName string
+	requestBody team_members.AddRequest
 }
 
 func NewAddCommand(c *cli.Context) (command.Command, error) {
-	cmd := addCommand{
-		endpoint: &api.OrganizationTeamsMembersEndpoint{
-			BaseURL:          api.EndpointURL,
-			OrganizationName: organizations.GetOrganizationName(c),
-			TeamName:         teams.GetTeamName(c),
-		},
-		requestBody: &add.Request{
-			UserName: getUserName(c),
-		},
+	organization, err := command.RequireOrganization(c)
+
+	if err != nil {
+		return nil, err
 	}
 
-	if err := cmd.VerifyInput(); err != nil {
+	teamName, err := command.RequireTeamName(c)
+
+	if err != nil {
 		return nil, err
+	}
+
+	userName, err := command.RequireUserName(c)
+
+	if err != nil {
+		return nil, err
+	}
+
+	cmd := addCommand{
+		organization: *organization,
+		teamName:teamName,
+		requestBody: team_members.AddRequest{
+			UserName: userName,
+		},
 	}
 
 	return cmd, nil
 }
 
-/*
-Endpoint:
-	organization name is required
-	team name is required
-Parameters:
-	user name is required
-*/
-func (cmd addCommand) VerifyInput() error {
-	if err := organizations.RequireOrganizationName(cmd.endpoint.OrganizationName); err != nil {
-		return err
-	}
-
-	if err := teams.RequireTeamName(cmd.endpoint.TeamName); err != nil {
-		return err
-	}
-
-	if err := requireUserName(cmd.requestBody.UserName); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (cmd addCommand) Run(authorization *api.Authorization) (string, error) {
-	if bytes, err := cmd.endpoint.MultiPartFormRequest(*authorization, *cmd.requestBody); err != nil {
-		return "", err
-	} else {
-		return string(bytes), nil
-	}
+	return api.NewClient(*authorization).AddTeamMember(cmd.organization, cmd.teamName, cmd.requestBody)
 }

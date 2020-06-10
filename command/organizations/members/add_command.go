@@ -4,6 +4,7 @@ import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/command"
 	"github.com/jmatsu/dpg/command/organizations"
+	"github.com/jmatsu/dpg/request/organizations/members"
 	"github.com/jmatsu/dpg/request/organizations/members/add"
 	"gopkg.in/urfave/cli.v2"
 )
@@ -18,45 +19,42 @@ func AddCommand() *cli.Command {
 }
 
 type addCommand struct {
-	endpoint    *api.OrganizationMembersEndpoint
-	requestBody *add.Request
+	organization api.Organization
+	requestBody members.AddRequest
 }
 
 func NewAddCommand(c *cli.Context) (command.Command, error) {
-	cmd := addCommand{
-		endpoint: &api.OrganizationMembersEndpoint{
-			BaseURL:          api.EndpointURL,
-			OrganizationName: organizations.GetOrganizationName(c),
-		},
-		requestBody: &add.Request{
-			UserName:  getUserName(c),
-			UserEmail: getUserEmail(c),
-		},
-	}
+	organization, err := command.RequireOrganization(c)
 
-	if err := cmd.VerifyInput(); err != nil {
+	if err != nil {
 		return nil, err
 	}
 
+	name, err := command.GetUserName(c)
+
+	if err != nil {
+		return nil, err
+	}
+
+	email, err := command.GetUserEmail(c)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := assertUserNameOrUserEmail(name, email); err != nil {
+		return nil, err
+	}
+
+	cmd := addCommand{
+		organization: *organization,
+		requestBody: members.AddRequest {
+			UserName:  name,
+			UserEmail: email,
+		},
+	}
+
 	return cmd, nil
-}
-
-/*
-Endpoint:
-	organization name is required
-Parameters:
-	user name or user email is required
-*/
-func (cmd addCommand) VerifyInput() error {
-	if err := organizations.RequireOrganizationName(cmd.endpoint.OrganizationName); err != nil {
-		return err
-	}
-
-	if err := requireUserNameOrUserEmail(cmd.requestBody.UserName, cmd.requestBody.UserEmail); err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func (cmd addCommand) Run(authorization *api.Authorization) (string, error) {
@@ -65,4 +63,5 @@ func (cmd addCommand) Run(authorization *api.Authorization) (string, error) {
 	} else {
 		return string(bytes), nil
 	}
+	return api.NewClient(*authorization).AddMember()
 }

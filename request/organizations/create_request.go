@@ -1,6 +1,7 @@
 package organizations
 
 import (
+	"fmt"
 	"github.com/jmatsu/dpg/util"
 	"gopkg.in/guregu/null.v3"
 	"io"
@@ -28,4 +29,12 @@ func (req CreateRequest) IoReaderMap() (*map[string]io.Reader, error) {
 	}
 
 	return out, nil
+}
+
+func (req CreateRequest) Verify() error {
+	if req.OrganizationName == "" {
+		return fmt.Errorf("organization name must be present")
+	}
+
+	return nil
 }

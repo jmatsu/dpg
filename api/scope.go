@@ -66,9 +66,21 @@ type Enterprise struct {
 	Name string
 }
 
-func (a Enterprise) verify() error {
-	if a.Name == "" {
+func (e Enterprise) verify() error {
+	if e.Name == "" {
 		return fmt.Errorf("enterprise name must be present")
+	}
+
+	return nil
+}
+
+type Organization struct {
+	Name string
+}
+
+func (o Organization) verify() error {
+	if o.Name == "" {
+		return fmt.Errorf("organization name must be present")
 	}
 
 	return nil
