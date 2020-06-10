@@ -7,11 +7,11 @@ import (
 	"strings"
 )
 
-type AddRequest struct {
+type CreateRequest struct {
 	TeamName string
 }
 
-func (req AddRequest) IoReaderMap() (*map[string]io.Reader, error) {
+func (req CreateRequest) IoReaderMap() (*map[string]io.Reader, error) {
 	parts := map[string]io.Reader{
 		"team": strings.NewReader(req.TeamName),
 	}
@@ -25,7 +25,7 @@ func (req AddRequest) IoReaderMap() (*map[string]io.Reader, error) {
 	return out, nil
 }
 
-func (req AddRequest) Verify() error {
+func (req CreateRequest) Verify() error {
 
 	if req.TeamName == "" {
 		return fmt.Errorf("team name must not be empty")

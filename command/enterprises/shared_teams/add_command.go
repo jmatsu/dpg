@@ -18,7 +18,7 @@ func AddCommand() *cli.Command {
 
 type addCommand struct {
 	enterprise  api.Enterprise
-	requestBody shared_teams.AddRequest
+	requestBody shared_teams.CreateRequest
 }
 
 func NewAddCommand(c *cli.Context) (command.Command, error) {
@@ -42,7 +42,7 @@ func NewAddCommand(c *cli.Context) (command.Command, error) {
 
 	cmd := addCommand{
 		enterprise: *enterprise,
-		requestBody: shared_teams.AddRequest{
+		requestBody: shared_teams.CreateRequest{
 			SharedTeamName: sharedTeamName,
 			Description:    description.String,
 		},
@@ -52,5 +52,5 @@ func NewAddCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd addCommand) Run(authorization *api.Authorization) (string, error) {
-	return api.NewClient(*authorization).AddSharedTeam2(cmd.enterprise, cmd.requestBody)
+	return api.NewClient(*authorization).CreateSharedTeam(cmd.enterprise, cmd.requestBody)
 }

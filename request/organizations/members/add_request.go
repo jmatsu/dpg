@@ -8,12 +8,12 @@ import (
 	"strings"
 )
 
-type AddRequest struct {
+type CreateRequest struct {
 	UserName  null.String
 	UserEmail null.String
 }
 
-func (req AddRequest) IoReaderMap() (*map[string]io.Reader, error) {
+func (req CreateRequest) IoReaderMap() (*map[string]io.Reader, error) {
 	parts := map[string]io.Reader{}
 
 	if req.UserName.Valid {
@@ -31,7 +31,7 @@ func (req AddRequest) IoReaderMap() (*map[string]io.Reader, error) {
 	return out, nil
 }
 
-func (req AddRequest) Verify() error {
+func (req CreateRequest) Verify() error {
 	if req.UserEmail.Valid && req.UserName.Valid {
 		return fmt.Errorf("user email and name cannot be specified at once")
 	}

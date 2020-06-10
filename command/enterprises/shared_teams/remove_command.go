@@ -45,5 +45,5 @@ func NewRemoveCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd removeCommand) Run(authorization *api.Authorization) (string, error) {
-	return api.NewClient(*authorization).RemoveSharedTeam2(cmd.enterprise, cmd.sharedTeamName, cmd.requestBody)
+	return api.NewClient(*authorization).DestroySharedTeam(cmd.enterprise, cmd.sharedTeamName, cmd.requestBody)
 }

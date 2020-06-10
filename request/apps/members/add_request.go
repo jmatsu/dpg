@@ -7,12 +7,12 @@ import (
 	"strings"
 )
 
-type AddRequest struct {
+type CreateRequest struct {
 	UserNamesOrEmails []string
 	DeveloperRole     bool
 }
 
-func (req AddRequest) IoReaderMap() (*map[string]io.Reader, error) {
+func (req CreateRequest) IoReaderMap() (*map[string]io.Reader, error) {
 	parts := map[string]io.Reader{
 		"users": strings.NewReader(strings.Join(req.UserNamesOrEmails, ",")),
 	}
@@ -32,7 +32,7 @@ func (req AddRequest) IoReaderMap() (*map[string]io.Reader, error) {
 	return out, nil
 }
 
-func (req AddRequest) Verify() error {
+func (req CreateRequest) Verify() error {
 	if len(req.UserNamesOrEmails) == 0 {
 		return fmt.Errorf("the number of invitees must be greater than 0")
 	}

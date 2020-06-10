@@ -3,7 +3,7 @@ package organizations
 import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/request/organizations"
+	"gopkg.in/guregu/null.v3"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -17,7 +17,8 @@ func CreateCommand() *cli.Command {
 }
 
 type createCommand struct {
-	requestBody organizations.CreateRequest
+	organizationName string
+	description null.String
 }
 
 func NewCreateCommand(c *cli.Context) (command.Command, error) {
@@ -34,15 +35,13 @@ func NewCreateCommand(c *cli.Context) (command.Command, error) {
 	}
 
 	cmd := createCommand{
-		requestBody: organizations.CreateRequest{
-			OrganizationName: organizationName,
-			Description: description,
-		},
+			organizationName: organizationName,
+			description: description,
 	}
 
 	return cmd, nil
 }
 
 func (cmd createCommand) Run(authorization *api.Authorization) (string, error) {
-	return api.NewClient(*authorization).CreateOrganization(cmd.requestBody)
+	return api.NewClient(*authorization).CreateOrganization(cmd.organizationName, cmd.description)
 }

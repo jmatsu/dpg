@@ -45,5 +45,5 @@ func NewRemoveCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd removeCommand) Run(authorization *api.Authorization) (string, error) {
-	return api.NewClient(*authorization).RemoveMember(cmd.app, cmd.requestBody)
+	return api.NewClient(*authorization).RemoveAppMember(cmd.app, cmd.requestBody)
 }

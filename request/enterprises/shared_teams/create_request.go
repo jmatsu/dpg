@@ -3,19 +3,23 @@ package shared_teams
 import (
 	"fmt"
 	"github.com/jmatsu/dpg/util"
+	"gopkg.in/guregu/null.v3"
 	"io"
 	"strings"
 )
 
-type AddRequest struct {
+type CreateRequest struct {
 	SharedTeamName string
-	Description    string
+	Description    null.String
 }
 
-func (req AddRequest) IoReaderMap() (*map[string]io.Reader, error) {
+func (req CreateRequest) IoReaderMap() (*map[string]io.Reader, error) {
 	parts := map[string]io.Reader{
 		"name":        strings.NewReader(req.SharedTeamName),
-		"description": strings.NewReader(req.Description),
+	}
+
+	if req.Description.Valid {
+		parts["description"] = strings.NewReader(req.Description.String)
 	}
 
 	out, err := util.StringifyKeysOfReaderMap(parts)
@@ -27,7 +31,7 @@ func (req AddRequest) IoReaderMap() (*map[string]io.Reader, error) {
 	return out, nil
 }
 
-func (req AddRequest) Verify() error {
+func (req CreateRequest) Verify() error {
 	if req.SharedTeamName == "" {
 		return fmt.Errorf("shared team name must be present")
 	}

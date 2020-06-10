@@ -20,7 +20,7 @@ func AddCommand() *cli.Command {
 
 type addCommand struct {
 	organization api.Organization
-	requestBody members.AddRequest
+	requestBody members.CreateRequest
 }
 
 func NewAddCommand(c *cli.Context) (command.Command, error) {
@@ -48,7 +48,7 @@ func NewAddCommand(c *cli.Context) (command.Command, error) {
 
 	cmd := addCommand{
 		organization: *organization,
-		requestBody: members.AddRequest {
+		requestBody: members.CreateRequest {
 			UserName:  name,
 			UserEmail: email,
 		},
@@ -63,5 +63,5 @@ func (cmd addCommand) Run(authorization *api.Authorization) (string, error) {
 	} else {
 		return string(bytes), nil
 	}
-	return api.NewClient(*authorization).AddMember()
+	return api.NewClient(*authorization).AddAppMember()
 }

@@ -37,5 +37,5 @@ func NewListCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd listCommand) Run(authorization *api.Authorization) (string, error) {
-	return api.NewClient(*authorization).ListMembers(cmd.app, cmd.requestParams)
+	return api.NewClient(*authorization).ListAppMembers(cmd.app, cmd.requestParams)
 }

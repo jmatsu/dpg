@@ -18,7 +18,7 @@ func AddCommand() *cli.Command {
 
 type addCommand struct {
 	app         api.UserApp
-	requestBody members.AddRequest
+	requestBody members.CreateRequest
 }
 
 func NewAddCommand(c *cli.Context) (command.Command, error) {
@@ -36,7 +36,7 @@ func NewAddCommand(c *cli.Context) (command.Command, error) {
 
 	cmd := addCommand{
 		app: *app,
-		requestBody: members.AddRequest{
+		requestBody: members.CreateRequest{
 			UserNamesOrEmails: invitees,
 			DeveloperRole:     command.IsDeveloperRole(c),
 		},
@@ -46,5 +46,5 @@ func NewAddCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd addCommand) Run(authorization *api.Authorization) (string, error) {
-	return api.NewClient(*authorization).AddMember(cmd.app, cmd.requestBody)
+	return api.NewClient(*authorization).AddAppMember(cmd.app, cmd.requestBody)
 }

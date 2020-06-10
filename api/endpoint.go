@@ -5,11 +5,11 @@ import (
 	"github.com/jmatsu/dpg/request/apps"
 	appsDistributions "github.com/jmatsu/dpg/request/apps/distributions"
 	appsMembers "github.com/jmatsu/dpg/request/apps/members"
-	appsSharedTeams "github.com/jmatsu/dpg/request/apps/shared_teams"
+	appsSharedTeams "github.com/jmatsu/dpg/request/apps/shared_team_relations"
 	appsTeams "github.com/jmatsu/dpg/request/apps/teams"
 	"github.com/jmatsu/dpg/request/distributions"
-	enterprisesMembers "github.com/jmatsu/dpg/request/enterprises/members"
-	enterprisesOrganizationsMembers "github.com/jmatsu/dpg/request/enterprises/organization_members"
+	enterprisesMembers "github.com/jmatsu/dpg/request/enterprises/member_relations"
+	enterprisesOrganizationsMembers "github.com/jmatsu/dpg/request/enterprises/organization_member_relations"
 	enterprisesSharedTeams "github.com/jmatsu/dpg/request/enterprises/shared_teams"
 	"github.com/jmatsu/dpg/request/organizations"
 	organizationsMembers "github.com/jmatsu/dpg/request/organizations/members"
@@ -72,7 +72,7 @@ func (e AppMembersEndpoint) ToURL() string {
 	return url
 }
 
-func (e AppMembersEndpoint) MultiPartFormRequest(authorization Authorization, requestBody appsMembers.AddRequest) ([]byte, error) {
+func (e AppMembersEndpoint) MultiPartFormRequest(authorization Authorization, requestBody appsMembers.CreateRequest) ([]byte, error) {
 	return multiPartFormRequest(e, &authorization, requestBody)
 }
 
@@ -129,7 +129,7 @@ func (e OrganizationAppTeamsEndpoint) ToURL() string {
 	return url
 }
 
-func (e OrganizationAppTeamsEndpoint) MultiPartFormRequest(authorization Authorization, requestBody appsTeams.AddRequest) ([]byte, error) {
+func (e OrganizationAppTeamsEndpoint) MultiPartFormRequest(authorization Authorization, requestBody appsTeams.CreateRequest) ([]byte, error) {
 	return multiPartFormRequest(e, &authorization, requestBody)
 }
 
@@ -165,7 +165,7 @@ func (e EnterpriseOrganizationAppSharedTeamsEndpoint) ToURL() string {
 	return url
 }
 
-func (e EnterpriseOrganizationAppSharedTeamsEndpoint) MultiPartFormRequest(authorization Authorization, requestBody appsSharedTeams.AddRequest) ([]byte, error) {
+func (e EnterpriseOrganizationAppSharedTeamsEndpoint) MultiPartFormRequest(authorization Authorization, requestBody appsSharedTeams.CreateRequest) ([]byte, error) {
 	return multiPartFormRequest(e, &authorization, requestBody)
 }
 
@@ -268,7 +268,7 @@ func (e OrganizationMembersEndpoint) ToURL() string {
 	return url
 }
 
-func (e OrganizationMembersEndpoint) MultiPartFormRequest(authorization Authorization, requestBody organizationsMembers.AddRequest) ([]byte, error) {
+func (e OrganizationMembersEndpoint) MultiPartFormRequest(authorization Authorization, requestBody organizationsMembers.CreateRequest) ([]byte, error) {
 	return multiPartFormRequest(e, &authorization, requestBody)
 }
 
@@ -303,7 +303,7 @@ func (e OrganizationTeamsMembersEndpoint) ToURL() string {
 	return url
 }
 
-func (e OrganizationTeamsMembersEndpoint) MultiPartFormRequest(authorization Authorization, requestBody team_members.AddRequest) ([]byte, error) {
+func (e OrganizationTeamsMembersEndpoint) MultiPartFormRequest(authorization Authorization, requestBody team_members.CreateRequest) ([]byte, error) {
 	return multiPartFormRequest(e, &authorization, requestBody)
 }
 
@@ -337,7 +337,7 @@ func (e EnterpriseMembersEndpoint) ToURL() string {
 	return url
 }
 
-func (e EnterpriseMembersEndpoint) MultiPartFormRequest(authorization Authorization, requestBody enterprisesMembers.AddRequest) ([]byte, error) {
+func (e EnterpriseMembersEndpoint) MultiPartFormRequest(authorization Authorization, requestBody enterprisesMembers.CreateRequest) ([]byte, error) {
 	return multiPartFormRequest(e, &authorization, requestBody)
 }
 
@@ -372,7 +372,7 @@ func (e EnterpriseOrganizationsMembersEndpoint) ToURL() string {
 	return url
 }
 
-func (e EnterpriseOrganizationsMembersEndpoint) MultiPartFormRequest(authorization Authorization, requestBody enterprisesOrganizationsMembers.AddRequest) ([]byte, error) {
+func (e EnterpriseOrganizationsMembersEndpoint) MultiPartFormRequest(authorization Authorization, requestBody enterprisesOrganizationsMembers.CreateRequest) ([]byte, error) {
 	return multiPartFormRequest(e, &authorization, requestBody)
 }
 
@@ -406,7 +406,7 @@ func (e EnterpriseSharedTeamsEndpoint) ToURL() string {
 	return url
 }
 
-func (e EnterpriseSharedTeamsEndpoint) MultiPartFormRequest(authorization Authorization, requestBody enterprisesSharedTeams.AddRequest) ([]byte, error) {
+func (e EnterpriseSharedTeamsEndpoint) MultiPartFormRequest(authorization Authorization, requestBody enterprisesSharedTeams.CreateRequest) ([]byte, error) {
 	return multiPartFormRequest(e, &authorization, requestBody)
 }
 

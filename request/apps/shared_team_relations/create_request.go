@@ -1,4 +1,4 @@
-package shared_teams
+package shared_team_relations
 
 import (
 	"fmt"
@@ -7,11 +7,11 @@ import (
 	"strings"
 )
 
-type AddRequest struct {
+type CreateRequest struct {
 	SharedTeamName string
 }
 
-func (req AddRequest) IoReaderMap() (*map[string]io.Reader, error) {
+func (req CreateRequest) IoReaderMap() (*map[string]io.Reader, error) {
 	parts := map[string]io.Reader{
 		"team": strings.NewReader(req.SharedTeamName),
 	}
@@ -25,7 +25,7 @@ func (req AddRequest) IoReaderMap() (*map[string]io.Reader, error) {
 	return out, nil
 }
 
-func (req AddRequest) Verify() error {
+func (req CreateRequest) Verify() error {
 	if req.SharedTeamName == "" {
 		return fmt.Errorf("shared team name must be present")
 	}

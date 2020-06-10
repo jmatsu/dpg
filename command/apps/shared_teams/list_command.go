@@ -3,7 +3,7 @@ package shared_teams
 import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/request/apps/shared_teams"
+	"github.com/jmatsu/dpg/request/apps/shared_team_relations"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -37,5 +37,5 @@ func NewListCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd listCommand) Run(authorization *api.Authorization) (string, error) {
-	return api.NewClient(*authorization).ListSharedTeams(cmd.app, cmd.requestParams)
+	return api.NewClient(*authorization).ListSharedTeamsInApp(cmd.app, cmd.requestParams)
 }

@@ -5,9 +5,9 @@ import (
 	"io"
 )
 
-type RemoveRequest struct{}
+type DestroyRequest struct{}
 
-func (req RemoveRequest) IoReaderMap() (*map[string]io.Reader, error) {
+func (req DestroyRequest) IoReaderMap() (*map[string]io.Reader, error) {
 	parts := map[string]io.Reader{}
 
 	out, err := util.StringifyKeysOfReaderMap(parts)
@@ -19,6 +19,6 @@ func (req RemoveRequest) IoReaderMap() (*map[string]io.Reader, error) {
 	return out, nil
 }
 
-func (req RemoveRequest) Verify() error {
+func (req DestroyRequest) Verify() error {
 	return nil
 }

@@ -1,12 +1,18 @@
 package api
 
 import (
+	"fmt"
 	"github.com/jmatsu/dpg/request/organizations/members"
 	"github.com/jmatsu/dpg/request/organizations/team_members"
 	"gopkg.in/guregu/null.v3"
 )
 
-func (c Client) AddOrganizationMember(organization Organization, request members.AddRequest) (string, error) {
+func (c Client) AddOrganizationMember(organization Organization, userName null.String, userEmail null.String) (string, error) {
+	request := members.CreateRequest{
+		UserName:userName,
+		UserEmail:userEmail,
+	}
+
 	if err := organization.verify(); err != nil {
 		return "", err
 	}
@@ -71,13 +77,21 @@ func (c Client) RemoveOrganizationMember(organization Organization, userName nul
 	}
 }
 
-func (c Client) AddTeamMember(organization Organization, teamName string, request team_members.AddRequest) (string, error) {
+func (c Client) AddOrganizationMemberToTeam(organization Organization, teamName string, userName string) (string, error) {
+	request := team_members.CreateRequest{
+		UserName:userName,
+	}
+
 	if err := organization.verify(); err != nil {
 		return "", err
 	}
 
 	if err := request.Verify(); err != nil {
 		return "", err
+	}
+
+	if teamName == "" {
+		return "", fmt.Errorf("team name must be present")
 	}
 
 	endpoint := OrganizationTeamsMembersEndpoint{
@@ -94,13 +108,21 @@ func (c Client) AddTeamMember(organization Organization, teamName string, reques
 }
 
 
-func (c Client) ListTeamMembers(organization Organization, teamName string, request team_members.ListRequest) (string, error) {
+func (c Client) ListOrganizationMembersInTeam(organization Organization, teamName string) (string, error) {
+	request :=  team_members.ListRequest {
+
+	}
+
 	if err := organization.verify(); err != nil {
 		return "", err
 	}
 
 	if err := request.Verify(); err != nil {
 		return "", err
+	}
+
+	if teamName == "" {
+		return "", fmt.Errorf("team name must be present")
 	}
 
 	endpoint := OrganizationTeamsMembersEndpoint{
@@ -117,13 +139,24 @@ func (c Client) ListTeamMembers(organization Organization, teamName string, requ
 }
 
 
-func (c Client) RemoveTeamMember(organization Organization, teamName string, userName string, request team_members.RemoveRequest) (string, error) {
+func (c Client) RemoveOrganizationMemberFromTeam(organization Organization, teamName string, userName string) (string, error) {
+	request := team_members.RemoveRequest {
+	}
+
 	if err := organization.verify(); err != nil {
 		return "", err
 	}
 
 	if err := request.Verify(); err != nil {
 		return "", err
+	}
+
+	if teamName == "" {
+		return "", fmt.Errorf("team name must be present")
+	}
+
+	if userName == "" {
+		return "", fmt.Errorf("user name must be present")
 	}
 
 	endpoint := OrganizationTeamsMembersEndpoint{

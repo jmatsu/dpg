@@ -1,4 +1,4 @@
-package organization_members
+package organization_member_relations
 
 import (
 	"fmt"
@@ -7,11 +7,11 @@ import (
 	"strings"
 )
 
-type AddRequest struct {
+type CreateRequest struct {
 	UserName string
 }
 
-func (req AddRequest) IoReaderMap() (*map[string]io.Reader, error) {
+func (req CreateRequest) IoReaderMap() (*map[string]io.Reader, error) {
 	parts := map[string]io.Reader{
 		"user": strings.NewReader(req.UserName),
 	}
@@ -25,7 +25,7 @@ func (req AddRequest) IoReaderMap() (*map[string]io.Reader, error) {
 	return out, nil
 }
 
-func (req AddRequest) Verify() error {
+func (req CreateRequest) Verify() error {
 	if req.UserName == "" {
 		return fmt.Errorf("user name must not be empty")
 	}

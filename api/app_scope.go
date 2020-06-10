@@ -1,17 +1,20 @@
 package api
 
 import (
-	"fmt"
 	"github.com/jmatsu/dpg/request/apps/distributions"
 )
 
-func (c Client) DestroyDistributionByName(app App, request distributions.DestroyRequest) (string, error) {
+func (c Client) DestroyDistributionByName(app App, distributionName string) (string, error) {
+	request := distributions.DestroyRequest {
+		DistributionName:distributionName,
+	}
+
 	if err := app.verify(); err != nil {
 		return "", err
 	}
 
-	if request.DistributionName == "" {
-		return "", fmt.Errorf("distribution name must be present")
+	if err := request.Verify(); err != nil {
+		return "", err
 	}
 
 	endpoint := AppDistributionsEndpoint{

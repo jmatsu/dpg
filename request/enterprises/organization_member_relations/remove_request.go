@@ -1,4 +1,4 @@
-package members
+package organization_member_relations
 
 import (
 	"github.com/jmatsu/dpg/util"

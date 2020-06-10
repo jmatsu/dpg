@@ -1,12 +1,18 @@
 package api
 
 import (
-	"github.com/jmatsu/dpg/request/enterprises/members"
-	"github.com/jmatsu/dpg/request/enterprises/organization_members"
+	"fmt"
+	"github.com/jmatsu/dpg/request/enterprises/member_relations"
+	"github.com/jmatsu/dpg/request/enterprises/organization_member_relations"
 	"github.com/jmatsu/dpg/request/enterprises/shared_teams"
+	"gopkg.in/guregu/null.v3"
 )
 
-func (c Client) AddEnterpriseMember(enterprise Enterprise, request members.AddRequest) (string, error) {
+func (c Client) AddEnterpriseMember(enterprise Enterprise, userName string) (string, error) {
+	request := member_relations.CreateRequest {
+		UserName: userName,
+	}
+
 	if err := enterprise.verify(); err != nil {
 		return "", err
 	}
@@ -27,7 +33,9 @@ func (c Client) AddEnterpriseMember(enterprise Enterprise, request members.AddRe
 	}
 }
 
-func (c Client) ListEnterpriseMembers(enterprise Enterprise, request members.ListRequest) (string, error) {
+func (c Client) ListEnterpriseMembers(enterprise Enterprise) (string, error) {
+	request := member_relations.ListRequest{}
+
 	if err := enterprise.verify(); err != nil {
 		return "", err
 	}
@@ -48,13 +56,19 @@ func (c Client) ListEnterpriseMembers(enterprise Enterprise, request members.Lis
 	}
 }
 
-func (c Client) RemoveEnterpriseMember(enterprise Enterprise, userName string, request members.RemoveRequest) (string, error) {
+func (c Client) RemoveEnterpriseMember(enterprise Enterprise, userName string) (string, error) {
+	request := member_relations.RemoveRequest{}
+
 	if err := enterprise.verify(); err != nil {
 		return "", err
 	}
 
 	if err := request.Verify(); err != nil {
 		return "", err
+	}
+
+	if userName == "" {
+		return "", fmt.Errorf("user name must be present")
 	}
 
 	endpoint := EnterpriseMembersEndpoint{
@@ -70,8 +84,16 @@ func (c Client) RemoveEnterpriseMember(enterprise Enterprise, userName string, r
 	}
 }
 
-func (c Client) AddEnterpriseOrganizationMember(enterprise Enterprise, organizationName string, request organization_members.AddRequest) (string, error) {
+func (c Client) AddEnterpriseMemberToOrganization(enterprise Enterprise, organization Organization, userName string) (string, error) {
+	request := organization_member_relations.CreateRequest{
+		UserName:userName,
+	}
+
 	if err := enterprise.verify(); err != nil {
+		return "", err
+	}
+
+	if err := organization.verify(); err != nil {
 		return "", err
 	}
 
@@ -82,7 +104,7 @@ func (c Client) AddEnterpriseOrganizationMember(enterprise Enterprise, organizat
 	endpoint := EnterpriseOrganizationsMembersEndpoint{
 		BaseURL:          c.baseURL,
 		EnterpriseName:   enterprise.Name,
-		OrganizationName: organizationName,
+		OrganizationName: organization.Name,
 	}
 
 	if bytes, err := endpoint.MultiPartFormRequest(c.authorization, request); err != nil {
@@ -92,8 +114,14 @@ func (c Client) AddEnterpriseOrganizationMember(enterprise Enterprise, organizat
 	}
 }
 
-func (c Client) ListEnterpriseOrganizationMembers(enterprise Enterprise, organizationName string, request organization_members.ListRequest) (string, error) {
+func (c Client) ListEnterpriseMembersInOrganization(enterprise Enterprise, organization Organization) (string, error) {
+	request := organization_member_relations.ListRequest{}
+
 	if err := enterprise.verify(); err != nil {
+		return "", err
+	}
+
+	if err := organization.verify(); err != nil {
 		return "", err
 	}
 
@@ -104,7 +132,7 @@ func (c Client) ListEnterpriseOrganizationMembers(enterprise Enterprise, organiz
 	endpoint := EnterpriseOrganizationsMembersEndpoint{
 		BaseURL:          c.baseURL,
 		EnterpriseName:   enterprise.Name,
-		OrganizationName: organizationName,
+		OrganizationName: organization.Name,
 	}
 
 	if bytes, err := endpoint.GetListRequest(c.authorization, request); err != nil {
@@ -114,8 +142,14 @@ func (c Client) ListEnterpriseOrganizationMembers(enterprise Enterprise, organiz
 	}
 }
 
-func (c Client) RemoveEnterpriseOrganizationMember(enterprise Enterprise, organizationName string, userName string, request organization_members.RemoveRequest) (string, error) {
+func (c Client) RemoveEnterpriseMemberFromOrganization(enterprise Enterprise, organization Organization, userName string) (string, error) {
+	request := organization_member_relations.RemoveRequest{}
+
 	if err := enterprise.verify(); err != nil {
+		return "", err
+	}
+
+	if err:=organization.verify(); err != nil {
 		return "", err
 	}
 
@@ -123,10 +157,14 @@ func (c Client) RemoveEnterpriseOrganizationMember(enterprise Enterprise, organi
 		return "", err
 	}
 
+	if userName == "" {
+		return "", fmt.Errorf("user name must be present")
+	}
+
 	endpoint := EnterpriseOrganizationsMembersEndpoint{
 		BaseURL:          c.baseURL,
 		EnterpriseName:   enterprise.Name,
-		OrganizationName: organizationName,
+		OrganizationName: organization.Name,
 		UserName:         userName,
 	}
 
@@ -137,7 +175,12 @@ func (c Client) RemoveEnterpriseOrganizationMember(enterprise Enterprise, organi
 	}
 }
 
-func (c Client) AddSharedTeam2(enterprise Enterprise, request shared_teams.AddRequest) (string, error) {
+func (c Client) CreateSharedTeam(enterprise Enterprise, sharedTeamName string, description null.String) (string, error) {
+	request := shared_teams.CreateRequest {
+		SharedTeamName:sharedTeamName,
+		Description:description,
+	}
+
 	if err := enterprise.verify(); err != nil {
 		return "", err
 	}
@@ -158,7 +201,9 @@ func (c Client) AddSharedTeam2(enterprise Enterprise, request shared_teams.AddRe
 	}
 }
 
-func (c Client) ListSharedTeams2(enterprise Enterprise, request shared_teams.ListRequest) (string, error) {
+func (c Client) ListSharedTeams(enterprise Enterprise) (string, error) {
+	request := shared_teams.ListRequest {}
+
 	if err := enterprise.verify(); err != nil {
 		return "", err
 	}
@@ -179,13 +224,19 @@ func (c Client) ListSharedTeams2(enterprise Enterprise, request shared_teams.Lis
 	}
 }
 
-func (c Client) RemoveSharedTeam2(enterprise Enterprise, sharedTeamName string, request shared_teams.RemoveRequest) (string, error) {
+func (c Client) DestroySharedTeam(enterprise Enterprise, sharedTeamName string) (string, error) {
+	request := shared_teams.DestroyRequest{}
+
 	if err := enterprise.verify(); err != nil {
 		return "", err
 	}
 
 	if err := request.Verify(); err != nil {
 		return "", err
+	}
+
+	if sharedTeamName == "" {
+		return "", fmt.Errorf("shared team name must be present")
 	}
 
 	endpoint := EnterpriseSharedTeamsEndpoint{

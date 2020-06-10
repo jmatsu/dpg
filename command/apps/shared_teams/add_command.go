@@ -3,7 +3,7 @@ package shared_teams
 import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/request/apps/shared_teams"
+	"github.com/jmatsu/dpg/request/apps/shared_team_relations"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -18,7 +18,7 @@ func AddCommand() *cli.Command {
 
 type addCommand struct {
 	app         api.OrganizationApp
-	requestBody shared_teams.AddRequest
+	requestBody shared_teams.CreateRequest
 }
 
 func NewAddCommand(c *cli.Context) (command.Command, error) {
@@ -36,7 +36,7 @@ func NewAddCommand(c *cli.Context) (command.Command, error) {
 
 	cmd := addCommand{
 		app: *app,
-		requestBody: shared_teams.AddRequest{
+		requestBody: shared_teams.CreateRequest{
 			SharedTeamName: sharedTeamName,
 		},
 	}
@@ -45,5 +45,5 @@ func NewAddCommand(c *cli.Context) (command.Command, error) {
 }
 
 func (cmd addCommand) Run(authorization *api.Authorization) (string, error) {
-	return api.NewClient(*authorization).AddSharedTeam(cmd.app, cmd.requestBody)
+	return api.NewClient(*authorization).AddSharedTeamToApp(cmd.app, cmd.requestBody)
 }

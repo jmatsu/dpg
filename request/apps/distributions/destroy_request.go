@@ -1,6 +1,7 @@
 package distributions
 
 import (
+	"fmt"
 	"github.com/jmatsu/dpg/util"
 	"io"
 	"strings"
@@ -25,5 +26,9 @@ func (req DestroyRequest) IoReaderMap() (*map[string]io.Reader, error) {
 }
 
 func (req DestroyRequest) Verify() error {
+	if req.DistributionName == "" {
+		return fmt.Errorf("distribution name must be present")
+	}
+
 	return nil
 }

@@ -1,4 +1,4 @@
-package shared_teams
+package shared_team_relations
 
 import (
 	"github.com/jmatsu/dpg/util"

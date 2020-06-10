@@ -3,7 +3,7 @@ package members
 import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/request/enterprises/organization_members"
+	"github.com/jmatsu/dpg/request/enterprises/organization_member_relations"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -19,7 +19,7 @@ func ListCommand() *cli.Command {
 type listCommand struct {
 	enterprise       api.Enterprise
 	organizationName string
-	requestParams    organization_members.ListRequest
+	requestParams    organization_member_relations.ListRequest
 }
 
 func NewListCommand(c *cli.Context) (command.Command, error) {
@@ -38,12 +38,12 @@ func NewListCommand(c *cli.Context) (command.Command, error) {
 	cmd := listCommand{
 		enterprise:       *enterprise,
 		organizationName: organizationName,
-		requestParams:    organization_members.ListRequest{},
+		requestParams:    organization_member_relations.ListRequest{},
 	}
 
 	return cmd, nil
 }
 
 func (cmd listCommand) Run(authorization *api.Authorization) (string, error) {
-	return api.NewClient(*authorization).ListEnterpriseOrganizationMembers(cmd.enterprise, cmd.organizationName, cmd.requestParams)
+	return api.NewClient(*authorization).ListEnterpriseMembersInOrganization(cmd.enterprise, cmd.organizationName, cmd.requestParams)
 }

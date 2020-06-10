@@ -3,7 +3,7 @@ package members
 import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/request/enterprises/members"
+	"github.com/jmatsu/dpg/request/enterprises/member_relations"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -18,7 +18,7 @@ func AddCommand() *cli.Command {
 
 type addCommand struct {
 	enterprise  api.Enterprise
-	requestBody members.AddRequest
+	requestBody member_relations.CreateRequest
 }
 
 func NewAddCommand(c *cli.Context) (command.Command, error) {
@@ -36,7 +36,7 @@ func NewAddCommand(c *cli.Context) (command.Command, error) {
 
 	cmd := addCommand{
 		enterprise: *enterprise,
-		requestBody: members.AddRequest{
+		requestBody: member_relations.CreateRequest{
 			UserName: userName,
 		},
 	}

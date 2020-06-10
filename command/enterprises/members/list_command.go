@@ -3,7 +3,7 @@ package members
 import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/request/enterprises/members"
+	"github.com/jmatsu/dpg/request/enterprises/member_relations"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -18,7 +18,7 @@ func ListCommand() *cli.Command {
 
 type listCommand struct {
 	enterprise    api.Enterprise
-	requestParams members.ListRequest
+	requestParams member_relations.ListRequest
 }
 
 func NewListCommand(c *cli.Context) (command.Command, error) {
@@ -30,7 +30,7 @@ func NewListCommand(c *cli.Context) (command.Command, error) {
 
 	cmd := listCommand{
 		enterprise:    *enterprise,
-		requestParams: members.ListRequest{},
+		requestParams: member_relations.ListRequest{},
 	}
 
 	return cmd, nil

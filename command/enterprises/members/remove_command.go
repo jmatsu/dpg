@@ -3,7 +3,7 @@ package members
 import (
 	"github.com/jmatsu/dpg/api"
 	"github.com/jmatsu/dpg/command"
-	"github.com/jmatsu/dpg/request/enterprises/members"
+	"github.com/jmatsu/dpg/request/enterprises/member_relations"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -19,7 +19,7 @@ func RemoveCommand() *cli.Command {
 type removeCommand struct {
 	enterprise  api.Enterprise
 	userName    string
-	requestBody members.RemoveRequest
+	requestBody member_relations.RemoveRequest
 }
 
 func NewRemoveCommand(c *cli.Context) (command.Command, error) {
@@ -38,7 +38,7 @@ func NewRemoveCommand(c *cli.Context) (command.Command, error) {
 	cmd := removeCommand{
 		enterprise:  *enterprise,
 		userName:    userName,
-		requestBody: members.RemoveRequest{},
+		requestBody: member_relations.RemoveRequest{},
 	}
 
 	return cmd, nil
